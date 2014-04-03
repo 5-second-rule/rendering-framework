@@ -1,5 +1,7 @@
 #include "DX11Renderer.h"
 
+#include <iostream>
+#include <fstream>
 
 DX11Renderer::DX11Renderer(Window& window) : Renderer()
 {
@@ -54,6 +56,8 @@ DX11Renderer::DX11Renderer(Window& window) : Renderer()
 
 DX11Renderer::~DX11Renderer()
 {
+	pixelShader->Release();
+	vertexShader->Release();
 	swapchain->SetFullscreenState(false, NULL);
 	swapchain->Release();
 	backbuffer->Release();
@@ -63,9 +67,39 @@ DX11Renderer::~DX11Renderer()
 
 void DX11Renderer::initializePipeline() {
 	
-	//ID3D10Blob *VS, *PS;
-	//D3DX11CompileFromFile(L"vertex.hlsl", 0, 0, "VShader", "vs_5_0", 0, 0, 0, &VS, 0, 0);
-	//D3DX11CompileFromFile(L"pixel.hlsl", 0, 0, "PSHader", "ps_5_0", 0, 0, 0, &VS, 0, 0);
+	// Vertex Shader
+	std::ifstream vs("vertex.cso", std::ifstream::binary);
+
+	vs.seekg(0, vs.end);
+	int vs_length = vs.tellg();
+	vs.seekg(0, vs.beg);
+
+	char* vs_buf = new char[vs_length];
+
+	vs.read(vs_buf, vs_length);
+	vs.close();
+
+	// Add the shader to things
+	this->device->CreateVertexShader(vs_buf, vs_length, NULL, &vertexShader);
+
+	delete[] vs_buf;
+	
+	// Pixel Shader
+	std::ifstream ps("pixel.cso", std::ifstream::binary);
+
+	ps.seekg(0, ps.end);
+	int ps_length = ps.tellg();
+	ps.seekg(0, ps.beg);
+
+	char* ps_buf = new char[ps_length];
+
+	ps.read(ps_buf, ps_length);
+	ps.close();
+
+	this->device->CreatePixelShader(ps_buf, ps_length, NULL, &pixelShader);
+
+	delete[] ps_buf;
+
 }
 
 void DX11Renderer::renderFrame() {

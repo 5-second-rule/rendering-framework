@@ -17,6 +17,9 @@ protected:
 	ID3D11DeviceContext* context;
 	ID3D11RenderTargetView* backbuffer;
 
+	ID3D11VertexShader* vertexShader;
+	ID3D11PixelShader* pixelShader;
+
 public:
 	DX11Renderer(Window&);
 	~DX11Renderer();

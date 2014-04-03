@@ -61,4 +61,12 @@
       <Filter>Header Files\Win32</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="DirectX11\pixel.hlsl">
+      <Filter>Source Files\DirectX11</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectX11\vertex.hlsl">
+      <Filter>Source Files\DirectX11</Filter>
+    </FxCompile>
+  </ItemGroup>
 </Project>
