@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer", "Renderer\Renderer.vcxproj", "{8EB07717-66B8-42FE-AE88-9DF7A326B9CD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer", "renderer\Renderer.vcxproj", "{8EB07717-66B8-42FE-AE88-9DF7A326B9CD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleApp", "SampleApp\SampleApp.vcxproj", "{CA43C38F-52D5-4417-ADF5-80BA42C15CB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{8EB07717-66B8-42FE-AE88-9DF7A326B9CD}.Debug|Win32.Build.0 = Debug|Win32
 		{8EB07717-66B8-42FE-AE88-9DF7A326B9CD}.Release|Win32.ActiveCfg = Release|Win32
 		{8EB07717-66B8-42FE-AE88-9DF7A326B9CD}.Release|Win32.Build.0 = Release|Win32
+		{CA43C38F-52D5-4417-ADF5-80BA42C15CB1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CA43C38F-52D5-4417-ADF5-80BA42C15CB1}.Debug|Win32.Build.0 = Debug|Win32
+		{CA43C38F-52D5-4417-ADF5-80BA42C15CB1}.Release|Win32.ActiveCfg = Release|Win32
+		{CA43C38F-52D5-4417-ADF5-80BA42C15CB1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

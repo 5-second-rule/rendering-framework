@@ -1,4 +1,6 @@
 #pragma once
+#include "render-framework.h"
+
 class Renderer
 {
 public:

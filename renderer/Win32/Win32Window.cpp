@@ -1,7 +1,7 @@
 #include "Win32Window.h"
 
 
-Win32Window::Win32Window(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
+Win32Window::Win32Window(HINSTANCE hInstance)
 	: Window()
 	, hInstance(hInstance)
 {
@@ -25,7 +25,7 @@ Win32Window::Win32Window(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	// this is all on one line becuse VC++ freaks out otherwise
 	this->hWnd = CreateWindowEx(NULL, L"WindowClass1", L"Window Name", WS_OVERLAPPEDWINDOW, 300, 300, wr.right - wr.left, wr.bottom - wr.top, NULL, NULL, hInstance, NULL);
 
-	ShowWindow(this->hWnd, nCmdShow);
+	ShowWindow(this->hWnd, SW_SHOWNORMAL);
 
 }
 
@@ -43,9 +43,10 @@ Window::MessageType Win32Window::getMessage() {
 
 	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&msg);
+		UINT type = msg.message;
 		DispatchMessage(&msg);
 
-		if (msg.message == WM_QUIT || msg.message == WM_DESTROY || msg.message == WM_CLOSE) return Quit;
+		if (type == WM_QUIT || type == WM_DESTROY || type == WM_CLOSE) return Quit;
 		else return Message;
 	} else return None;
 }

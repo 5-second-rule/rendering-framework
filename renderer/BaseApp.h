@@ -1,17 +1,18 @@
 #pragma once
+#include "render-framework.h"
 
 #include "Window.h"
 #include "Renderer.h"
 
-class BaseApp
+class FRAMEWORKDLL BaseApp
 {
 protected:
-	Window& window;
-	Renderer& renderer;
+	Window* window;
+	Renderer* renderer;
 
 	virtual bool run();
 public:
-	BaseApp(Window&, Renderer&);
+	BaseApp(void* handle);
 	~BaseApp();
 
 	void start();
