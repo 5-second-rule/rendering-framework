@@ -7,6 +7,8 @@
 
 #include "Renderer.h"
 #include "Window.h"
+#include "DX11VertexShader.h"
+#include "DX11PixelShader.h"
 
 class DX11Renderer :
 	public Renderer
@@ -17,14 +19,14 @@ protected:
 	ID3D11DeviceContext* context;
 	ID3D11RenderTargetView* backbuffer;
 
-	ID3D11VertexShader* vertexShader;
-	ID3D11PixelShader* pixelShader;
+	DX11VertexShader vertexShader;
+	DX11PixelShader pixelShader;
 
 public:
 	DX11Renderer(Window&);
 	~DX11Renderer();
 
-	virtual void initializePipeline();
-	virtual void renderFrame();
+	virtual void clearFrame();
+	virtual void drawFrame();
 };
 

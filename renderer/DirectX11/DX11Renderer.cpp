@@ -51,62 +51,28 @@ DX11Renderer::DX11Renderer(Window& window) : Renderer()
 	viewport.Height = 600;
 
 	context->RSSetViewports(1, &viewport);
+
+	// fixed shaders for now
+	this->vertexShader = DX11VertexShader("vertex.hlsl", this->device);
+	this->pixelShader = DX11PixelShader("pixel.hlsl", this->device);
 }
 
 
 DX11Renderer::~DX11Renderer()
 {
-	pixelShader->Release();
-	vertexShader->Release();
 	swapchain->SetFullscreenState(false, NULL);
+
 	swapchain->Release();
 	backbuffer->Release();
 	device->Release();
 	context->Release();
 }
 
-void DX11Renderer::initializePipeline() {
-	
-	// Vertex Shader
-	std::ifstream vs("vertex.cso", std::ifstream::binary);
-
-	vs.seekg(0, vs.end);
-	int vs_length = vs.tellg();
-	vs.seekg(0, vs.beg);
-
-	char* vs_buf = new char[vs_length];
-
-	vs.read(vs_buf, vs_length);
-	vs.close();
-
-	// Add the shader to things
-	this->device->CreateVertexShader(vs_buf, vs_length, NULL, &vertexShader);
-
-	delete[] vs_buf;
-	
-	// Pixel Shader
-	std::ifstream ps("pixel.cso", std::ifstream::binary);
-
-	ps.seekg(0, ps.end);
-	int ps_length = ps.tellg();
-	ps.seekg(0, ps.beg);
-
-	char* ps_buf = new char[ps_length];
-
-	ps.read(ps_buf, ps_length);
-	ps.close();
-
-	this->device->CreatePixelShader(ps_buf, ps_length, NULL, &pixelShader);
-
-	delete[] ps_buf;
-
-}
-
-void DX11Renderer::renderFrame() {
+void DX11Renderer::clearFrame() {
 	float color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
 	context->ClearRenderTargetView(backbuffer, color);
+}
 
-	// rendering happens here
-
+void DX11Renderer::drawFrame() {
 	swapchain->Present(0, 0);
 }

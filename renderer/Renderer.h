@@ -7,8 +7,7 @@ public:
 	Renderer();
 	~Renderer();
 
-	virtual void initializePipeline() = 0;
-
-	virtual void renderFrame() = 0;
+	virtual void clearFrame() = 0;
+	virtual void drawFrame() = 0;
 };
 

@@ -42,6 +42,15 @@
     <ClCompile Include="Win32\Win32Window.cpp">
       <Filter>Source Files\Win32</Filter>
     </ClCompile>
+    <ClCompile Include="DX11Shader.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="DX11VertexShader.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="DX11PixelShader.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseApp.h">
@@ -64,6 +73,15 @@
     </ClInclude>
     <ClInclude Include="renderers.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DX11Shader.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="DX11PixelShader.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="DX11VertexShader.h">
+      <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
