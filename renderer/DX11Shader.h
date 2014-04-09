@@ -24,9 +24,5 @@ public:
 
 	Buffer getBytecode();
 
-protected:
-
-	virtual ID3D11DeviceChild* createShader(char*, size_t, ID3D11Device*) = 0;
-
 };
 

@@ -4,6 +4,7 @@
 #include <fstream>
 
 #include "DX11VertexBuffer.h"
+#include "DX11IndexBuffer.h"
 
 DX11Renderer::DX11Renderer(Window& window) : Renderer()
 {
@@ -55,8 +56,8 @@ DX11Renderer::DX11Renderer(Window& window) : Renderer()
 	context->RSSetViewports(1, &viewport);
 
 	// fixed shaders for now
-	this->vertexShader = new DX11VertexShader("vertex.hlsl", this->device);
-	this->pixelShader = new DX11PixelShader("pixel.hlsl", this->device);
+	this->vertexShader = new DX11VertexShader("vertex.cso", this->device);
+	this->pixelShader = new DX11PixelShader("pixel.cso", this->device);
 
 	context->VSSetShader(vertexShader->getVertexShader(), NULL, 0);
 	context->PSSetShader(pixelShader->getPixelShader(), NULL, 0);
@@ -97,5 +98,9 @@ void DX11Renderer::drawFrame() {
 }
 
 VertexBuffer* DX11Renderer::createVertexBuffer(Vertex vertices[], size_t num) {
-	return new DX11VertexBuffer(vertices, num, this->device);
+	return new DX11VertexBuffer(vertices, num, this->device, this->context);
+}
+
+IndexBuffer* DX11Renderer::createIndexBuffer(unsigned int indices[], size_t num) {
+	return new DX11IndexBuffer(indices, num, this->device, this->context);
 }

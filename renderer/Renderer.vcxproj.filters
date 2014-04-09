@@ -63,6 +63,9 @@
     <ClCompile Include="DX11IndexBuffer.cpp">
       <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseApp.h">
@@ -109,6 +112,9 @@
     </ClInclude>
     <ClInclude Include="DX11IndexBuffer.h">
       <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

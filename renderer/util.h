@@ -12,3 +12,9 @@ struct Vertex {
 };
 
 typedef unsigned int Index;
+
+template<typename T>
+struct Array{
+	T buf[];
+	size_t len;
+};

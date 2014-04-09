@@ -10,8 +10,5 @@ public:
 	~DX11PixelShader();
 
 	ID3D11PixelShader* getPixelShader();
-
-protected:
-	virtual ID3D11DeviceChild* createShader(char*, size_t, ID3D11Device*);
 };
 

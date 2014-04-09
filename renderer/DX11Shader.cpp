@@ -6,6 +6,13 @@
 
 DX11Shader::DX11Shader(char* filename) {
 	std::ifstream shader(filename, std::ifstream::binary);
+	if (!shader) {
+		TCHAR pwd[MAX_PATH];
+		GetCurrentDirectory(MAX_PATH, pwd);
+		MessageBox(NULL, pwd, pwd, 0);
+		MessageBoxA(NULL, strerror(errno), "Shader Error", MB_OK | MB_ICONERROR);
+		exit(-1);
+	}
 
 	shader.seekg(0, shader.end);
 	this->length = (size_t)shader.tellg();
