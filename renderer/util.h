@@ -10,3 +10,5 @@ struct Vertex {
 	Point point;
 	Color color;
 };
+
+typedef unsigned int Index;

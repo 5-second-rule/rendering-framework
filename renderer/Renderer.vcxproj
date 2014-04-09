@@ -13,22 +13,31 @@
   <ItemGroup>
     <ClCompile Include="BaseApp.cpp" />
     <ClCompile Include="DirectX11\DX11Renderer.cpp" />
+    <ClCompile Include="DX11IndexBuffer.cpp" />
     <ClCompile Include="DX11PixelShader.cpp" />
     <ClCompile Include="DX11Shader.cpp" />
+    <ClCompile Include="DX11VertexBuffer.cpp" />
     <ClCompile Include="DX11VertexShader.cpp" />
+    <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="Win32\Win32Window.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseApp.h" />
     <ClInclude Include="DirectX11\DX11Renderer.h" />
+    <ClInclude Include="DX11IndexBuffer.h" />
     <ClInclude Include="DX11PixelShader.h" />
     <ClInclude Include="DX11Shader.h" />
+    <ClInclude Include="DX11VertexBuffer.h" />
     <ClInclude Include="DX11VertexShader.h" />
+    <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="render-framework.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="renderers.h" />
+    <ClInclude Include="util.h" />
+    <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Win32\Win32Window.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

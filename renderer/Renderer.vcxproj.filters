@@ -51,6 +51,18 @@
     <ClCompile Include="DX11PixelShader.cpp">
       <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DX11VertexBuffer.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DX11IndexBuffer.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseApp.h">
@@ -81,6 +93,21 @@
       <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
     <ClInclude Include="DX11VertexShader.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DX11VertexBuffer.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DX11IndexBuffer.h">
       <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
   </ItemGroup>

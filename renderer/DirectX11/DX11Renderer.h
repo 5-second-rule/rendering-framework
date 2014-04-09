@@ -32,5 +32,7 @@ public:
 	virtual void drawFrame();
 
 	virtual VertexBuffer* createVertexBuffer(Vertex[], size_t);
+	virtual IndexBuffer* createIndexBuffer(unsigned int[], size_t);
+
 };
 

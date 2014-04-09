@@ -7,7 +7,6 @@
 
 #include "util.h"
 
-
 class DX11VertexBuffer :
 	public VertexBuffer
 {
