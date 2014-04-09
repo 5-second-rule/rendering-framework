@@ -54,7 +54,7 @@ bool BaseApp::run() {
 			return false;
 	}
 
-	renderer->renderFrame();
+	renderer->drawFrame();
 
 	return true;
 }

@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "DX11VertexBuffer.h"
+
 DX11Renderer::DX11Renderer(Window& window) : Renderer()
 {
 	/* TODO: Windows window stuff */
@@ -53,14 +55,31 @@ DX11Renderer::DX11Renderer(Window& window) : Renderer()
 	context->RSSetViewports(1, &viewport);
 
 	// fixed shaders for now
-	this->vertexShader = DX11VertexShader("vertex.hlsl", this->device);
-	this->pixelShader = DX11PixelShader("pixel.hlsl", this->device);
+	this->vertexShader = new DX11VertexShader("vertex.hlsl", this->device);
+	this->pixelShader = new DX11PixelShader("pixel.hlsl", this->device);
+
+	context->VSSetShader(vertexShader->getVertexShader(), NULL, 0);
+	context->PSSetShader(pixelShader->getPixelShader(), NULL, 0);
+
+	// Input Layout for vertex buffers
+	D3D11_INPUT_ELEMENT_DESC ied[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
+	DX11Shader::Buffer VSbytecode = vertexShader->getBytecode();
+	device->CreateInputLayout(ied, 2, VSbytecode.buf, VSbytecode.len, &this->layout);
+	context->IASetInputLayout(this->layout);
 }
 
 
 DX11Renderer::~DX11Renderer()
 {
 	swapchain->SetFullscreenState(false, NULL);
+
+	delete vertexShader;
+	delete pixelShader;
 
 	swapchain->Release();
 	backbuffer->Release();
@@ -75,4 +94,8 @@ void DX11Renderer::clearFrame() {
 
 void DX11Renderer::drawFrame() {
 	swapchain->Present(0, 0);
+}
+
+VertexBuffer* DX11Renderer::createVertexBuffer(Vertex vertices[], size_t num) {
+	return new DX11VertexBuffer(vertices, num, this->device);
 }

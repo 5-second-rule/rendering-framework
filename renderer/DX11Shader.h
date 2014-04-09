@@ -8,22 +8,25 @@ class DX11Shader
 protected:
 	ID3D11DeviceChild* shader;
 
+	char* bytecode;
+	size_t length;
+
 public:
-	DX11Shader(char*, ID3D11Device*);
+	DX11Shader(char*);
 	~DX11Shader();
 
 	ID3D11DeviceChild* getShader();
 
-private:
-	struct buf_len {
+	struct Buffer {
 		char* buf;
 		size_t len;
 	};
 
-	buf_len readShader(char*);
+	Buffer getBytecode();
 
 protected:
-	virtual ID3D11DeviceChild* createShader(char*, size_t length, ID3D11Device*) = 0;
+
+	virtual ID3D11DeviceChild* createShader(char*, size_t, ID3D11Device*) = 0;
 
 };
 

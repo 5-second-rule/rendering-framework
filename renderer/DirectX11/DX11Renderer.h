@@ -19,8 +19,10 @@ protected:
 	ID3D11DeviceContext* context;
 	ID3D11RenderTargetView* backbuffer;
 
-	DX11VertexShader vertexShader;
-	DX11PixelShader pixelShader;
+	DX11VertexShader* vertexShader;
+	DX11PixelShader* pixelShader;
+
+	ID3D11InputLayout *layout;
 
 public:
 	DX11Renderer(Window&);
@@ -28,5 +30,7 @@ public:
 
 	virtual void clearFrame();
 	virtual void drawFrame();
+
+	virtual VertexBuffer* createVertexBuffer(Vertex[], size_t);
 };
 

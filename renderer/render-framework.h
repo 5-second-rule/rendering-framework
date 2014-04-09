@@ -11,5 +11,3 @@
 #ifndef RENDERER
 	#define RENDERER RENDERER_NONE
 #endif
-
-
