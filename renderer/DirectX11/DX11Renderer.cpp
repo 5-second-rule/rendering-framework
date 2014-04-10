@@ -9,17 +9,22 @@
 
 DX11Renderer::DX11Renderer(Window& window) : Renderer()
 {
-	
+
 	// Create a descriptor for our swap chain
 	DXGI_SWAP_CHAIN_DESC desc;
 
 	ZeroMemory(&desc, sizeof(DXGI_SWAP_CHAIN_DESC));
 
 	desc.BufferCount = 1;
+	desc.BufferDesc.Width = 800;
+	desc.BufferDesc.Height = 600;
 	desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.BufferDesc.RefreshRate.Numerator = 60;
+	desc.BufferDesc.RefreshRate.Denominator = 1;
 	desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	desc.OutputWindow = (HWND)(window.getHandle());
-	desc.SampleDesc.Count = 4;
+	desc.SampleDesc.Count = 1;
+	desc.SampleDesc.Quality = 0;
 	desc.Windowed = true;
 	desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
@@ -105,6 +110,8 @@ DX11Renderer::~DX11Renderer()
 void DX11Renderer::clearFrame() {
 	float color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
 	context->ClearRenderTargetView(backbuffer, color);
+	context->VSSetShader(vertexShader->getVertexShader(), NULL, 0);
+	context->PSSetShader(pixelShader->getPixelShader(), NULL, 0);
 }
 
 void DX11Renderer::drawFrame() {

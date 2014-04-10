@@ -19,6 +19,9 @@
 #include "OpenGL\GLRenderer.h"
 #endif
 
+VertexBuffer* vbuf;
+IndexBuffer* ibuf;
+Model* model;
 
 BaseApp::BaseApp(void* handle) :
 #ifdef _WIN32
@@ -38,14 +41,31 @@ BaseApp::BaseApp(void* handle) :
 #endif
 
 {
-	//TODO
+		Vertex triangle[3] = {
+			{ XMFLOAT3(0, 0, 1), XMFLOAT4(1, 0, 0, 1) },
+			{ XMFLOAT3(0, 1, 1), XMFLOAT4(0, 1, 0, 1) },
+			{ XMFLOAT3(1, 0, 1), XMFLOAT4(0, 0, 1, 1) }
+		};
+
+		UINT index[3] = { 0, 1, 2 };
+
+		vbuf = renderer->createVertexBuffer(triangle, 3);
+		ibuf = renderer->createIndexBuffer(index, 3);
+		model = renderer->createModel(vbuf, ibuf);
 }
 
 
 BaseApp::~BaseApp()
 {
+
+	delete model;
+	delete vbuf;
+	delete ibuf;
+
 	delete this->renderer;
 	delete this->window;
+
+	
 }
 
 bool BaseApp::run() {
@@ -59,26 +79,9 @@ bool BaseApp::run() {
 
 	renderer->clearFrame();
 
-	Vertex triangle[3] = {
-		{ XMFLOAT3(0, 0, 1), XMFLOAT4(1, 0, 0, 1) },
-		{ XMFLOAT3(0, 1, 1), XMFLOAT4(0, 1, 0, 1) },
-		{ XMFLOAT3(1, 0, 1), XMFLOAT4(0, 0, 1, 1) }
-	};
-
-	UINT index[3] = { 0, 1, 2 };
-
-	VertexBuffer* vbuf = renderer->createVertexBuffer(triangle, 3);
-	IndexBuffer* ibuf = renderer->createIndexBuffer(index, 3);
-	Model* model = renderer->createModel(vbuf, ibuf);
-
 	model->draw();
 
 	renderer->drawFrame();
-
-
-	delete model;
-	delete vbuf;
-	delete ibuf;
 
 	return true;
 }
