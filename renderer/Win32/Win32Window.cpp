@@ -42,10 +42,12 @@ LRESULT CALLBACK Win32Window::SubclassWndProc(
 	switch (wm) {
 		case WM_CLOSE:
 			PostMessage(hwnd, wm, wParam, lParam);
-			break;
+			return 0;
 		default:
-			return CallWindowProc(cppWnd->oldWndproc, hwnd, wm, wParam, lParam);
+			break;
 	}
+
+	return CallWindowProc(cppWnd->oldWndproc, hwnd, wm, wParam, lParam);
 }
 
 
