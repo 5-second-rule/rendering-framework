@@ -33,6 +33,7 @@ public:
 
 	virtual VertexBuffer* createVertexBuffer(Vertex[], size_t);
 	virtual IndexBuffer* createIndexBuffer(unsigned int[], size_t);
+	virtual Model* createModel(VertexBuffer*, IndexBuffer*);
 
 };
 

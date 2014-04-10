@@ -1,8 +1,12 @@
 #pragma once
-class VertexBuffer
+#include "Buffer.h"
+class VertexBuffer : public Buffer
 {
+
 public:
-	VertexBuffer();
+	VertexBuffer(size_t);
 	~VertexBuffer();
+
+	virtual void set() = 0;
 };
 

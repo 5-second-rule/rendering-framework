@@ -11,6 +11,9 @@ class Win32Window :
 protected:
 	HINSTANCE hInstance;
 	HWND hWnd;
+	WNDPROC oldWndproc;
+
+	static LRESULT CALLBACK SubclassWndProc(HWND hwnd, UINT wm, WPARAM wParam, LPARAM lParam);
 public:
 	Win32Window(HINSTANCE);
 	~Win32Window();

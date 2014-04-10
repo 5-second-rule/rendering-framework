@@ -16,6 +16,7 @@ Win32Window::Win32Window(HINSTANCE hInstance)
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	// wc.hbrBackground = (HBRUSH) COLOR_WINDOW;
 	wc.lpszClassName = L"WindowClass1";
+	wc.cbWndExtra = sizeof(Win32Window*);
 
 	RegisterClassEx(&wc);
 
@@ -27,6 +28,24 @@ Win32Window::Win32Window(HINSTANCE hInstance)
 
 	ShowWindow(this->hWnd, SW_SHOWNORMAL);
 
+
+	this->oldWndproc = (WNDPROC)SetWindowLongPtr(this->hWnd, GWLP_WNDPROC, (LONG_PTR)SubclassWndProc);
+
+	// store pointer back to c++ class
+	SetWindowLongPtr(this->hWnd, 0, reinterpret_cast<LONG_PTR>(this));
+}
+
+LRESULT CALLBACK Win32Window::SubclassWndProc(
+	HWND hwnd, UINT wm, WPARAM wParam, LPARAM lParam)
+{
+	Win32Window* cppWnd = reinterpret_cast<Win32Window*>(GetWindowLongPtr(hwnd, 0));
+	switch (wm) {
+		case WM_CLOSE:
+			PostMessage(hwnd, wm, wParam, lParam);
+			break;
+		default:
+			return CallWindowProc(cppWnd->oldWndproc, hwnd, wm, wParam, lParam);
+	}
 }
 
 
@@ -41,7 +60,7 @@ void* Win32Window::getHandle() {
 Window::MessageType Win32Window::getMessage() {
 	MSG msg = { 0 };
 
-	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+	if (PeekMessage(&msg, this->hWnd, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&msg);
 		UINT type = msg.message;
 		DispatchMessage(&msg);

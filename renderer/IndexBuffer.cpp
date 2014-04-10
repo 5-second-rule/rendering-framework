@@ -1,7 +1,7 @@
 #include "IndexBuffer.h"
 
 
-IndexBuffer::IndexBuffer()
+IndexBuffer::IndexBuffer(size_t c) : Buffer(c)
 {
 }
 

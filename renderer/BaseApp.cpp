@@ -56,9 +56,26 @@ bool BaseApp::run() {
 
 	renderer->clearFrame();
 
-	//draw stuff here
+	Vertex triangle[3] = {
+		{ 0, 0, 0, 1, 0, 0, 1 },
+		{ 1, 0, 0, 0, 1, 0, 1 },
+		{ 0, 1, 0, 0, 0, 1, 1 }
+	};
+
+	UINT index[3] = { 0, 1, 2 };
+
+	VertexBuffer* vbuf = renderer->createVertexBuffer(triangle, 3);
+	IndexBuffer* ibuf = renderer->createIndexBuffer(index, 3);
+	//Model* model = renderer->createModel(vbuf, ibuf);
+
+	//model->draw();
 
 	renderer->drawFrame();
+
+
+	//delete model;
+	delete vbuf;
+	delete ibuf;
 
 	return true;
 }

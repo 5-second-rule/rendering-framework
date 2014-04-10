@@ -1,7 +1,7 @@
 #include "DX11VertexBuffer.h"
 
 
-DX11VertexBuffer::DX11VertexBuffer(Vertex vertices[], size_t num, ID3D11Device* device, ID3D11DeviceContext* context) {
+DX11VertexBuffer::DX11VertexBuffer(Vertex vertices[], size_t num, ID3D11Device* device, ID3D11DeviceContext* context) : VertexBuffer(num), context(context) {
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 
@@ -22,4 +22,10 @@ DX11VertexBuffer::DX11VertexBuffer(Vertex vertices[], size_t num, ID3D11Device* 
 DX11VertexBuffer::~DX11VertexBuffer()
 {
 	this->buffer->Release();
+}
+
+void DX11VertexBuffer::set() {
+	UINT stride = sizeof(Vertex);
+	UINT offset = 0;
+	context->IASetVertexBuffers(0, 1, &this->buffer, &stride, &offset);
 }

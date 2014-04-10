@@ -17,6 +17,6 @@ public:
 
 	virtual VertexBuffer* createVertexBuffer(Vertex[], size_t) = 0;
 	virtual IndexBuffer* createIndexBuffer(unsigned int[], size_t) = 0;
-	Model* createModel(Vertex[], size_t, unsigned int[], size_t);
+	virtual Model* createModel(VertexBuffer*, IndexBuffer*) = 0;
 };
 

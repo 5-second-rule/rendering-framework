@@ -6,11 +6,11 @@
 class Model
 {
 protected:
-	VertexBuffer vertexBuffer;
-	IndexBuffer indexBuffer;
+	VertexBuffer* vertexBuffer;
+	IndexBuffer* indexBuffer;
 
 public:
-	Model(VertexBuffer, IndexBuffer);
+	Model(VertexBuffer*, IndexBuffer*);
 	~Model();
 
 	virtual void draw() = 0;

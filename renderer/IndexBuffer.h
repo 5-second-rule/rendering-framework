@@ -1,8 +1,12 @@
 #pragma once
-class IndexBuffer
+#include "Buffer.h"
+
+class IndexBuffer : public Buffer
 {
 public:
-	IndexBuffer();
+	IndexBuffer(size_t);
 	~IndexBuffer();
+
+	virtual void set() = 0;
 };
 

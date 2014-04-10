@@ -5,6 +5,7 @@
 
 #include "DX11VertexBuffer.h"
 #include "DX11IndexBuffer.h"
+#include "DX11Model.h"
 
 DX11Renderer::DX11Renderer(Window& window) : Renderer()
 {
@@ -103,4 +104,8 @@ VertexBuffer* DX11Renderer::createVertexBuffer(Vertex vertices[], size_t num) {
 
 IndexBuffer* DX11Renderer::createIndexBuffer(unsigned int indices[], size_t num) {
 	return new DX11IndexBuffer(indices, num, this->device, this->context);
+}
+
+Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i) {
+	return new DX11Model(v, i, context);
 }

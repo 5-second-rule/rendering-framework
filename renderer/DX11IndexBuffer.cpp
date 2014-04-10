@@ -1,7 +1,7 @@
 #include "DX11IndexBuffer.h"
 
 
-DX11IndexBuffer::DX11IndexBuffer(unsigned int indices[], size_t num, ID3D11Device* device, ID3D11DeviceContext* context) {
+DX11IndexBuffer::DX11IndexBuffer(unsigned int indices[], size_t num, ID3D11Device* device, ID3D11DeviceContext* context) : IndexBuffer(num), context(context) {
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 
@@ -22,4 +22,8 @@ DX11IndexBuffer::DX11IndexBuffer(unsigned int indices[], size_t num, ID3D11Devic
 DX11IndexBuffer::~DX11IndexBuffer()
 {
 	this->buffer->Release();
+}
+
+void DX11IndexBuffer::set() {
+	context->IASetIndexBuffer(this->buffer, DXGI_FORMAT_R32_UINT, 0);
 }

@@ -12,9 +12,12 @@ class DX11VertexBuffer :
 {
 private:
 	ID3D11Buffer* buffer;
+	ID3D11DeviceContext* context;
 
 public:
 	DX11VertexBuffer(Vertex[], size_t, ID3D11Device*, ID3D11DeviceContext*);
 	~DX11VertexBuffer();
+
+	virtual void set();
 };
 
