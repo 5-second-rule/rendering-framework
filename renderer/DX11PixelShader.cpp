@@ -2,7 +2,7 @@
 
 
 DX11PixelShader::DX11PixelShader(char* filename, ID3D11Device* device) : DX11Shader(filename) {
-	this->shader = (ID3D11DeviceChild*)device->CreatePixelShader(this->bytecode, this->length, NULL, (ID3D11PixelShader**)&this->shader);
+	device->CreatePixelShader(this->bytecode, this->length, NULL, (ID3D11PixelShader**)&this->shader);
 }
 
 

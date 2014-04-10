@@ -2,7 +2,7 @@
 
 
 DX11VertexShader::DX11VertexShader(char* filename, ID3D11Device* device) : DX11Shader(filename) {
-	this->shader = (ID3D11DeviceChild*)device->CreateVertexShader(this->bytecode, this->length, NULL, (ID3D11VertexShader**)&this->shader);
+	device->CreateVertexShader(this->bytecode, this->length, NULL, (ID3D11VertexShader**)&this->shader);
 }
 
 
