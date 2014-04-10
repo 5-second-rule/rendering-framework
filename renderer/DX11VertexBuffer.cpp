@@ -1,21 +1,24 @@
 #include "DX11VertexBuffer.h"
 
+#include <stdexcept>
 
 DX11VertexBuffer::DX11VertexBuffer(Vertex vertices[], size_t num, ID3D11Device* device, ID3D11DeviceContext* context) : VertexBuffer(num), context(context) {
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 
-	bd.Usage = D3D11_USAGE_DYNAMIC;
+	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = (sizeof Vertex) * num;
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	bd.CPUAccessFlags = 0;
+	bd.MiscFlags = 0;
 
-	device->CreateBuffer(&bd, NULL, &this->buffer);
+	D3D11_SUBRESOURCE_DATA initData;
+	ZeroMemory(&initData, sizeof(initData));
+	initData.pSysMem = vertices;
 
-	D3D11_MAPPED_SUBRESOURCE ms;
-	context->Map(this->buffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
-	memcpy(ms.pData, vertices, num);
-	context->Unmap(this->buffer, NULL);
+	if (FAILED(device->CreateBuffer(&bd, &initData, &this->buffer)))
+		throw std::runtime_error("Couldn't create Vertex Buffer");
+
 }
 
 

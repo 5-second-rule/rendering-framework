@@ -2,6 +2,9 @@
 
 #include "render-framework.h"
 
+#include <chrono>
+#include <thread>
+
 // Platform Choice
 #ifdef _WIN32
 #include "Win32\Win32Window.h"
@@ -57,23 +60,23 @@ bool BaseApp::run() {
 	renderer->clearFrame();
 
 	Vertex triangle[3] = {
-		{ 0, 0, 0, 1, 0, 0, 1 },
-		{ 1, 0, 0, 0, 1, 0, 1 },
-		{ 0, 1, 0, 0, 0, 1, 1 }
+		{ XMFLOAT3(0, 0, 1), XMFLOAT4(1, 0, 0, 1) },
+		{ XMFLOAT3(0, 1, 1), XMFLOAT4(0, 1, 0, 1) },
+		{ XMFLOAT3(1, 0, 1), XMFLOAT4(0, 0, 1, 1) }
 	};
 
 	UINT index[3] = { 0, 1, 2 };
 
 	VertexBuffer* vbuf = renderer->createVertexBuffer(triangle, 3);
 	IndexBuffer* ibuf = renderer->createIndexBuffer(index, 3);
-	//Model* model = renderer->createModel(vbuf, ibuf);
+	Model* model = renderer->createModel(vbuf, ibuf);
 
-	//model->draw();
+	model->draw();
 
 	renderer->drawFrame();
 
 
-	//delete model;
+	delete model;
 	delete vbuf;
 	delete ibuf;
 
@@ -81,5 +84,5 @@ bool BaseApp::run() {
 }
 
 void BaseApp::start() {
-	while(run());
+	while (run()) std::this_thread::sleep_for(std::chrono::milliseconds(500));;
 }

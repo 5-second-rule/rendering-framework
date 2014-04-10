@@ -9,8 +9,8 @@
 
 DX11Renderer::DX11Renderer(Window& window) : Renderer()
 {
-	/* TODO: Windows window stuff */
-
+	
+	// Create a descriptor for our swap chain
 	DXGI_SWAP_CHAIN_DESC desc;
 
 	ZeroMemory(&desc, sizeof(DXGI_SWAP_CHAIN_DESC));
@@ -23,7 +23,8 @@ DX11Renderer::DX11Renderer(Window& window) : Renderer()
 	desc.Windowed = true;
 	desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-	D3D11CreateDeviceAndSwapChain(
+	// Create the device, device context, and swap chain
+	HRESULT result = D3D11CreateDeviceAndSwapChain(
 		NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
@@ -36,16 +37,24 @@ DX11Renderer::DX11Renderer(Window& window) : Renderer()
 		&device,
 		NULL,
 		&context
-	);
+		);
+	if (FAILED(result)) throw std::runtime_error("Device and Swap Chain creation failed");
 
+	// Get the backbuffer
 	ID3D11Texture2D* pBackBuffer;
-	swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*) &pBackBuffer);
+	if (FAILED(swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*) &pBackBuffer)))
+		throw std::runtime_error("Couldn't get BackBuffer");
 
-	device->CreateRenderTargetView(pBackBuffer, NULL, &backbuffer);
+	// get a render target view on the backbuffer
+	result = device->CreateRenderTargetView(pBackBuffer, NULL, &backbuffer);
 	pBackBuffer->Release();
 
+	if (FAILED(result)) throw std::runtime_error("Couldn't create render target view on backbuffer");
+
+	// set the render target
 	context->OMSetRenderTargets(1, &backbuffer, NULL);
 
+	// describe the viewport
 	D3D11_VIEWPORT viewport;
 	ZeroMemory(&viewport, sizeof D3D11_VIEWPORT);
 
@@ -56,12 +65,11 @@ DX11Renderer::DX11Renderer(Window& window) : Renderer()
 
 	context->RSSetViewports(1, &viewport);
 
+	/* ---------- */
+
 	// fixed shaders for now
 	this->vertexShader = new DX11VertexShader("vertex.cso", this->device);
 	this->pixelShader = new DX11PixelShader("pixel.cso", this->device);
-
-	context->VSSetShader(vertexShader->getVertexShader(), NULL, 0);
-	context->PSSetShader(pixelShader->getPixelShader(), NULL, 0);
 
 	// Input Layout for vertex buffers
 	D3D11_INPUT_ELEMENT_DESC ied[] =
@@ -71,8 +79,13 @@ DX11Renderer::DX11Renderer(Window& window) : Renderer()
 	};
 
 	DX11Shader::Buffer VSbytecode = vertexShader->getBytecode();
-	device->CreateInputLayout(ied, 2, VSbytecode.buf, VSbytecode.len, &this->layout);
+	if (FAILED(result = device->CreateInputLayout(ied, 2, VSbytecode.buf, VSbytecode.len, &this->layout)))
+		throw std::runtime_error("Could not create input layout");
 	context->IASetInputLayout(this->layout);
+
+	// set shaders
+	context->VSSetShader(vertexShader->getVertexShader(), NULL, 0);
+	context->PSSetShader(pixelShader->getPixelShader(), NULL, 0);
 }
 
 

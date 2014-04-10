@@ -1,34 +1,15 @@
-cbuffer cbVSPerFrame
+struct VOut
 {
-	matrix g_mWorld;
-	matrix g_mViewProj;
+	float4 position : SV_POSITION;
+	float4 color : COLOR;
 };
 
-
-struct VSInput
+VOut vs_main(float4 position : POSITION, float4 color : COLOR)
 {
-	float4 Pos : POSITION;
-	float3 Normal : NORMAL;
-	float2 Texcoord : TEXCOORD0;
-};
+	VOut output;
 
-struct PSInput
-{
-	float4 Pos : SV_Position;
-	float3 Normal : NORMAL;
-	float2 Texcoord : TEXCOORD0;
-	float4 WorldPos : POSITION;
-};
+	output.position = position;
+	output.color = color;
 
-
-PSInput vs_main(VSInput In)
-{
-	PSInput Out;
-
-	Out.Normal = mul(In.Normal, (float3x3)g_mWorld);
-	Out.WorldPos = mul(In.Pos, g_mWorld);
-	Out.Pos = mul(Out.WorldPos, g_mViewProj);
-	Out.Texcoord = In.Texcoord;
-
-	return Out;
+	return output;
 }

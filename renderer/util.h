@@ -1,14 +1,11 @@
 #pragma once
 
-struct Color {
-	float r, g, b, a;
-};
-struct Point {
-	float x, y, z;
-};
+#include <DirectXMath.h>
+using namespace DirectX;
+
 struct Vertex {
-	Point point;
-	Color color;
+	XMFLOAT3 point;
+	XMFLOAT4 color;
 };
 
 typedef unsigned int Index;
