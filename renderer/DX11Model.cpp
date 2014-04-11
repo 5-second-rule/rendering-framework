@@ -14,6 +14,4 @@ void DX11Model::draw() {
 	indexBuffer->set();
 
 	context->DrawIndexed(indexBuffer->count(), 0, 0);
-	//context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//context->Draw(3, 0);
 }
