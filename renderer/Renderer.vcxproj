@@ -11,7 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BaseApp.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="DirectX11\DX11Renderer.cpp" />
     <ClCompile Include="DX11IndexBuffer.cpp" />
@@ -28,7 +27,6 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseApp.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="DirectX11\DX11Renderer.h" />
     <ClInclude Include="DX11IndexBuffer.h" />

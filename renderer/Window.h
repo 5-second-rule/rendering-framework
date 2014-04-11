@@ -1,11 +1,13 @@
 #pragma once
 #include "render-framework.h"
 
-class Window
+class FRAMEWORKDLL Window
 {
 public:
-	Window();
-	~Window();
+
+	static Window* createWindow(void* handle);
+
+	// -----
 
 	virtual void* getHandle() = 0;
 

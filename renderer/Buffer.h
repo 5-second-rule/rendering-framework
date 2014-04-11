@@ -1,5 +1,8 @@
 #pragma once
-class Buffer
+
+#include "render-framework.h"
+
+class FRAMEWORKDLL Buffer
 {
 private:
 	size_t num;

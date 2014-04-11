@@ -25,7 +25,7 @@ protected:
 	ID3D11InputLayout *layout;
 
 public:
-	DX11Renderer(Window&);
+	DX11Renderer(Window*);
 	~DX11Renderer();
 
 	virtual void clearFrame();

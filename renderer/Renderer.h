@@ -2,15 +2,17 @@
 #include "render-framework.h"
 #include "util.h"
 
+#include "Window.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "Model.h"
 
-class Renderer
+class FRAMEWORKDLL Renderer
 {
 public:
-	Renderer();
-	~Renderer();
+	static Renderer* createRenderer(Window*);
+
+	/* ----- */
 
 	virtual void clearFrame() = 0;
 	virtual void drawFrame() = 0;

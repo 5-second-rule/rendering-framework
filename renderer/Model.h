@@ -3,7 +3,7 @@
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
 
-class Model
+class FRAMEWORKDLL Model
 {
 protected:
 	VertexBuffer* vertexBuffer;

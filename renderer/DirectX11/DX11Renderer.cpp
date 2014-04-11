@@ -7,7 +7,7 @@
 #include "DX11IndexBuffer.h"
 #include "DX11Model.h"
 
-DX11Renderer::DX11Renderer(Window& window) : Renderer()
+DX11Renderer::DX11Renderer(Window* window) : Renderer()
 {
 
 	// Create a descriptor for our swap chain
@@ -22,7 +22,7 @@ DX11Renderer::DX11Renderer(Window& window) : Renderer()
 	desc.BufferDesc.RefreshRate.Numerator = 60;
 	desc.BufferDesc.RefreshRate.Denominator = 1;
 	desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	desc.OutputWindow = (HWND)(window.getHandle());
+	desc.OutputWindow = (HWND)(window->getHandle());
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
 	desc.Windowed = true;

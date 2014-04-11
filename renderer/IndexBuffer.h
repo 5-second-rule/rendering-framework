@@ -1,7 +1,7 @@
 #pragma once
 #include "Buffer.h"
 
-class IndexBuffer : public Buffer
+class FRAMEWORKDLL IndexBuffer : public Buffer
 {
 public:
 	IndexBuffer(size_t);

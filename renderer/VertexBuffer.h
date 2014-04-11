@@ -1,6 +1,6 @@
 #pragma once
 #include "Buffer.h"
-class VertexBuffer : public Buffer
+class FRAMEWORKDLL VertexBuffer : public Buffer
 {
 
 public:
