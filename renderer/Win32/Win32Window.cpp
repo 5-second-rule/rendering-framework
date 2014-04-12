@@ -14,7 +14,7 @@ Win32Window::Win32Window(HINSTANCE hInstance)
 	wc.lpfnWndProc = DefWindowProc;
 	wc.hInstance = hInstance;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	// wc.hbrBackground = (HBRUSH) COLOR_WINDOW;
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
 	wc.lpszClassName = L"WindowClass1";
 	wc.cbWndExtra = sizeof(Win32Window*);
 
@@ -40,14 +40,12 @@ LRESULT CALLBACK Win32Window::SubclassWndProc(
 {
 	Win32Window* cppWnd = reinterpret_cast<Win32Window*>(GetWindowLongPtr(hwnd, 0));
 	switch (wm) {
-		case WM_CLOSE:
-			PostMessage(hwnd, wm, wParam, lParam);
-			return 0;
+    case WM_DESTROY:
+      PostQuitMessage(EXIT_SUCCESS);
+      return 0;
 		default:
-			break;
+      return CallWindowProc(cppWnd->oldWndproc, hwnd, wm, wParam, lParam);
 	}
-
-	return CallWindowProc(cppWnd->oldWndproc, hwnd, wm, wParam, lParam);
 }
 
 
@@ -62,12 +60,16 @@ void* Win32Window::getHandle() {
 Window::MessageType Win32Window::getMessage() {
 	MSG msg = { 0 };
 
-	if (PeekMessage(&msg, this->hWnd, 0, 0, PM_REMOVE)) {
+	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&msg);
 		UINT type = msg.message;
 		DispatchMessage(&msg);
 
-		if (type == WM_QUIT || type == WM_DESTROY || type == WM_CLOSE) return Quit;
-		else return Message;
-	} else return None;
+    if (type == WM_QUIT)
+      return Quit;
+		else 
+      return Message;
+	} 
+  else 
+    return None;
 }
