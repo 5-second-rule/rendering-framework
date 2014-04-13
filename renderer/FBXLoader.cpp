@@ -1,5 +1,5 @@
 #include "FBXLoader.h"
-#include <fbxsdk.h>
+#include "fbxsdk.h"
 
 #include <Windows.h>
 #pragma comment(lib, "libfbxsdk.lib")
@@ -66,10 +66,10 @@ HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer*
 			{
 				//The divide by 2.01 and the add by 1.1 is accounting for the fact that the model has z values ranging from ~-1.07 to 1.07 
 				//when it needs to range from 0 to 1
-				vertex.point = XMFLOAT3((float)pVertices[l].mData[0] / 2.01, 
-										(float)pVertices[l].mData[1] / 2.01, 
-										((float)pVertices[l].mData[2] + 1.1) / 2.01);
-				vertex.color = XMFLOAT4(1.0, 0.0, 0.0, 1);
+				vertex.point = XMFLOAT3((float)pVertices[l].mData[0] / 2.01f, 
+										(float)pVertices[l].mData[1] / 2.01f, 
+										((float)pVertices[l].mData[2] + 1.1f) / 2.01f);
+				vertex.color = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 				vertexArray[l] = vertex;
 			}
 
