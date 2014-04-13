@@ -82,7 +82,7 @@ build/config/buildinfo.properties
 
 # User-specific files
 *.suo
-*.user
+#*.user
 *.sln.docstates
 
 # Build results
