@@ -24,6 +24,8 @@ protected:
 
 	ID3D11InputLayout *layout;
 
+	bool windowed = true;
+
 public:
 	DX11Renderer(Window*);
 	~DX11Renderer();

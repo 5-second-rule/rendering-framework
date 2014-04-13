@@ -5,6 +5,9 @@ class FRAMEWORKDLL Window
 {
 public:
 
+	static const unsigned int screenWidth = 800;
+	static const unsigned int screenHeight = 600;
+
 	static Window* createWindow(void* handle);
 
 	// -----

@@ -12,12 +12,13 @@ DX11Renderer::DX11Renderer(Window* window) : Renderer()
 
 	// Create a descriptor for our swap chain
 	DXGI_SWAP_CHAIN_DESC desc;
+	D3D_FEATURE_LEVEL featureLevel;
 
 	ZeroMemory(&desc, sizeof(DXGI_SWAP_CHAIN_DESC));
 
 	desc.BufferCount = 1;
-	desc.BufferDesc.Width = 800;
-	desc.BufferDesc.Height = 600;
+	desc.BufferDesc.Width = Window::screenWidth;
+	desc.BufferDesc.Height = Window::screenHeight;
 	desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	desc.BufferDesc.RefreshRate.Numerator = 60;
 	desc.BufferDesc.RefreshRate.Denominator = 1;
@@ -25,17 +26,22 @@ DX11Renderer::DX11Renderer(Window* window) : Renderer()
 	desc.OutputWindow = (HWND)(window->getHandle());
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
-	desc.Windowed = true;
+	desc.Windowed = windowed; //we should have a variable in config, for now its in header
+	desc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	desc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+
+	featureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	// Create the device, device context, and swap chain
 	HRESULT result = D3D11CreateDeviceAndSwapChain(
 		NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
-		NULL,
-		NULL,
-		NULL,
+		0,
+		&featureLevel,
+		1,
 		D3D11_SDK_VERSION,
 		&desc,
 		&swapchain,
@@ -52,9 +58,11 @@ DX11Renderer::DX11Renderer(Window* window) : Renderer()
 
 	// get a render target view on the backbuffer
 	result = device->CreateRenderTargetView(pBackBuffer, NULL, &backbuffer);
-	pBackBuffer->Release();
 
 	if (FAILED(result)) throw std::runtime_error("Couldn't create render target view on backbuffer");
+
+	pBackBuffer->Release();
+	pBackBuffer = NULL;
 
 	// set the render target
 	context->OMSetRenderTargets(1, &backbuffer, NULL);
@@ -63,12 +71,31 @@ DX11Renderer::DX11Renderer(Window* window) : Renderer()
 	D3D11_VIEWPORT viewport;
 	ZeroMemory(&viewport, sizeof D3D11_VIEWPORT);
 
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	viewport.Width = 800;
-	viewport.Height = 600;
+	viewport.TopLeftX = 0.0f;
+	viewport.TopLeftY = 0.0f;
+	// added these in case we need them in future iterations
+	//viewport.MinDepth = 0.0f;
+	//viewport.MaxDepth = 1.0f;
+	viewport.Width = (float)Window::screenWidth;
+	viewport.Height = (float)Window::screenHeight;
 
 	context->RSSetViewports(1, &viewport);
+
+	// These might need to be implemented later
+	/*
+	float fieldOfView;
+	float screenAspect;
+
+	fieldOfView = (float)XM_PI / 4.0f;
+
+	screenAspect = (float)Window::screenWidth / (float)Window::screenHeight;
+
+	XMMatrixPerspectiveFovLH(&projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
+
+	XMMatrixIdentity(&worldMatrix);
+
+	XMMatrixOrthographicLH(&orthoMatrix, (float)Window::screenWidth, (float)Window::screenHeight, screenNear, screenDepth);
+	*/
 
 	/* ---------- */
 

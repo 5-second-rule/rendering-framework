@@ -20,7 +20,7 @@ Win32Window::Win32Window(HINSTANCE hInstance)
 
 	RegisterClassEx(&wc);
 
-	RECT wr = { 0, 0, 800, 600 };
+	RECT wr = { 0, 0, screenWidth, screenHeight };
 	AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
 
 	// this is all on one line becuse VC++ freaks out otherwise

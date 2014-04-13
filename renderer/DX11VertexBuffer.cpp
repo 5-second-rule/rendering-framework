@@ -31,4 +31,7 @@ void DX11VertexBuffer::set() {
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 	context->IASetVertexBuffers(0, 1, &this->buffer, &stride, &offset);
+
+	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }

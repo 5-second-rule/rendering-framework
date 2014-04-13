@@ -3,6 +3,8 @@
 #include "renderer/Renderer.h"
 #include "renderer/Window.h"
 
+#include "renderer/FBXLoader.h"
+
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 bool messagePump(Window* window) {
@@ -20,16 +22,27 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Renderer* renderer = Renderer::createRenderer(window);
 
 	Vertex triangle[3] = {
-		{ XMFLOAT3(0, 0, 1), XMFLOAT4(1, 0, 0, 1) },
-		{ XMFLOAT3(0, 1, 1), XMFLOAT4(0, 1, 0, 1) },
-		{ XMFLOAT3(1, 0, 1), XMFLOAT4(0, 0, 1, 1) }
+		{ XMFLOAT3(-0.5, 0, 0), XMFLOAT4(1, 0, 0, 1) },
+		{ XMFLOAT3(0, 0.5, 0), XMFLOAT4(0, 1, 0, 1) },
+		{ XMFLOAT3(0.5, 0, 0), XMFLOAT4(0, 0, 1, 1) }
 	};
 
 	UINT index[3] = { 0, 1, 2 };
 
-	VertexBuffer* vbuf = renderer->createVertexBuffer(triangle, 3);
-	IndexBuffer* ibuf = renderer->createIndexBuffer(index, 3);
+	FBXLoader fileLoaded;
+
+	VertexBuffer* vbuf;
+	IndexBuffer* ibuf;
+
+	char* filePath = "C:\\Users\\Kyler\\Desktop\\whitey.fbx";
+
+	fileLoaded.loadFBXFile(filePath, &vbuf, &ibuf, renderer);
+
+	//VertexBuffer* vbuf = renderer->createVertexBuffer(triangle, 3);
+	//IndexBuffer* ibuf = renderer->createIndexBuffer(index, 3);
 	Model* model = renderer->createModel(vbuf, ibuf);
+
+	//((DX11Model*)model)->loadFBXModel();
 
 	while (messagePump(window)) {
 

@@ -19,6 +19,7 @@
     <ClCompile Include="DX11Shader.cpp" />
     <ClCompile Include="DX11VertexBuffer.cpp" />
     <ClCompile Include="DX11VertexShader.cpp" />
+    <ClCompile Include="FBXLoader.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -35,6 +36,7 @@
     <ClInclude Include="DX11Shader.h" />
     <ClInclude Include="DX11VertexBuffer.h" />
     <ClInclude Include="DX11VertexShader.h" />
+    <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="render-framework.h" />
@@ -93,11 +95,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)</IncludePath>
+    <IncludePath>C:\Program Files\Autodesk\FBX\FBX SDK\2014.2.1\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Renderer</IncludePath>
+    <IncludePath>C:\Program Files\Autodesk\FBX\FBX SDK\2014.2.1\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)Renderer</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -110,7 +112,12 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2014.2.1\lib\vs2012\x86\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "C:\Program Files\Autodesk\FBX\FBX SDK\2014.2.1\lib\vs2012\x86\debug\libfbxsdk.dll" "$(SolutionDir)$(Configuration)\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -127,7 +134,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2014.2.1\lib\vs2012\x86\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>copy "C:\Program Files\Autodesk\FBX\FBX SDK\2014.2.1\lib\vs2012\x86\release\libfbxsdk.dll" "$(SolutionDir)$(Configuration)\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
