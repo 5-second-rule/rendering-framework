@@ -34,7 +34,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	VertexBuffer* vbuf;
 	IndexBuffer* ibuf;
 
-	char* filePath = "C:\\Users\\Kyler\\Desktop\\whitey.fbx";
+	char* filePath = "../SampleApp/whitey.fbx";
 
 	fileLoaded.loadFBXFile(filePath, &vbuf, &ibuf, renderer);
 

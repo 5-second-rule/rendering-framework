@@ -86,6 +86,9 @@
       <Project>{8eb07717-66b8-42fe-ae88-9df7a326b9cd}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="whitey.fbx" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
