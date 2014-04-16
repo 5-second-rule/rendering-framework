@@ -19,10 +19,14 @@ protected:
 	ID3D11DeviceContext* context;
 	ID3D11RenderTargetView* backbuffer;
 
+	ID3D11Buffer* constantBuffer;
+
 	DX11VertexShader* vertexShader;
 	DX11PixelShader* pixelShader;
 
 	ID3D11InputLayout *layout;
+
+	Camera* camera;
 
 	bool windowed = true;
 
@@ -36,6 +40,8 @@ public:
 	virtual VertexBuffer* createVertexBuffer(Vertex[], size_t);
 	virtual IndexBuffer* createIndexBuffer(unsigned int[], size_t);
 	virtual Model* createModel(VertexBuffer*, IndexBuffer*);
+
+	virtual Camera* getCamera();
 
 };
 

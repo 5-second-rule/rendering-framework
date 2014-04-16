@@ -67,6 +67,16 @@ DX11Renderer::DX11Renderer(Window* window) : Renderer()
 	// set the render target
 	context->OMSetRenderTargets(1, &backbuffer, NULL);
 
+	// setup constant buffer
+	D3D11_BUFFER_DESC cb;
+	ZeroMemory(&cb, sizeof(cb));
+	cb.Usage = D3D11_USAGE_DEFAULT;
+	cb.ByteWidth = sizeof(XMMATRIX) * 2;
+	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cb.CPUAccessFlags = 0;
+	if (FAILED(device->CreateBuffer(&cb, NULL, &this->constantBuffer)))
+		throw std::runtime_error("Couldn't create constant buffer");
+
 	// describe the viewport
 	D3D11_VIEWPORT viewport;
 	ZeroMemory(&viewport, sizeof D3D11_VIEWPORT);
@@ -81,21 +91,9 @@ DX11Renderer::DX11Renderer(Window* window) : Renderer()
 
 	context->RSSetViewports(1, &viewport);
 
-	// These might need to be implemented later
-	/*
-	float fieldOfView;
-	float screenAspect;
-
-	fieldOfView = (float)XM_PI / 4.0f;
-
-	screenAspect = (float)Window::screenWidth / (float)Window::screenHeight;
-
-	XMMatrixPerspectiveFovLH(&projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
-
-	XMMatrixIdentity(&worldMatrix);
-
-	XMMatrixOrthographicLH(&orthoMatrix, (float)Window::screenWidth, (float)Window::screenHeight, screenNear, screenDepth);
-	*/
+	// Camera and Perspective Matrices
+	this->camera = new Camera(POINT(3, 5, -10), POINT(0, 0, 0), VECTOR(0, 1, 0),
+		XM_PI / 4.0f, (float) Window::screenWidth / (float) Window::screenHeight, 1, 1000);
 
 	/* ---------- */
 
@@ -123,6 +121,8 @@ DX11Renderer::DX11Renderer(Window* window) : Renderer()
 
 DX11Renderer::~DX11Renderer()
 {
+	delete camera;
+
 	swapchain->SetFullscreenState(false, NULL);
 
 	delete vertexShader;
@@ -130,6 +130,7 @@ DX11Renderer::~DX11Renderer()
 
 	swapchain->Release();
 	backbuffer->Release();
+	constantBuffer->Release();
 	device->Release();
 	context->Release();
 }
@@ -142,6 +143,12 @@ void DX11Renderer::clearFrame() {
 }
 
 void DX11Renderer::drawFrame() {
+	XMMATRIX matrices[2] = {
+		DirectX::XMMatrixTranspose(this->camera->getCameraInverse()),
+		DirectX::XMMatrixTranspose(this->camera->getPerspective())
+	};
+	context->UpdateSubresource(constantBuffer, 0, NULL, &matrices, 0, 0);
+	context->VSSetConstantBuffers(0, 1, &constantBuffer);
 	swapchain->Present(0, 0);
 }
 
@@ -155,4 +162,8 @@ IndexBuffer* DX11Renderer::createIndexBuffer(unsigned int indices[], size_t num)
 
 Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i) {
 	return new DX11Model(v, i, context);
+}
+
+Camera* DX11Renderer::getCamera() {
+	return this->camera;
 }
