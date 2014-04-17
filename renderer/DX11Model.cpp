@@ -3,8 +3,9 @@
 
 
 
-DX11Model::DX11Model(VertexBuffer* v, IndexBuffer* i, ID3D11DeviceContext* context) : Model(v, i) {
+DX11Model::DX11Model(VertexBuffer* v, IndexBuffer* i, ID3D11DeviceContext* context, Renderer* renderer) : Model(v, i) {
 	this->context = context;
+	this->renderer = renderer;
 	vertices = new std::vector<Vertex>();
 	indices = new std::vector<int>();
 }
@@ -18,6 +19,6 @@ DX11Model::~DX11Model()
 void DX11Model::draw() {
 	vertexBuffer->set();
 	indexBuffer->set();
-
+	this->renderer->setObjectMatrix(this);
 	context->DrawIndexed(indexBuffer->count(), 0, 0);
 }

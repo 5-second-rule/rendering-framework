@@ -22,8 +22,10 @@
     <ClCompile Include="DX11VertexShader.cpp" />
     <ClCompile Include="FBXLoader.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="ITransformable.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Transformer.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="Win32\Win32Window.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -40,10 +42,12 @@
     <ClInclude Include="DX11VertexShader.h" />
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="IndexBuffer.h" />
+    <ClInclude Include="ITransformable.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="render-framework.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="renderers.h" />
+    <ClInclude Include="Transformer.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Win32\Win32Window.h" />

@@ -23,5 +23,7 @@ public:
 	virtual Model* createModel(VertexBuffer*, IndexBuffer*) = 0;
 
 	virtual Camera* getCamera() = 0;
+
+	virtual void setObjectMatrix(ITransformable*) = 0;
 };
 

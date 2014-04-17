@@ -9,16 +9,18 @@
 
 #include "DX11VertexBuffer.h"
 #include "DX11IndexBuffer.h"
+#include "Renderer.h"
 
 class DX11Model : public Model
 {
 private:
 	ID3D11DeviceContext* context;
+	Renderer* renderer;
 	std::vector<Vertex> *vertices;
 	std::vector<int> *indices;
 
 public:
-	DX11Model(VertexBuffer*, IndexBuffer*, ID3D11DeviceContext*);
+	DX11Model(VertexBuffer*, IndexBuffer*, ID3D11DeviceContext*, Renderer*);
 	~DX11Model();
 
 	virtual void draw();

@@ -71,7 +71,7 @@ DX11Renderer::DX11Renderer(Window* window) : Renderer()
 	D3D11_BUFFER_DESC cb;
 	ZeroMemory(&cb, sizeof(cb));
 	cb.Usage = D3D11_USAGE_DEFAULT;
-	cb.ByteWidth = sizeof(XMMATRIX) * 2;
+	cb.ByteWidth = sizeof(XMMATRIX) * 3;
 	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cb.CPUAccessFlags = 0;
 	if (FAILED(device->CreateBuffer(&cb, NULL, &this->constantBuffer)))
@@ -138,17 +138,23 @@ DX11Renderer::~DX11Renderer()
 void DX11Renderer::clearFrame() {
 	float color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
 	context->ClearRenderTargetView(backbuffer, color);
-	context->VSSetShader(vertexShader->getVertexShader(), NULL, 0);
-	context->PSSetShader(pixelShader->getPixelShader(), NULL, 0);
-}
 
-void DX11Renderer::drawFrame() {
-	XMMATRIX matrices[2] = {
+	// set default stuff
+	XMMATRIX matrices[3] = {
+		DirectX::XMMatrixIdentity(),
 		DirectX::XMMatrixTranspose(this->camera->getCameraInverse()),
 		DirectX::XMMatrixTranspose(this->camera->getPerspective())
 	};
 	context->UpdateSubresource(constantBuffer, 0, NULL, &matrices, 0, 0);
 	context->VSSetConstantBuffers(0, 1, &constantBuffer);
+
+	// set shaders
+	context->VSSetShader(vertexShader->getVertexShader(), NULL, 0);
+	context->PSSetShader(pixelShader->getPixelShader(), NULL, 0);
+}
+
+void DX11Renderer::drawFrame() {
+	
 	swapchain->Present(0, 0);
 }
 
@@ -161,9 +167,19 @@ IndexBuffer* DX11Renderer::createIndexBuffer(unsigned int indices[], size_t num)
 }
 
 Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i) {
-	return new DX11Model(v, i, context);
+	return new DX11Model(v, i, context, this);
 }
 
 Camera* DX11Renderer::getCamera() {
 	return this->camera;
+}
+
+void DX11Renderer::setObjectMatrix(ITransformable* t) {
+	XMMATRIX matrices[3] = {
+		DirectX::XMMatrixTranspose(t->getTransform()),
+		DirectX::XMMatrixTranspose(this->camera->getCameraInverse()),
+		DirectX::XMMatrixTranspose(this->camera->getPerspective())
+	};
+	context->UpdateSubresource(constantBuffer, 0, NULL, &matrices, 0, 0);
+	context->VSSetConstantBuffers(0, 1, &constantBuffer);
 }

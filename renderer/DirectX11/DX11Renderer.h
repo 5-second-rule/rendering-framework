@@ -42,6 +42,6 @@ public:
 	virtual Model* createModel(VertexBuffer*, IndexBuffer*);
 
 	virtual Camera* getCamera();
-
+	virtual void setObjectMatrix(ITransformable*);
 };
 

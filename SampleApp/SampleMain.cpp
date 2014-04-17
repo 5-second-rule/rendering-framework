@@ -67,12 +67,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	IndexBuffer* ibuf = renderer->createIndexBuffer(index, 36);
 	Model* model = renderer->createModel(vbuf, ibuf);
 
+	model->rotate(XMVectorSet(0, 0, 45, 0));
+
 	//((DX11Model*)model)->loadFBXModel();
 
 	while (messagePump(window)) {
 
 		renderer->clearFrame();
 
+		model->move(XMVectorSet(0.001, 0, 0, 0));
 		model->draw();
 
 		renderer->drawFrame();
