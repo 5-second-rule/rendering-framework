@@ -49,6 +49,7 @@
     <ClInclude Include="renderers.h" />
     <ClInclude Include="Transformer.h" />
     <ClInclude Include="util.h" />
+    <ClInclude Include="Vector4.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Win32\Win32Window.h" />
     <ClInclude Include="Window.h" />

@@ -146,6 +146,9 @@
     <ClInclude Include="Transformer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Vector4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectX11\pixel.hlsl">
