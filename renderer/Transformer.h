@@ -1,20 +1,21 @@
 #pragma once
 #include "ITransformable.h"
+
 class FRAMEWORKDLL Transformer : public ITransformable
 {
 private:
-	XMVECTOR position;
-	XMVECTOR rotation;
-	XMVECTOR scale;
+	Vector4 position;
+	Vector4 rotation;
+	Vector4 scale;
 
 public:
 	Transformer();
 	~Transformer();
 
-	virtual void move(XMVECTOR);
-	virtual void rotate(XMVECTOR);
-	virtual void setScale(XMVECTOR);
+	virtual void move(const Vector4&);
+	virtual void rotate(const Vector4&);
+	virtual void setScale(const Vector4&);
 
-	virtual XMMATRIX getTransform();
+	virtual Matrix4 getTransform();
 };
 

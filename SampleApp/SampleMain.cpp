@@ -22,14 +22,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Renderer* renderer = Renderer::createRenderer(window);
 
 	Vertex cube[8] = {
-		{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
+		{ { -1.0f, 1.0f, -1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } },
+		{ { 1.0f, 1.0f, -1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
+		{ { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f, 1.0f, 1.0f } },
+		{ { -1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
+		{ { -1.0f, -1.0f, -1.0f }, { 1.0f, 0.0f, 1.0f, 1.0f } },
+		{ { 1.0f, -1.0f, -1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f } },
+		{ { 1.0f, -1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ { -1.0f, -1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f } }
 	};
 
 	UINT index[36] = {
@@ -67,7 +67,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	IndexBuffer* ibuf = renderer->createIndexBuffer(index, 36);
 	Model* model = renderer->createModel(vbuf, ibuf);
 
-	model->rotate(XMVectorSet(0, 0, 45, 0));
+	model->move(Vector4(0, 0, 10));
+
+	//model->rotate(Vector(0, 0, 45));
 
 	//((DX11Model*)model)->loadFBXModel();
 
@@ -75,7 +77,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		renderer->clearFrame();
 
-		model->move(XMVectorSet(0.001, 0, 0, 0));
+		//model->move(XMVectorSet(0.001, 0, 0, 0));
 		model->draw();
 
 		renderer->drawFrame();
@@ -88,6 +90,4 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	delete renderer;
 	delete window;
 }
-
-
 

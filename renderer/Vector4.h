@@ -1,11 +1,13 @@
 #pragma once
 
+#include "render-framework.h"
+
 #include <stdexcept>
 #include <iostream>
 
 #define VECTOR4_RANGE_ERR "index must be in [0,4)"
 
-class Vector4
+class FRAMEWORKDLL Vector4
 {
 protected:
 	float vector[4];
@@ -18,29 +20,18 @@ public:
 	*         Constructors         *
 	*==============================*/
 
-	Vector4() {
-		this->vector[0] = 0;
-		this->vector[1] = 0;
-		this->vector[2] = 0;
-		this->vector[3] = 0;
-	}
-
-	Vector4(float x, float y, float z) {
+	Vector4(float x, float y, float z, float w) {
 		this->vector[0] = x;
 		this->vector[1] = y;
 		this->vector[2] = z;
-		this->vector[3] = 0;
+		this->vector[3] = w;
 	}
 
-	Vector4(const Vector4& v) {
-		this->vector[0] = v[0];
-		this->vector[1] = v[1];
-		this->vector[2] = v[2];
-		this->vector[3] = v[3];
-	}
+	Vector4() : Vector4(0.0f, 0.0f, 0.0f, 0.0f) {}
 
-	Vector4(const Vector4&);
+	Vector4(float x, float y, float z) : Vector4(x, y, z, 0.0f) {}
 
+	Vector4(const Vector4& v) : Vector4(v[0], v[1], v[2], v[3]) {}
 	/*==============================*
 	*      Setters and Getters     *
 	*==============================*/
@@ -245,8 +236,11 @@ public:
 	}
 
 
-	static Vector4 lerp(float f, const Vector4& u, const Vector4& v) {
-		return u + (v - u)*f;
+	static Vector4 lerp(float f, Vector4 u, Vector4 v) {
+		v -= u;
+		v *= f;
+		u += v;
+		return u;
 	}
 };
 

@@ -43,6 +43,7 @@
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="ITransformable.h" />
+    <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="render-framework.h" />
     <ClInclude Include="Renderer.h" />

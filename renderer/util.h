@@ -1,14 +1,11 @@
 #pragma once
 
-#include <DirectXMath.h>
-using namespace DirectX;
-
-#define POINT(x, y, z) XMVectorSet((x), (y), (z), 1.0f)
-#define VECTOR(x, y, z) XMVectorSet((x), (y), (z), 0.0f)
+#define Point(x, y, z) Vector4((x), (y), (z), 1.0f)
+#define Vector(x, y, z) Vector4((x), (y), (z), 0.0f)
 
 struct Vertex {
-	XMFLOAT3 point;
-	XMFLOAT4 color;
+	float point[3];
+	float color[4];
 };
 
 typedef unsigned int Index;

@@ -1,39 +1,39 @@
 #pragma once
 #include "render-framework.h"
 
-#include <DirectXMath.h>
-using namespace DirectX;
+#include "Vector4.h"
+#include "Matrix4.h"
 
 class FRAMEWORKDLL Camera
 {
 private:
-	XMVECTOR position;
-	XMVECTOR target;
-	XMVECTOR up;
+	Vector4 position;
+	Vector4 target;
+	Vector4 up;
 
 	float fovY;
 	float aspect;
 	float nearPlane;
 	float farPlane;
 
-	XMMATRIX camera;
-	XMMATRIX perspective;
+	Matrix4 camera;
+	Matrix4 perspective;
 
 	void updateCamera();
 	void updatePerspective();
 
 
 public:
-	Camera(XMVECTOR&, XMVECTOR&, XMVECTOR&);
-	Camera(XMVECTOR&, XMVECTOR&, XMVECTOR&, float, float, float, float);
+	Camera(Vector4&, Vector4&, Vector4&);
+	Camera(Vector4&, Vector4&, Vector4&, float, float, float, float);
 	
 	~Camera();
 
-	void move(XMVECTOR&);
-	void lookAt(XMVECTOR&);
+	void move(Vector4&);
+	void lookAt(Vector4&);
 
-	const XMMATRIX getCameraInverse();
-	const XMMATRIX getPerspective();
+	Matrix4 getCameraInverse();
+	Matrix4 getPerspective();
 
 };
 

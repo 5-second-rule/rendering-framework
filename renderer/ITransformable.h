@@ -1,8 +1,7 @@
 #pragma once
 #include "render-framework.h"
 
-#include <DirectXMath.h>
-using namespace DirectX;
+#include "Matrix4.h"
 
 class FRAMEWORKDLL ITransformable
 {
@@ -10,6 +9,6 @@ public:
 	ITransformable();
 	~ITransformable();
 
-	virtual XMMATRIX getTransform() = 0;
+	virtual Matrix4 getTransform() = 0;
 };
 
