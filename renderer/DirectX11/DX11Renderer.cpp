@@ -1,7 +1,12 @@
+#define _USE_MATH_DEFINES
 #include "DX11Renderer.h"
 
+#include <cmath>
 #include <iostream>
 #include <fstream>
+
+#include "Matrix4.h"
+#include "Vector4.h"
 
 #include "DX11VertexBuffer.h"
 #include "DX11IndexBuffer.h"
@@ -67,6 +72,16 @@ DX11Renderer::DX11Renderer(Window* window) : Renderer()
 	// set the render target
 	context->OMSetRenderTargets(1, &backbuffer, NULL);
 
+	// setup constant buffer
+	D3D11_BUFFER_DESC cb;
+	ZeroMemory(&cb, sizeof(cb));
+	cb.Usage = D3D11_USAGE_DEFAULT;
+	cb.ByteWidth = sizeof(float[4][4]) * 3;
+	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cb.CPUAccessFlags = 0;
+	if (FAILED(device->CreateBuffer(&cb, NULL, &this->constantBuffer)))
+		throw std::runtime_error("Couldn't create constant buffer");
+
 	// describe the viewport
 	D3D11_VIEWPORT viewport;
 	ZeroMemory(&viewport, sizeof D3D11_VIEWPORT);
@@ -81,21 +96,9 @@ DX11Renderer::DX11Renderer(Window* window) : Renderer()
 
 	context->RSSetViewports(1, &viewport);
 
-	// These might need to be implemented later
-	/*
-	float fieldOfView;
-	float screenAspect;
-
-	fieldOfView = (float)XM_PI / 4.0f;
-
-	screenAspect = (float)Window::screenWidth / (float)Window::screenHeight;
-
-	XMMatrixPerspectiveFovLH(&projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
-
-	XMMatrixIdentity(&worldMatrix);
-
-	XMMatrixOrthographicLH(&orthoMatrix, (float)Window::screenWidth, (float)Window::screenHeight, screenNear, screenDepth);
-	*/
+	// Camera and Perspective Matrices
+	this->camera = new Camera(Point(3, 5, -10), Point(0, 0, 0), Vector(0, 1, 0),
+		(float)M_PI / 4.0f, (float) Window::screenWidth / (float) Window::screenHeight, 1, 1000);
 
 	/* ---------- */
 
@@ -124,6 +127,8 @@ DX11Renderer::DX11Renderer(Window* window) : Renderer()
 
 DX11Renderer::~DX11Renderer()
 {
+	delete camera;
+
 	swapchain->SetFullscreenState(false, NULL);
 
 	delete vertexShader;
@@ -131,6 +136,7 @@ DX11Renderer::~DX11Renderer()
 
 	swapchain->Release();
 	backbuffer->Release();
+	constantBuffer->Release();
 	device->Release();
 	context->Release();
 }
@@ -138,11 +144,24 @@ DX11Renderer::~DX11Renderer()
 void DX11Renderer::clearFrame() {
 	float color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
 	context->ClearRenderTargetView(backbuffer, color);
+
+	// set default stuff
+	float matrices[3][16];
+
+	memcpy(matrices[0], Matrix4::identity().getPointer(), sizeof(float[4][4]));
+	memcpy(matrices[1], this->camera->getCameraInverse().getPointer(), sizeof(float[4][4]));
+	memcpy(matrices[2], this->camera->getPerspective().getPointer(), sizeof(float[4][4]));
+
+	context->UpdateSubresource(constantBuffer, 0, NULL, &matrices, 0, 0);
+	context->VSSetConstantBuffers(0, 1, &constantBuffer);
+
+	// set shaders
 	context->VSSetShader(vertexShader->getVertexShader(), NULL, 0);
 	context->PSSetShader(pixelShader->getPixelShader(), NULL, 0);
 }
 
 void DX11Renderer::drawFrame() {
+	
 	swapchain->Present(0, 0);
 }
 
@@ -155,5 +174,21 @@ IndexBuffer* DX11Renderer::createIndexBuffer(unsigned int indices[], size_t num)
 }
 
 Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i) {
-	return new DX11Model(v, i, context);
+	return new DX11Model(v, i, context, this);
+}
+
+Camera* DX11Renderer::getCamera() {
+	return this->camera;
+}
+
+void DX11Renderer::setObjectMatrix(ITransformable* t) {
+	// set default stuff
+	float matrices[3][16];
+
+	memcpy(matrices[0], t->getTransform().transpose().getPointer(), sizeof(float[4][4]));
+	memcpy(matrices[1], this->camera->getCameraInverse().getPointer(), sizeof(float[4][4]));
+	memcpy(matrices[2], this->camera->getPerspective().getPointer(), sizeof(float[4][4]));
+
+	context->UpdateSubresource(constantBuffer, 0, NULL, &matrices, 0, 0);
+	context->VSSetConstantBuffers(0, 1, &constantBuffer);
 }

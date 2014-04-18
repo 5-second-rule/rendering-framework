@@ -4,6 +4,8 @@
 #include <Windows.h>
 #pragma comment(lib, "libfbxsdk.lib")
 
+#include <cassert>
+
 FbxManager* g_pFbxSdkManager = nullptr;
 
 FBXLoader::FBXLoader()

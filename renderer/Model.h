@@ -1,9 +1,12 @@
 #pragma once
 #include "util.h"
+
+#include "Transformer.h"
+
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
 
-class FRAMEWORKDLL Model
+class FRAMEWORKDLL Model : public Transformer
 {
 protected:
 	VertexBuffer* vertexBuffer;

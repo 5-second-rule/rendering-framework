@@ -1,7 +1,7 @@
 #pragma once
 
-#include <DirectXMath.h>
-using namespace DirectX;
+#define Point(x, y, z) Vector4((x), (y), (z), 1.0f)
+#define Vector(x, y, z) Vector4((x), (y), (z), 0.0f)
 
 struct Vertex {
 	float point[3];

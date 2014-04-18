@@ -21,8 +21,53 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Window* window = Window::createWindow(hInstance);
 	Renderer* renderer = Renderer::createRenderer(window);
 
+	Vertex cube[8] = {
+		{ { -1.0f, 1.0f, -1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } },
+		{ { 1.0f, 1.0f, -1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
+		{ { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f, 1.0f, 1.0f } },
+		{ { -1.0f, 1.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
+		{ { -1.0f, -1.0f, -1.0f }, { 1.0f, 0.0f, 1.0f, 1.0f } },
+		{ { 1.0f, -1.0f, -1.0f }, { 1.0f, 1.0f, 0.0f, 1.0f } },
+		{ { 1.0f, -1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } },
+		{ { -1.0f, -1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f } }
+	};
+
+	UINT index[36] = {
+		3, 1, 0,
+		2, 1, 3,
+
+		0, 5, 4,
+		1, 5, 0,
+
+		3, 4, 7,
+		0, 4, 3,
+
+		1, 6, 5,
+		2, 6, 1,
+
+		2, 7, 6,
+		3, 7, 2,
+
+		6, 4, 5,
+		7, 4, 6,
+	};
+
+	/*
+	// FBX Load
+	FBXLoader fileLoaded;
+
 	VertexBuffer* vbuf;
 	IndexBuffer* ibuf;
+	char* filePath = "../SampleApp/whitey.fbx";
+
+	fileLoaded.loadFBXFile(filePath, &vbuf, &ibuf, renderer);
+	*/
+
+	VertexBuffer* vbuf = renderer->createVertexBuffer(cube, 8);
+	IndexBuffer* ibuf = renderer->createIndexBuffer(index, 36);
+	Model* model = renderer->createModel(vbuf, ibuf);
+
+	model->move(Vector4(0, 0, 10));
 
 	char* whiteBloodFbxFilePath = "../SampleApp/whitey.fbx";
 	char* ecoliFbxFilePath = "../SampleApp/ecoli4_animated_binary.fbx";
@@ -45,6 +90,4 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	delete renderer;
 	delete window;
 }
-
-
 

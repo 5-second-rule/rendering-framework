@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DirectX11\DX11Renderer.cpp" />
     <ClCompile Include="DX11IndexBuffer.cpp" />
     <ClCompile Include="DX11Model.cpp" />
@@ -21,15 +22,18 @@
     <ClCompile Include="DX11VertexShader.cpp" />
     <ClCompile Include="FBXLoader.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="ITransformable.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Transformer.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="Win32\Win32Window.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="DirectX11\DX11Renderer.h" />
     <ClInclude Include="DX11IndexBuffer.h" />
     <ClInclude Include="DX11Model.h" />
@@ -39,12 +43,16 @@
     <ClInclude Include="DX11VertexShader.h" />
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="IndexBuffer.h" />
+    <ClInclude Include="ITransformable.h" />
+    <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="render-framework.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="renderers.h" />
+    <ClInclude Include="Transformer.h" />
     <ClInclude Include="util.h" />
+    <ClInclude Include="Vector4.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Win32\Win32Window.h" />
     <ClInclude Include="Window.h" />
