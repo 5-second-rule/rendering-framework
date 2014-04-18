@@ -5,7 +5,8 @@
 
 struct Vertex {
 	float point[3];
-	float color[4];
+	float texCoord[2];
+	float normal[3];
 };
 
 typedef unsigned int Index;

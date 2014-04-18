@@ -24,6 +24,7 @@
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="ITransformable.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Transformer.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
@@ -45,6 +46,7 @@
     <ClInclude Include="ITransformable.h" />
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="render-framework.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="renderers.h" />

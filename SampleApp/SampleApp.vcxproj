@@ -87,7 +87,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ecoli.fbx" />
+    <None Include="ecoli4_animated_binary.fbx" />
     <None Include="whitey.fbx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="ecoli_TXTR.tif" />
+    <Image Include="whitebloodcell_3_TXTR.tif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ecoli4_Object.obj">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -37,6 +37,14 @@ HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer*
 	bSuccess = pImporter->Import(pFbxScene);
 	if (!bSuccess) return E_FAIL;
 
+	FbxAxisSystem sceneAxisSystem = pFbxScene->GetGlobalSettings().GetAxisSystem();
+	FbxAxisSystem DirectXAxisSystem(FbxAxisSystem::eYAxis, FbxAxisSystem::eParityOdd, FbxAxisSystem::eLeftHanded);
+
+	if (sceneAxisSystem != DirectXAxisSystem)
+	{
+		DirectXAxisSystem.ConvertScene(pFbxScene);
+	}
+
 	pImporter->Destroy();
 
 	FbxNode* pFbxRootNode = pFbxScene->GetRootNode();
@@ -44,6 +52,8 @@ HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer*
 	if (pFbxRootNode)
 	{
 		// Check if the getChildCount is > 1  TODO
+		int test = pFbxRootNode->GetChildCount();
+
 		for (int i = 0; i < pFbxRootNode->GetChildCount(); i++)
 		{
 			FbxNode* pFbxChildNode = pFbxRootNode->GetChild(i);
@@ -66,20 +76,20 @@ HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer*
 
 			for (int l = 0; l < controlCount; l++)
 			{
-				//The divide by 2.01 and the add by 1.1 is accounting for the fact that the model has z values ranging from ~-1.07 to 1.07 
-				//when it needs to range from 0 to 1
-				vertex.point[0] = (float)pVertices[l].mData[0] / 2.01f;
-				vertex.point[1] = (float)pVertices[l].mData[1] / 2.01f;
-				vertex.point[2] = ((float)pVertices[l].mData[2] + 1.1f) / 2.01f;
-				float color[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
-				memcpy(vertex.color, color, sizeof(float[4]));
+				vertex.point[0] = (float)pVertices[l].mData[0];
+				vertex.point[1] = (float)pVertices[l].mData[1];
+				vertex.point[2] = (float)pVertices[l].mData[2];
+
 				vertexArray[l] = vertex;
 			}
+
+			int numIndices = pMesh->GetPolygonVertexCount();
+			unsigned int* indices = (unsigned int*)pMesh->GetPolygonVertices();
 
 			for (int j = 0; j < pMesh->GetPolygonCount(); j++)
 			{
 				int iNumVertices = pMesh->GetPolygonSize(j);
-				//OutputDebugString(L"above\n");
+
 				assert(iNumVertices == 3);
 
 				//Possibly need to reverse order of vertices for fbx to direct X, but this results in empty spaces
@@ -87,16 +97,31 @@ HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer*
 				//indices->push_back(pMesh->GetPolygonVertex(j, 2));
 				//indices->push_back(pMesh->GetPolygonVertex(j, 1));
 
+				FbxVector4 fbxNorm(0, 0, 0, 0);
+				FbxVector2 fbxUV(0, 0);
+				bool isMapped;
+				int iControlPointIndex;
+
 				for (int k = 0; k < iNumVertices; k++)
 				{
-					int iControlPointIndex = pMesh->GetPolygonVertex(j, k);
+					iControlPointIndex = pMesh->GetPolygonVertex(j, k);
 
-					indices->push_back(iControlPointIndex);
+					pMesh->GetPolygonVertexUV(j, k, "map1", fbxUV, isMapped);
+
+					vertexArray[iControlPointIndex].texCoord[0] = (float) fbxUV[0];
+					vertexArray[iControlPointIndex].texCoord[1] = (float) fbxUV[1];
+
+					pMesh->GetPolygonVertexNormal(j, k, fbxNorm);
+
+					vertexArray[iControlPointIndex].normal[0] = (float) fbxNorm[0];
+					vertexArray[iControlPointIndex].normal[1] = (float) fbxNorm[1];
+					vertexArray[iControlPointIndex].normal[2] = (float) fbxNorm[2];
 				}
 			}
 
 			*vBuf = renderer->createVertexBuffer(vertexArray, controlCount);
-			*iBuf = renderer->createIndexBuffer(indices->data(), indices->size());
+			//*iBuf = renderer->createIndexBuffer(indices->data(), indices->size());
+			*iBuf = renderer->createIndexBuffer(indices, numIndices);
 
 			delete vertexArray;
 		}
