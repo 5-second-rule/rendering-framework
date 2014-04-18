@@ -265,9 +265,9 @@ bool OBJLoader::LoadDataStructures(char* filename, int vertexCount, int textureC
 			<< normals[nIndex].point.x << ' ' << normals[nIndex].point.y << ' ' << normals[nIndex].point.z << endl;
 		*/
 
-		indices[indiceIndex++] = faces[i].vIndex1;
-		indices[indiceIndex++] = faces[i].vIndex2;
-		indices[indiceIndex++] = faces[i].vIndex3;
+		indices[indiceIndex++] = faces[i].vIndex1-1;
+		indices[indiceIndex++] = faces[i].vIndex2-1;
+		indices[indiceIndex++] = faces[i].vIndex3-1;
 	}
 
 	*vBuf = renderer->createVertexBuffer(vertices, vertexCount);

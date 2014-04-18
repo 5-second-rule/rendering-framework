@@ -21,7 +21,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Window* window = Window::createWindow(hInstance);
 	Renderer* renderer = Renderer::createRenderer(window);
 
-	Vertex cube[8] = {
+	/*Vertex cube[8] = {
 		{ { -1.0f, 1.0f, -1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } },
 		{ { 1.0f, 1.0f, -1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
 		{ { 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f, 1.0f, 1.0f } },
@@ -50,7 +50,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		6, 4, 5,
 		7, 4, 6,
-	};
+	};*/
 
 	/*
 	// FBX Load
@@ -63,17 +63,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	fileLoaded.loadFBXFile(filePath, &vbuf, &ibuf, renderer);
 	*/
 
-	VertexBuffer* vbuf = renderer->createVertexBuffer(cube, 8);
-	IndexBuffer* ibuf = renderer->createIndexBuffer(index, 36);
-	Model* model = renderer->createModel(vbuf, ibuf);
+	VertexBuffer* vbuf;// = renderer->createVertexBuffer(cube, 8);
+	IndexBuffer* ibuf;// = renderer->createIndexBuffer(index, 36);
+	//Model* model = renderer->createModel(vbuf, ibuf);
 
-	model->move(Vector4(0, 0, 10));
+	//model->move(Vector4(0, 0, 10));
 
 	char* whiteBloodFbxFilePath = "../SampleApp/whitey.fbx";
 	char* ecoliFbxFilePath = "../SampleApp/ecoli4_animated_binary.fbx";
 	char* ecoliObjFilePath = "../SampleApp/Ecoli4_Object.obj";
 
-	Model* model = renderer->createModelFromFile(ecoliFbxFilePath, &vbuf, &ibuf);
+	Model* model = renderer->createModelFromFile(ecoliObjFilePath, &vbuf, &ibuf);
 
 	while (messagePump(window)) {
 		renderer->clearFrame();
