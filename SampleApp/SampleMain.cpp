@@ -21,31 +21,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Window* window = Window::createWindow(hInstance);
 	Renderer* renderer = Renderer::createRenderer(window);
 
-	Vertex triangle[3] = {
-		{ XMFLOAT3(-0.5, 0, 0), XMFLOAT4(1, 0, 0, 1) },
-		{ XMFLOAT3(0, 0.5, 0), XMFLOAT4(0, 1, 0, 1) },
-		{ XMFLOAT3(0.5, 0, 0), XMFLOAT4(0, 0, 1, 1) }
-	};
-
-	UINT index[3] = { 0, 1, 2 };
-
-	FBXLoader fileLoaded;
-
 	VertexBuffer* vbuf;
 	IndexBuffer* ibuf;
 
-	char* filePath = "../SampleApp/whitey.fbx";
+	char* whiteBloodFbxFilePath = "../SampleApp/whitey.fbx";
+	char* ecoliFbxFilePath = "../SampleApp/ecoli4_animated_binary.fbx";
+	char* ecoliObjFilePath = "../SampleApp/Ecoli4_Object.obj";
 
-	fileLoaded.loadFBXFile(filePath, &vbuf, &ibuf, renderer);
-
-	//VertexBuffer* vbuf = renderer->createVertexBuffer(triangle, 3);
-	//IndexBuffer* ibuf = renderer->createIndexBuffer(index, 3);
-	Model* model = renderer->createModel(vbuf, ibuf);
-
-	//((DX11Model*)model)->loadFBXModel();
+	Model* model = renderer->createModelFromFile(ecoliFbxFilePath, &vbuf, &ibuf);
 
 	while (messagePump(window)) {
-
 		renderer->clearFrame();
 
 		model->draw();

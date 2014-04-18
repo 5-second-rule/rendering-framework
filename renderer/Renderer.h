@@ -20,5 +20,6 @@ public:
 	virtual VertexBuffer* createVertexBuffer(Vertex[], size_t) = 0;
 	virtual IndexBuffer* createIndexBuffer(unsigned int[], size_t) = 0;
 	virtual Model* createModel(VertexBuffer*, IndexBuffer*) = 0;
+	virtual Model* createModelFromFile(char* f, VertexBuffer**, IndexBuffer**);
 };
 

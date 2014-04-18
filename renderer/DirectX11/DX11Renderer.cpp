@@ -107,11 +107,12 @@ DX11Renderer::DX11Renderer(Window* window) : Renderer()
 	D3D11_INPUT_ELEMENT_DESC ied[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	DX11Shader::Buffer VSbytecode = vertexShader->getBytecode();
-	if (FAILED(result = device->CreateInputLayout(ied, 2, VSbytecode.buf, VSbytecode.len, &this->layout)))
+	if (FAILED(result = device->CreateInputLayout(ied, 3, VSbytecode.buf, VSbytecode.len, &this->layout)))
 		throw std::runtime_error("Could not create input layout");
 	context->IASetInputLayout(this->layout);
 

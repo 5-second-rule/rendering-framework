@@ -20,8 +20,25 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ecoli.fbx">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ecoli4_animated_binary.fbx">
+      <Filter>Resource Files</Filter>
+    </None>
     <None Include="whitey.fbx">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Ecoli4_Object.obj">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="ecoli_TXTR.tif">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="whitebloodcell_3_TXTR.tif">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
