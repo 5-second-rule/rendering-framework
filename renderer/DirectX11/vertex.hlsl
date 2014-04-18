@@ -17,7 +17,7 @@ VOut vs_main(float4 position : POSITION, float2 texCoord : TEXCOORD, float4 norm
 
 	output.position = mul(mul(mul(position,World),View),Projection);
 
-	//add texture lookup here
+	//color will be replaced with texture values to be passed to pixel shader
 
 	output.color = float4(1.0,0.0,0.0,1.0);
 

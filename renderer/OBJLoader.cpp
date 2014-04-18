@@ -29,6 +29,16 @@ using namespace std;
 
 typedef struct
 {
+	float u, v;
+}texType;
+
+typedef struct
+{
+	float x, y, z;
+}normalType;
+
+typedef struct
+{
 	int vIndex1, vIndex2, vIndex3;
 	int tIndex1, tIndex2, tIndex3;
 	int nIndex1, nIndex2, nIndex3;
@@ -45,17 +55,17 @@ HRESULT OBJLoader::loadOBJFile(char* filePath, VertexBuffer** vBuf, IndexBuffer*
 	result = ReadFileCounts(filePath, vertexCount, textureCount, normalCount, faceCount);
 	if (!result)
 	{
-		return -1;
+		return E_FAIL;
 	}
 
 	// Now read the data from the file into the data structures and then output it in our model format.
 	result = LoadDataStructures(filePath, vertexCount, textureCount, normalCount, faceCount, vBuf, iBuf, renderer);
 	if (!result)
 	{
-		return -1;
+		return E_FAIL;
 	}
 
-	return 0;
+	return S_OK;
 }
 
 bool OBJLoader::ReadFileCounts(char* filename, int& vertexCount, int& textureCount, int& normalCount, int& faceCount)
@@ -118,8 +128,10 @@ bool OBJLoader::ReadFileCounts(char* filename, int& vertexCount, int& textureCou
 
 bool OBJLoader::LoadDataStructures(char* filename, int vertexCount, int textureCount, int normalCount, int faceCount, VertexBuffer** vBuf, IndexBuffer** iBuf, Renderer* renderer)
 {
-	Vertex *vertices, *texcoords, *normals;
-	FaceType *faces;
+	Vertex* vertices;
+	texType* texcoords;
+	normalType* normals;
+	FaceType* faces;
 	ifstream fin;
 	int vertexIndex, texcoordIndex, normalIndex, faceIndex;
 	char input, input2;
@@ -132,13 +144,13 @@ bool OBJLoader::LoadDataStructures(char* filename, int vertexCount, int textureC
 		return false;
 	}
 
-	texcoords = new Vertex[textureCount];
+	texcoords = new texType[textureCount];
 	if (!texcoords)
 	{
 		return false;
 	}
 
-	normals = new Vertex[normalCount];
+	normals = new normalType[normalCount];
 	if (!normals)
 	{
 		return false;
@@ -187,20 +199,20 @@ bool OBJLoader::LoadDataStructures(char* filename, int vertexCount, int textureC
 			// Read in the texture uv coordinates.
 			if (input == 't')
 			{
-				fin >> texcoords[texcoordIndex].point[0] >> texcoords[texcoordIndex].point[1];
+				fin >> texcoords[texcoordIndex].u >> texcoords[texcoordIndex].v;
 
 				// Invert the V texture coordinates to left hand system.
-				texcoords[texcoordIndex].point[1] = 1.0f - texcoords[texcoordIndex].point[1];
+				texcoords[texcoordIndex].v = 1.0f - texcoords[texcoordIndex].v;
 				texcoordIndex++;
 			}
 
 			// Read in the normals.
 			if (input == 'n')
 			{
-				fin >> normals[normalIndex].point[0] >> normals[normalIndex].point[1] >> normals[normalIndex].point[2];
+				fin >> normals[normalIndex].x >> normals[normalIndex].y >> normals[normalIndex].z;
 
 				// Invert the Z normal to change to left hand system.
-				normals[normalIndex].point[2] = normals[normalIndex].point[2] * -1.0f;
+				normals[normalIndex].z = normals[normalIndex].z * -1.0f;
 				normalIndex++;
 			}
 		}
@@ -236,40 +248,44 @@ bool OBJLoader::LoadDataStructures(char* filename, int vertexCount, int textureC
 	int numIndices = faceCount * 3;
 	unsigned int* indices = new unsigned int[numIndices];
 	int indiceIndex = 0;
+	int index1, index2, index3;
 	// Now loop through all the faces and create the index buffer
 	for (int i = 0; i<faceIndex; i++)
 	{
-		/*
-		vIndex = faces[i].vIndex1 - 1;
-		tIndex = faces[i].tIndex1 - 1;
-		nIndex = faces[i].nIndex1 - 1;
+		index1 = faces[i].vIndex1 - 1;
+		index2 = faces[i].vIndex2 - 1;
+		index3 = faces[i].vIndex3 - 1;
 
-		fout << vertices[vIndex].point.x << ' ' << vertices[vIndex].point.y << ' ' << vertices[vIndex].point.z << ' '
-			<< texcoords[tIndex].point.x << ' ' << texcoords[tIndex].point.y << ' '
-			<< normals[nIndex].point.x << ' ' << normals[nIndex].point.y << ' ' << normals[nIndex].point.z << endl;
+		// Add indices to index array
+		indices[indiceIndex++] = index1;
+		indices[indiceIndex++] = index2;
+		indices[indiceIndex++] = index3;
 
-		vIndex = faces[i].vIndex2 - 1;
-		tIndex = faces[i].tIndex2 - 1;
-		nIndex = faces[i].nIndex2 - 1;
+		// Set texture coordinates for each vertex
+		vertices[index1].texCoord[0] = texcoords[faces[i].tIndex1-1].u;
+		vertices[index1].texCoord[1] = texcoords[faces[i].tIndex1-1].v;
 
-		fout << vertices[vIndex].point.x << ' ' << vertices[vIndex].point.y << ' ' << vertices[vIndex].point.z << ' '
-			<< texcoords[tIndex].point.x << ' ' << texcoords[tIndex].point.y << ' '
-			<< normals[nIndex].point.x << ' ' << normals[nIndex].point.y << ' ' << normals[nIndex].point.z << endl;
+		vertices[index2].texCoord[0] = texcoords[faces[i].tIndex2-1].u;
+		vertices[index2].texCoord[1] = texcoords[faces[i].tIndex2-1].v;
 
-		vIndex = faces[i].vIndex3 - 1;
-		tIndex = faces[i].tIndex3 - 1;
-		nIndex = faces[i].nIndex3 - 1;
+		vertices[index3].texCoord[0] = texcoords[faces[i].tIndex3-1].u;
+		vertices[index3].texCoord[1] = texcoords[faces[i].tIndex3-1].v;
 
-		fout << vertices[vIndex].point.x << ' ' << vertices[vIndex].point.y << ' ' << vertices[vIndex].point.z << ' '
-			<< texcoords[tIndex].point.x << ' ' << texcoords[tIndex].point.y << ' '
-			<< normals[nIndex].point.x << ' ' << normals[nIndex].point.y << ' ' << normals[nIndex].point.z << endl;
-		*/
+		// Set normals for each vertex
+		vertices[index1].normal[0] = normals[faces[i].nIndex1-1].x;
+		vertices[index1].normal[1] = normals[faces[i].nIndex1-1].y;
+		vertices[index1].normal[2] = normals[faces[i].nIndex1-1].z;
 
-		indices[indiceIndex++] = faces[i].vIndex1-1;
-		indices[indiceIndex++] = faces[i].vIndex2-1;
-		indices[indiceIndex++] = faces[i].vIndex3-1;
+		vertices[index2].normal[0] = normals[faces[i].nIndex2-1].x;
+		vertices[index2].normal[1] = normals[faces[i].nIndex2-1].y;
+		vertices[index2].normal[2] = normals[faces[i].nIndex2-1].z;
+
+		vertices[index3].normal[0] = normals[faces[i].nIndex3-1].x;
+		vertices[index3].normal[1] = normals[faces[i].nIndex3-1].y;
+		vertices[index3].normal[2] = normals[faces[i].nIndex3-1].z;
 	}
 
+	// Create the vertex and index buffers
 	*vBuf = renderer->createVertexBuffer(vertices, vertexCount);
 	*iBuf = renderer->createIndexBuffer(indices, numIndices);
 
