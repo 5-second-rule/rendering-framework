@@ -39,7 +39,8 @@ public:
 
 	virtual VertexBuffer* createVertexBuffer(Vertex[], size_t);
 	virtual IndexBuffer* createIndexBuffer(unsigned int[], size_t);
-	virtual Model* createModel(VertexBuffer*, IndexBuffer*);
+	virtual Model* createModel(VertexBuffer*, IndexBuffer*, Texture*);
+	virtual Texture* createTextureFromFile(char* f);
 
 	virtual Camera* getCamera();
 	virtual void setObjectMatrix(ITransformable*);

@@ -73,7 +73,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	char* ecoliFbxFilePath = "../SampleApp/ecoli4_animated_binary.fbx";
 	char* ecoliObjFilePath = "../SampleApp/Ecoli4_Object.obj";
 
-	Model* model = renderer->createModelFromFile(ecoliObjFilePath, &vbuf, &ibuf);
+	char* textureLocation = "../SampleApp/ecoli_TXTR.dds";
+	char* textureLocationW = "../SampleApp/Wood.dds";
+
+	Texture* texture = renderer->createTextureFromFile(textureLocation);
+
+	Model* model = renderer->createModelFromFile(ecoliObjFilePath, &vbuf, &ibuf, texture);
 
 	while (messagePump(window)) {
 		renderer->clearFrame();
@@ -86,6 +91,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	delete model;
 	delete vbuf;
 	delete ibuf;
+	delete texture;
 
 	delete renderer;
 	delete window;

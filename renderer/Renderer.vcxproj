@@ -13,11 +13,13 @@
   <ItemGroup>
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DirectX11\DDSTextureLoader.cpp" />
     <ClCompile Include="DirectX11\DX11Renderer.cpp" />
     <ClCompile Include="DX11IndexBuffer.cpp" />
     <ClCompile Include="DX11Model.cpp" />
     <ClCompile Include="DX11PixelShader.cpp" />
     <ClCompile Include="DX11Shader.cpp" />
+    <ClCompile Include="DX11Texture.cpp" />
     <ClCompile Include="DX11VertexBuffer.cpp" />
     <ClCompile Include="DX11VertexShader.cpp" />
     <ClCompile Include="FBXLoader.cpp" />
@@ -26,6 +28,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Transformer.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="Win32\Win32Window.cpp" />
@@ -34,11 +37,13 @@
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="DirectX11\DDSTextureLoader.h" />
     <ClInclude Include="DirectX11\DX11Renderer.h" />
     <ClInclude Include="DX11IndexBuffer.h" />
     <ClInclude Include="DX11Model.h" />
     <ClInclude Include="DX11PixelShader.h" />
     <ClInclude Include="DX11Shader.h" />
+    <ClInclude Include="DX11Texture.h" />
     <ClInclude Include="DX11VertexBuffer.h" />
     <ClInclude Include="DX11VertexShader.h" />
     <ClInclude Include="FBXLoader.h" />
@@ -50,6 +55,7 @@
     <ClInclude Include="render-framework.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="renderers.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Transformer.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="Vector4.h" />

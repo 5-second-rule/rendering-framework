@@ -40,5 +40,8 @@
     <Image Include="whitebloodcell_3_TXTR.tif">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="ecoli_TXTR.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

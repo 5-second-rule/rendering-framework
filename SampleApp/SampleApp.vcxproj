@@ -92,6 +92,7 @@
     <None Include="whitey.fbx" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="ecoli_TXTR.dds" />
     <Image Include="ecoli_TXTR.tif" />
     <Image Include="whitebloodcell_3_TXTR.tif" />
   </ItemGroup>

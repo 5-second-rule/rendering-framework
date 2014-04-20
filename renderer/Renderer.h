@@ -6,6 +6,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "Model.h"
+#include "Texture.h"
 #include "Camera.h"
 
 class FRAMEWORKDLL Renderer
@@ -20,11 +21,11 @@ public:
 
 	virtual VertexBuffer* createVertexBuffer(Vertex[], size_t) = 0;
 	virtual IndexBuffer* createIndexBuffer(unsigned int[], size_t) = 0;
-	virtual Model* createModel(VertexBuffer*, IndexBuffer*) = 0;
+	virtual Model* createModel(VertexBuffer*, IndexBuffer*, Texture*) = 0;
+	virtual Model* createModelFromFile(char* f, VertexBuffer**, IndexBuffer**, Texture*);
+	virtual Texture* createTextureFromFile(char* f) = 0;
 
-	virtual Model* createModelFromFile(char* f, VertexBuffer**, IndexBuffer**);
-
-virtual Camera* getCamera() = 0;
+	virtual Camera* getCamera() = 0;
 
 	virtual void setObjectMatrix(ITransformable*) = 0;
 };

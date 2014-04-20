@@ -5,12 +5,14 @@
 
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
+#include "Texture.h"
 
 class FRAMEWORKDLL Model : public Transformer
 {
 protected:
 	VertexBuffer* vertexBuffer;
 	IndexBuffer* indexBuffer;
+	Texture* texture;
 
 public:
 	Model(VertexBuffer*, IndexBuffer*);

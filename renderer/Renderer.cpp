@@ -28,7 +28,7 @@ Renderer* Renderer::createRenderer(Window* window) {
 		- vP: pointer to VertexBuffer pointer
 		- iP: pointer to IndexBuffer pointer
 */
-Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP) {
+Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex) {
 	char* extension;
 	HRESULT result;
 
@@ -49,7 +49,7 @@ Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuf
 
 	// Checks if error occured during model loader
 	if (result == S_OK) {
-		return createModel(*vP, *iP);
+		return createModel(*vP, *iP, tex);
 	}
 	else {
 		return nullptr;

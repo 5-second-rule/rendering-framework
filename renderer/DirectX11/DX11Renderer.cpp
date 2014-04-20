@@ -11,6 +11,7 @@
 #include "DX11VertexBuffer.h"
 #include "DX11IndexBuffer.h"
 #include "DX11Model.h"
+#include "DX11Texture.h"
 
 DX11Renderer::DX11Renderer(Window* window) : Renderer()
 {
@@ -173,8 +174,12 @@ IndexBuffer* DX11Renderer::createIndexBuffer(unsigned int indices[], size_t num)
 	return new DX11IndexBuffer(indices, num, this->device, this->context);
 }
 
-Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i) {
-	return new DX11Model(v, i, context, this);
+Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture) {
+	return new DX11Model(v, i, context, texture, this);
+}
+
+Texture* DX11Renderer::createTextureFromFile(char* f) {
+	return new DX11Texture(f, this->device, this->context);
 }
 
 Camera* DX11Renderer::getCamera() {
