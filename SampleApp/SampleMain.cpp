@@ -18,30 +18,40 @@ bool messagePump(Window* window) {
 	return true;
 }
 
+static int reduceSpam = 0;
+
 void moveBlob(Window* w, Model* m) {
 	float moveAmt = 1 / 1000.0;
 	Input* inp = (Input*) w->getInput();
-	if (inp->forward) {
-		OutputDebugStringW(L"move forward\n");
-		m->move(Vector4(0, 0, moveAmt));
-	}
-	if (inp->up) {
-		OutputDebugStringW(L"move up\n");
+
+	if (inp->keys[Input::KEY_W] == Input::STATE_DOWN) {
 		m->move(Vector4(0, moveAmt, 0));
 	}
-	if (inp->left) {
-		OutputDebugStringW(L"move left\n");
+	if (inp->keys[Input::KEY_A] == Input::STATE_DOWN) {
 		m->move(Vector4(-moveAmt, 0, 0));
 	}
-	if (inp->down) {
-		OutputDebugStringW(L"move down\n");
+	if (inp->keys[Input::KEY_S] == Input::STATE_DOWN) {
 		m->move(Vector4(0, -moveAmt, 0));
 	}
-	if (inp->right) {
-		OutputDebugStringW(L"move right\n");
+	if (inp->keys[Input::KEY_D] == Input::STATE_DOWN) {
 		m->move(Vector4(moveAmt, 0, 0));
+	}	
+	if (inp->keys[Input::KEY_SP] == Input::STATE_DOWN) {
+		m->move(Vector4(0, 0, moveAmt));
 	}
-		
+	// just messages now, no movement
+	if (inp->keys[Input::KEY_CTRL] == Input::STATE_DOWN && reduceSpam++ % 100 == 0) {
+		OutputDebugStringW(L"ctrl down\n");
+	}
+	if (inp->keys[Input::KEY_SHFT] == Input::STATE_DOWN && reduceSpam++ % 100 == 0) {
+		OutputDebugStringW(L"shift down\n");
+	}
+	if (inp->keys[Input::KEY_LMB] == Input::STATE_DOWN && reduceSpam++ % 100 == 0) {
+		OutputDebugStringW(L"left mouse button down\n");
+	}
+	if (inp->keys[Input::KEY_RMB] == Input::STATE_DOWN && reduceSpam++ % 100 == 0) {
+		OutputDebugStringW(L"right mouse button down\n");
+	}
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {

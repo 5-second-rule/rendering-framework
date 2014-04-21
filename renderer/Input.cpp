@@ -1,11 +1,15 @@
 #include "Input.h"
 
 Input::Input() {
-	forward = false;
-	up = down = false;
-	left = right = false;
-	rollLeft = rollRight = false;
 }
 
 Input::~Input() {
+}
+
+void Input::keyDown(Key k) {
+	keys[k] = STATE_DOWN;
+}
+
+void Input::keyUp(Key k) {
+	keys[k] = STATE_UP;
 }
