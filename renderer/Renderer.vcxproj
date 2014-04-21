@@ -22,6 +22,7 @@
     <ClCompile Include="DX11VertexShader.cpp" />
     <ClCompile Include="FBXLoader.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="ITransformable.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="DX11VertexShader.h" />
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="IndexBuffer.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="ITransformable.h" />
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Model.h" />

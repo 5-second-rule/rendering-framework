@@ -5,6 +5,8 @@
 
 #include "renderer/FBXLoader.h"
 
+#include "renderer/Input.h"
+
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 bool messagePump(Window* window) {
@@ -16,6 +18,31 @@ bool messagePump(Window* window) {
 	return true;
 }
 
+void moveBlob(Window* w, Model* m) {
+	float moveAmt = 1 / 1000.0;
+	Input* inp = (Input*) w->getInput();
+	if (inp->forward) {
+		OutputDebugStringW(L"move forward\n");
+		m->move(Vector4(0, 0, moveAmt));
+	}
+	if (inp->up) {
+		OutputDebugStringW(L"move up\n");
+		m->move(Vector4(0, moveAmt, 0));
+	}
+	if (inp->left) {
+		OutputDebugStringW(L"move left\n");
+		m->move(Vector4(-moveAmt, 0, 0));
+	}
+	if (inp->down) {
+		OutputDebugStringW(L"move down\n");
+		m->move(Vector4(0, -moveAmt, 0));
+	}
+	if (inp->right) {
+		OutputDebugStringW(L"move right\n");
+		m->move(Vector4(moveAmt, 0, 0));
+	}
+		
+}
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	Window* window = Window::createWindow(hInstance);
@@ -73,7 +100,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	char* ecoliFbxFilePath = "../SampleApp/ecoli4_animated_binary.fbx";
 	char* ecoliObjFilePath = "../SampleApp/Ecoli4_Object.obj";
 
-	Model* model = renderer->createModelFromFile(ecoliObjFilePath, &vbuf, &ibuf);
+	Model* model = renderer->createModelFromFile(ecoliFbxFilePath, &vbuf, &ibuf);
 
 	while (messagePump(window)) {
 		renderer->clearFrame();
@@ -81,6 +108,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		model->draw();
 
 		renderer->drawFrame();
+
+		moveBlob(window, model); // temp input handler
 	}
 
 	delete model;

@@ -1,6 +1,5 @@
 #include "Win32Window.h"
 
-
 Win32Window::Win32Window(HINSTANCE hInstance)
 	: Window()
 	, hInstance(hInstance)
@@ -28,11 +27,12 @@ Win32Window::Win32Window(HINSTANCE hInstance)
 
 	ShowWindow(this->hWnd, SW_SHOWNORMAL);
 
-
 	this->oldWndproc = (WNDPROC)SetWindowLongPtr(this->hWnd, GWLP_WNDPROC, (LONG_PTR)SubclassWndProc);
 
 	// store pointer back to c++ class
 	SetWindowLongPtr(this->hWnd, 0, reinterpret_cast<LONG_PTR>(this));
+
+	Win32Window::inp = Input();
 }
 
 LRESULT CALLBACK Win32Window::SubclassWndProc(
@@ -40,11 +40,63 @@ LRESULT CALLBACK Win32Window::SubclassWndProc(
 {
 	Win32Window* cppWnd = reinterpret_cast<Win32Window*>(GetWindowLongPtr(hwnd, 0));
 	switch (wm) {
+	case WM_KEYDOWN:
+		switch (wParam)
+		{
+		case VK_SPACE:
+			cppWnd->inp.forward = true;
+			break;
+		case 0x57: // W
+			cppWnd->inp.up = true;
+			break;
+		case 0x41: // A
+			cppWnd->inp.left = true;
+			break;
+		case 0x53: // S
+			cppWnd->inp.down = true;
+			break;
+		case 0x44: // D
+			cppWnd->inp.right = true;
+			break;
+		case 0x51: // Q
+			cppWnd->inp.rollLeft = true;
+			break;
+		case 0x45: // E
+			cppWnd->inp.rollRight = true;
+			break;
+		}
+		return CallWindowProc(cppWnd->oldWndproc, hwnd, wm, wParam, lParam);
+	case WM_KEYUP:
+		switch (wParam)
+		{
+		case VK_SPACE:
+			cppWnd->inp.forward = false;
+			break;
+		case 0x57: // W
+			cppWnd->inp.up = false;
+			break;
+		case 0x41: // A
+			cppWnd->inp.left = false;
+			break;
+		case 0x53: // S
+			cppWnd->inp.down = false;
+			break;
+		case 0x44: // D
+			cppWnd->inp.right = false;
+			break;
+		case 0x51: // Q
+			cppWnd->inp.rollLeft = false;
+			break;
+		case 0x45: // E
+			cppWnd->inp.rollRight = false;
+			break;
+		}
+		return CallWindowProc(cppWnd->oldWndproc, hwnd, wm, wParam, lParam);
     case WM_DESTROY:
-      PostQuitMessage(EXIT_SUCCESS);
-      return 0;
-		default:
-      return CallWindowProc(cppWnd->oldWndproc, hwnd, wm, wParam, lParam);
+		PostQuitMessage(EXIT_SUCCESS);
+		return 0;
+	default:
+		return CallWindowProc(cppWnd->oldWndproc, hwnd, wm, wParam, lParam);
 	}
 }
 
@@ -55,6 +107,10 @@ Win32Window::~Win32Window()
 
 void* Win32Window::getHandle() {
 	return this->hWnd;
+}
+
+void* Win32Window::getInput() {
+	return &(this->inp);
 }
 
 Window::MessageType Win32Window::getMessage() {
@@ -73,3 +129,4 @@ Window::MessageType Win32Window::getMessage() {
   else 
     return None;
 }
+
