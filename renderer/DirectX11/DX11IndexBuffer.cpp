@@ -1,6 +1,6 @@
 #include "DX11IndexBuffer.h"
 
-#include <stdexcept>
+#include "dxerr.h"
 
 namespace Transmission {
 
@@ -18,8 +18,7 @@ namespace Transmission {
 		ZeroMemory(&initData, sizeof initData);
 		initData.pSysMem = indices;
 
-		if (FAILED(device->CreateBuffer(&bd, &initData, &this->buffer)))
-			throw std::runtime_error("Couldn't create Index Buffer");
+		HR(device->CreateBuffer(&bd, &initData, &this->buffer));
 
 	}
 

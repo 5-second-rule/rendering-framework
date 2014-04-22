@@ -1,6 +1,6 @@
 #include "DX11PixelShader.h"
 
-#include "DirectX11/dxerr.h"
+#include "dxerr.h"
 
 namespace Transmission {
 

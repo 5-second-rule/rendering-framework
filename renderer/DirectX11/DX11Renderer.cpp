@@ -70,8 +70,7 @@ namespace Transmission {
 
 		// Get the backbuffer
 		ID3D11Texture2D* pBackBuffer;
-		if (FAILED(swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*) &pBackBuffer)))
-			throw std::runtime_error("Couldn't get BackBuffer");
+		HR(swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*) &pBackBuffer));
 
 		// get a render target view on the backbuffer
 		HR(device->CreateRenderTargetView(pBackBuffer, NULL, &backbuffer));
@@ -90,8 +89,7 @@ namespace Transmission {
 		cb.ByteWidth = sizeof(float[4][4]) * 3;
 		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		cb.CPUAccessFlags = 0;
-		if (FAILED(device->CreateBuffer(&cb, NULL, &this->constantBuffer)))
-			throw std::runtime_error("Couldn't create constant buffer");
+		HR(device->CreateBuffer(&cb, NULL, &this->constantBuffer));
 
 		// describe the viewport
 		D3D11_VIEWPORT viewport;

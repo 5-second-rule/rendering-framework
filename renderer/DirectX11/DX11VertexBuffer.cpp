@@ -1,6 +1,6 @@
 #include "DX11VertexBuffer.h"
 
-#include <stdexcept>
+#include "dxerr.h"
 
 namespace Transmission {
 
@@ -18,8 +18,7 @@ namespace Transmission {
 		ZeroMemory(&initData, sizeof(initData));
 		initData.pSysMem = vertices;
 
-		if (FAILED(device->CreateBuffer(&bd, &initData, &this->buffer)))
-			throw std::runtime_error("Couldn't create Vertex Buffer");
+		HR(device->CreateBuffer(&bd, &initData, &this->buffer));
 
 	}
 
