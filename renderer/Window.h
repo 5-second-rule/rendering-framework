@@ -1,6 +1,7 @@
 #pragma once
 #include "render-framework.h"
 
+#include "Input.h"
 
 class FRAMEWORKDLL Window
 {
@@ -13,7 +14,7 @@ public:
 	// -----
 
 	virtual void* getHandle() = 0;
-	virtual void* getInput() = 0;
+	virtual const Input* getInput() = NULL;
 	enum MessageType { None = 0, Message, Quit };
 	virtual MessageType getMessage() = 0;
 };

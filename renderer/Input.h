@@ -1,6 +1,8 @@
 #pragma once
 #include "render-framework.h"
 
+#include <Windows.h>
+
 class FRAMEWORKDLL Input
 {
 public:
@@ -9,12 +11,15 @@ public:
 		KEY_Z, KEY_X, KEY_C, KEY_V,
 		KEY_1, KEY_2, KEY_3, KEY_4, KEY_5,
 		KEY_SP, KEY_CTRL, KEY_SHFT,
-	    KEY_LMB, KEY_RMB,
+	    KEY_LMB, KEY_RMB, NOT_FOUND = -1
 	};
 	enum KeyState { STATE_UP, STATE_DOWN };
 
-	KeyState keys[20];
+	static const int NUM_KEYS = 20;
+	static const int keyMap[];
+	KeyState keys[NUM_KEYS];
 
+	static Key findKey(int winKey);
 	void keyDown(Key k);
 	void keyUp(Key k);
 

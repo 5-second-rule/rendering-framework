@@ -18,7 +18,7 @@ bool messagePump(Window* window) {
 	return true;
 }
 
-static int reduceSpam = 0;
+static int reduceSpam = 1;
 
 void moveBlob(Window* w, Model* m) {
 	float moveAmt = 1 / 1000.0;
@@ -38,19 +38,6 @@ void moveBlob(Window* w, Model* m) {
 	}	
 	if (inp->keys[Input::KEY_SP] == Input::STATE_DOWN) {
 		m->move(Vector4(0, 0, moveAmt));
-	}
-	// just messages now, no movement
-	if (inp->keys[Input::KEY_CTRL] == Input::STATE_DOWN && reduceSpam++ % 100 == 0) {
-		OutputDebugStringW(L"ctrl down\n");
-	}
-	if (inp->keys[Input::KEY_SHFT] == Input::STATE_DOWN && reduceSpam++ % 100 == 0) {
-		OutputDebugStringW(L"shift down\n");
-	}
-	if (inp->keys[Input::KEY_LMB] == Input::STATE_DOWN && reduceSpam++ % 100 == 0) {
-		OutputDebugStringW(L"left mouse button down\n");
-	}
-	if (inp->keys[Input::KEY_RMB] == Input::STATE_DOWN && reduceSpam++ % 100 == 0) {
-		OutputDebugStringW(L"right mouse button down\n");
 	}
 }
 

@@ -6,8 +6,6 @@
 
 #include "Window.h"
 
-#include "Input.h"
-
 class Win32Window :
 	public Window
 {
@@ -23,7 +21,7 @@ public:
 	~Win32Window();
 
 	virtual void* getHandle();
-	virtual void* getInput();
+	virtual const Input* getInput();
 	virtual Window::MessageType getMessage();
 };
 

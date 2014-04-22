@@ -1,5 +1,5 @@
 #include "Win32Window.h"
-#include "Input.h"
+
 Win32Window::Win32Window(HINSTANCE hInstance)
 	: Window()
 	, hInstance(hInstance)
@@ -39,137 +39,26 @@ LRESULT CALLBACK Win32Window::SubclassWndProc(
 	HWND hwnd, UINT wm, WPARAM wParam, LPARAM lParam)
 {
 	Win32Window* cppWnd = reinterpret_cast<Win32Window*>(GetWindowLongPtr(hwnd, 0));
+	Input::Key key;
 
 	switch (wm) {
 	case WM_KEYDOWN:
-		switch (wParam)
-		{
-		case 0x57: // W
-			cppWnd->inp.keyDown(Input::KEY_W);
-			break;
-		case 0x41: // A
-			cppWnd->inp.keyDown(Input::KEY_A);
-			break;
-		case 0x53: // S
-			cppWnd->inp.keyDown(Input::KEY_S);
-			break;
-		case 0x44: // D
-			cppWnd->inp.keyDown(Input::KEY_D);
-			break;
-		case 0x51: // Q
-			cppWnd->inp.keyDown(Input::KEY_Q);
-			break;
-		case 0x45: // E
-			cppWnd->inp.keyDown(Input::KEY_E);
-			break;
-		case 0x5A: // Z
-			cppWnd->inp.keyDown(Input::KEY_Z);
-			break;
-		case 0x58: // X
-			cppWnd->inp.keyDown(Input::KEY_X);
-			break;
-		case 0x43: // C
-			cppWnd->inp.keyDown(Input::KEY_C);
-			break;
-		case 0x56: // V
-			cppWnd->inp.keyDown(Input::KEY_V);
-			break;
-		case 0x31: // 1
-			cppWnd->inp.keyDown(Input::KEY_1);
-			break;
-		case 0x32: // 2
-			cppWnd->inp.keyDown(Input::KEY_2);
-			break;
-		case 0x33: // 3
-			cppWnd->inp.keyDown(Input::KEY_3);
-			break;
-		case 0x34: // 4
-			cppWnd->inp.keyDown(Input::KEY_4);
-			break;
-		case 0x35: // 5
-			cppWnd->inp.keyDown(Input::KEY_5);
-			break;
-		case VK_SPACE:
-			cppWnd->inp.keyDown(Input::KEY_SP);
-			break;
-		case VK_CONTROL:
-			cppWnd->inp.keyDown(Input::KEY_CTRL);
-			break;
-		case VK_SHIFT:
-			cppWnd->inp.keyDown(Input::KEY_SHFT);
-			break;
-		}
+		key = Input::findKey(wParam);
+		if (key != Input::NOT_FOUND)
+			cppWnd->inp.keyDown(key);
 		break;
+	case WM_KEYUP:
+		key = Input::findKey(wParam);
+		if (key != Input::NOT_FOUND)
+			cppWnd->inp.keyUp(key);
+		break;
+
+	// Need to handle mouse buttons directly
 	case WM_LBUTTONDOWN:
 		cppWnd->inp.keyDown(Input::KEY_LMB);
 		break;
 	case WM_RBUTTONDOWN:
 		cppWnd->inp.keyDown(Input::KEY_RMB);
-		break;
-	case WM_KEYUP:
-		switch (wParam)
-		{
-		case 0x57: // W
-			cppWnd->inp.keyUp(Input::KEY_W);
-			break;
-		case 0x41: // A
-			cppWnd->inp.keyUp(Input::KEY_A);
-			break;
-		case 0x53: // S
-			cppWnd->inp.keyUp(Input::KEY_S);
-			break;
-		case 0x44: // D
-			cppWnd->inp.keyUp(Input::KEY_D);
-			break;
-		case 0x51: // Q
-			cppWnd->inp.keyUp(Input::KEY_Q);
-			break;
-		case 0x45: // E
-			cppWnd->inp.keyUp(Input::KEY_E);
-			break;
-		case 0x5A: // Z
-			cppWnd->inp.keyUp(Input::KEY_Z);
-			break;
-		case 0x58: // X
-			cppWnd->inp.keyUp(Input::KEY_X);
-			break;
-		case 0x43: // C
-			cppWnd->inp.keyUp(Input::KEY_C);
-			break;
-		case 0x56: // V
-			cppWnd->inp.keyUp(Input::KEY_V);
-			break;
-		case 0x31: // 1
-			cppWnd->inp.keyUp(Input::KEY_1);
-			break;
-		case 0x32: // 2
-			cppWnd->inp.keyUp(Input::KEY_2);
-			break;
-		case 0x33: // 3
-			cppWnd->inp.keyUp(Input::KEY_3);
-			break;
-		case 0x34: // 4
-			cppWnd->inp.keyUp(Input::KEY_4);
-			break;
-		case 0x35: // 5
-			cppWnd->inp.keyUp(Input::KEY_5);
-			break;
-		case VK_SPACE:
-			cppWnd->inp.keyUp(Input::KEY_SP);
-			break;
-		case VK_CONTROL:
-			cppWnd->inp.keyUp(Input::KEY_CTRL);
-			break;
-		case VK_SHIFT:
-			cppWnd->inp.keyUp(Input::KEY_SHFT);
-			break;
-		case VK_LBUTTON:
-			cppWnd->inp.keyUp(Input::KEY_LMB);
-			break;
-		case VK_RBUTTON:
-			cppWnd->inp.keyUp(Input::KEY_RMB);
-			break;
-		}
 		break;
 	case WM_LBUTTONUP:
 		cppWnd->inp.keyUp(Input::KEY_LMB);
@@ -177,6 +66,7 @@ LRESULT CALLBACK Win32Window::SubclassWndProc(
 	case WM_RBUTTONUP:
 		cppWnd->inp.keyUp(Input::KEY_RMB);
 		break;
+
     case WM_DESTROY:
 		PostQuitMessage(EXIT_SUCCESS);
 		return 0;
@@ -196,7 +86,7 @@ void* Win32Window::getHandle() {
 	return this->hWnd;
 }
 
-void* Win32Window::getInput() {
+const Input* Win32Window::getInput() {
 	return &(this->inp);
 }
 
