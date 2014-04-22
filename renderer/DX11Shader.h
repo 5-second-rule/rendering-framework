@@ -3,26 +3,29 @@
 #include <d3d11.h>
 #pragma comment(lib, "d3d11.lib")
 
-class DX11Shader
-{
-protected:
-	ID3D11DeviceChild* shader;
+namespace Transmission {
 
-	char* bytecode;
-	size_t length;
+	class DX11Shader
+	{
+	protected:
+		ID3D11DeviceChild* shader;
 
-public:
-	DX11Shader(char*);
-	~DX11Shader();
+		char* bytecode;
+		size_t length;
 
-	ID3D11DeviceChild* getShader();
+	public:
+		DX11Shader(char*);
+		~DX11Shader();
 
-	struct Buffer {
-		char* buf;
-		size_t len;
+		ID3D11DeviceChild* getShader();
+
+		struct Buffer {
+			char* buf;
+			size_t len;
+		};
+
+		Buffer getBytecode();
+
 	};
 
-	Buffer getBytecode();
-
-};
-
+}

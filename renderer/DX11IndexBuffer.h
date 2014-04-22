@@ -7,17 +7,18 @@
 
 #include "util.h"
 
-class DX11IndexBuffer :
-	public IndexBuffer
-{
-private:
-	ID3D11Buffer* buffer;
-	ID3D11DeviceContext* context;
+namespace Transmission {
+	class DX11IndexBuffer :
+		public IndexBuffer
+	{
+	private:
+		ID3D11Buffer* buffer;
+		ID3D11DeviceContext* context;
 
-public:
-	DX11IndexBuffer(unsigned int[], size_t, ID3D11Device*, ID3D11DeviceContext*);
-	~DX11IndexBuffer();
+	public:
+		DX11IndexBuffer(unsigned int [], size_t, ID3D11Device*, ID3D11DeviceContext*);
+		~DX11IndexBuffer();
 
-	virtual void set();
-};
-
+		virtual void set();
+	};
+}

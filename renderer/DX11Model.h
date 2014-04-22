@@ -11,18 +11,20 @@
 #include "DX11IndexBuffer.h"
 #include "Renderer.h"
 
-class DX11Model : public Model
-{
-private:
-	ID3D11DeviceContext* context;
-	Renderer* renderer;
-	std::vector<Vertex> *vertices;
-	std::vector<int> *indices;
+namespace Transmission {
 
-public:
-	DX11Model(VertexBuffer*, IndexBuffer*, ID3D11DeviceContext*, Renderer*);
-	~DX11Model();
+	class DX11Model : public Model
+	{
+	private:
+		ID3D11DeviceContext* context;
+		Renderer* renderer;
+		std::vector<Vertex> *vertices;
+		std::vector<int> *indices;
 
-	virtual void draw();
-};
+	public:
+		DX11Model(VertexBuffer*, IndexBuffer*, ID3D11DeviceContext*, Renderer*);
+		~DX11Model();
 
+		virtual void draw();
+	};
+}
