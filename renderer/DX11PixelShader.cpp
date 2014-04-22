@@ -1,13 +1,12 @@
 #include "DX11PixelShader.h"
 
-#include <stdexcept>
+#include "DirectX11/dxerr.h"
 
 namespace Transmission {
 
 
 	DX11PixelShader::DX11PixelShader(char* filename, ID3D11Device* device) : DX11Shader(filename) {
-		if (FAILED(device->CreatePixelShader(this->bytecode, this->length, NULL, (ID3D11PixelShader**) &this->shader)))
-			throw std::runtime_error("Could not create pixel shader");
+		HR(device->CreatePixelShader(this->bytecode, this->length, NULL, (ID3D11PixelShader**) &this->shader));
 	}
 
 

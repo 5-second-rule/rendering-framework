@@ -87,6 +87,9 @@
     <ClCompile Include="Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX11\dxerr.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -163,6 +166,9 @@
     </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\dxerr.h">
+      <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

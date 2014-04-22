@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include <d3d11.h>
+#include "dxerr.h"
 
 #pragma comment(lib, "d3d11.lib")
 

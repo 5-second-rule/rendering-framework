@@ -20,7 +20,6 @@ namespace Transmission {
 
 		// Create a descriptor for our swap chain
 		DXGI_SWAP_CHAIN_DESC desc;
-		D3D_FEATURE_LEVEL featureLevel;
 
 		ZeroMemory(&desc, sizeof(DXGI_SWAP_CHAIN_DESC));
 
@@ -40,24 +39,34 @@ namespace Transmission {
 		desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-		featureLevel = D3D_FEATURE_LEVEL_11_0;
+		D3D_FEATURE_LEVEL featureLevels [] = {
+			D3D_FEATURE_LEVEL_11_0,
+			D3D_FEATURE_LEVEL_10_1,
+			D3D_FEATURE_LEVEL_10_0,
+			D3D_FEATURE_LEVEL_9_3
+		};
+
+		UINT createDeviceFlags = 0;
+
+#if defined(DEBUG) || defined(_DEBUG)
+		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
 
 		// Create the device, device context, and swap chain
-		HRESULT result = D3D11CreateDeviceAndSwapChain(
+		HR(D3D11CreateDeviceAndSwapChain(
 			NULL,
 			D3D_DRIVER_TYPE_HARDWARE,
 			NULL,
-			0,
-			&featureLevel,
-			1,
+			createDeviceFlags,
+			featureLevels,
+			4,
 			D3D11_SDK_VERSION,
 			&desc,
 			&swapchain,
 			&device,
 			NULL,
 			&context
-			);
-		if (FAILED(result)) throw std::runtime_error("Device and Swap Chain creation failed");
+			));
 
 		// Get the backbuffer
 		ID3D11Texture2D* pBackBuffer;
@@ -65,9 +74,8 @@ namespace Transmission {
 			throw std::runtime_error("Couldn't get BackBuffer");
 
 		// get a render target view on the backbuffer
-		result = device->CreateRenderTargetView(pBackBuffer, NULL, &backbuffer);
+		HR(device->CreateRenderTargetView(pBackBuffer, NULL, &backbuffer));
 
-		if (FAILED(result)) throw std::runtime_error("Couldn't create render target view on backbuffer");
 
 		pBackBuffer->Release();
 		pBackBuffer = NULL;
@@ -118,8 +126,7 @@ namespace Transmission {
 		};
 
 		DX11Shader::Buffer VSbytecode = vertexShader->getBytecode();
-		if (FAILED(result = device->CreateInputLayout(ied, 3, VSbytecode.buf, VSbytecode.len, &this->layout)))
-			throw std::runtime_error("Could not create input layout");
+		HR(device->CreateInputLayout(ied, 3, VSbytecode.buf, VSbytecode.len, &this->layout));
 		context->IASetInputLayout(this->layout);
 
 		// set shaders

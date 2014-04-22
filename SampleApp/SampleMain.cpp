@@ -21,7 +21,7 @@ bool messagePump(Transmission::Window* window) {
 static int reduceSpam = 1;
 
 void moveBlob(Transmission::Window* w, Transmission::Model* m) {
-	float moveAmt = 1 / 1000.0;
+	float moveAmt = 1.0f / 1000.0f;
 	Transmission::Input* inp = (Transmission::Input*) w->getInput();
 
 	if (inp->keys[Transmission::Input::KEY_W] == Transmission::Input::STATE_DOWN) {
