@@ -22,6 +22,7 @@ public:
 	virtual IndexBuffer* createIndexBuffer(unsigned int[], size_t) = 0;
 	virtual Model* createModel(VertexBuffer*, IndexBuffer*) = 0;
 
+	virtual bool loadModelFile(char* f, VertexBuffer**, IndexBuffer**);
 	virtual Model* createModelFromFile(char* f, VertexBuffer**, IndexBuffer**);
 
 virtual Camera* getCamera() = 0;
