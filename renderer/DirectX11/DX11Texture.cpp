@@ -1,11 +1,16 @@
 #include "DX11Texture.h"
 
+#include "dxerr.h"
+#include <stdexcept>
+
 namespace Transmission {
 	DX11Texture::DX11Texture(const char* textureFile, ID3D11Device* device, ID3D11DeviceContext* context) : Texture(textureFile), context(context) {
 		wchar_t news[MAX_PATH];
 		mbstowcs(news, textureFile, strlen(textureFile) + 1);
-		HRESULT hr;
-		hr = DirectX::CreateDDSTextureFromFile(device, news, nullptr, &textureResource);
+
+		if (FAILED(DirectX::CreateDDSTextureFromFile(device, news, nullptr, &textureResource))) {
+			throw std::runtime_error("Couldn't create texture");
+		}
 
 		D3D11_SAMPLER_DESC sampDesc;
 		ZeroMemory(&sampDesc, sizeof(sampDesc));
@@ -17,7 +22,7 @@ namespace Transmission {
 		sampDesc.MinLOD = 0;
 		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-		hr = device->CreateSamplerState(&sampDesc, &samplerState);
+		HR(device->CreateSamplerState(&sampDesc, &samplerState));
 	}
 
 
