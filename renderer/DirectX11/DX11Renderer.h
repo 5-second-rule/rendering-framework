@@ -22,6 +22,8 @@ namespace Transmission {
 		ID3D11DeviceContext* context;
 
 		ID3D11RenderTargetView* backbuffer;
+		ID3D11DepthStencilView* depthStencil;
+		ID3D11DepthStencilState * depthStencilState;
 
 		DX11VertexShader* vertexShader;
 		DX11PixelShader* pixelShader;
