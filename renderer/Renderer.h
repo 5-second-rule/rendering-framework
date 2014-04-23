@@ -29,6 +29,6 @@ namespace Transmission {
 
 		virtual Camera* getCamera() = 0;
 
-		virtual void setObjectMatrix(ITransformable*) = 0;
+		virtual void setObjectMatrix(Matrix4) = 0;
 	};
 }

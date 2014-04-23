@@ -1,8 +1,11 @@
-cbuffer ConstantBuffer : register(b0)
+cbuffer PerFrame : register(b0)
+{
+	matrix ViewProjection;
+}
+
+cbuffer PerVertex : register(b1)
 {
 	matrix World;
-	matrix View;
-	matrix Projection;
 }
 
 struct VOut
@@ -15,7 +18,7 @@ VOut vs_main(float4 position : POSITION, float2 texCoord : TEXCOORD, float4 norm
 {
 	VOut output;
 
-	output.position = mul(mul(mul(position,World),View),Projection);
+	output.position = mul(mul(position,World),ViewProjection);
 
 	//color will be replaced with texture values to be passed to pixel shader
 
