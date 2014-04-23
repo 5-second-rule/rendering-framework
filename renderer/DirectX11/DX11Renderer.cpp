@@ -141,7 +141,7 @@ namespace Transmission {
 		depthStencilDesc.Height = Window::screenHeight;
 		depthStencilDesc.MipLevels = 1;
 		depthStencilDesc.ArraySize = 1;
-		depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthStencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
 
 		depthStencilDesc.SampleDesc.Count = 1;
 		depthStencilDesc.SampleDesc.Quality = 0;
@@ -154,6 +154,13 @@ namespace Transmission {
 		ID3D11Texture2D* pDepthStencil;
 
 		HR(device->CreateTexture2D(&depthStencilDesc, NULL, &pDepthStencil));
+
+		D3D11_DEPTH_STENCIL_VIEW_DESC ds;
+		ZeroMemory(&ds, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+		ds.Format = depthStencilDesc.Format;
+		ds.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		ds.Texture2D.MipSlice = 0;
+
 		HR(device->CreateDepthStencilView(pDepthStencil, NULL, &depthStencil));
 
 		/* uncomment this if depth testing stops working
