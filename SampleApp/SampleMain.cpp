@@ -5,21 +5,45 @@
 
 #include "renderer/FBXLoader.h"
 
+#include "renderer/Input.h"
+
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-bool messagePump(Window* window) {
-	Window::MessageType t;
-	while ((t = window->getMessage()) != Window::MessageType::None) {
-		if (t == Window::MessageType::Quit) return false;
+bool messagePump(Transmission::Window* window) {
+	Transmission::Window::MessageType t;
+	while ((t = window->getMessage()) != Transmission::Window::MessageType::None) {
+		if (t == Transmission::Window::MessageType::Quit) return false;
 	}
 
 	return true;
 }
 
+static int reduceSpam = 1;
+
+void moveBlob(Transmission::Window* w, Transmission::Model* m) {
+	float moveAmt = 1.0f / 1000.0f;
+	Transmission::Input* inp = (Transmission::Input*) w->getInput();
+
+	if (inp->keys[Transmission::Input::KEY_W] == Transmission::Input::STATE_DOWN) {
+		m->move(Transmission::Vector4(0, moveAmt, 0));
+	}
+	if (inp->keys[Transmission::Input::KEY_A] == Transmission::Input::STATE_DOWN) {
+		m->move(Transmission::Vector4(-moveAmt, 0, 0));
+	}
+	if (inp->keys[Transmission::Input::KEY_S] == Transmission::Input::STATE_DOWN) {
+		m->move(Transmission::Vector4(0, -moveAmt, 0));
+	}
+	if (inp->keys[Transmission::Input::KEY_D] == Transmission::Input::STATE_DOWN) {
+		m->move(Transmission::Vector4(moveAmt, 0, 0));
+	}	
+	if (inp->keys[Transmission::Input::KEY_SP] == Transmission::Input::STATE_DOWN) {
+		m->move(Transmission::Vector4(0, 0, moveAmt));
+	}
+}
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-	Window* window = Window::createWindow(hInstance);
-	Renderer* renderer = Renderer::createRenderer(window);
+	Transmission::Window* window = Transmission::Window::createWindow(hInstance);
+	Transmission::Renderer* renderer = Transmission::Renderer::createRenderer(window);
 
 	/*Vertex cube[8] = {
 		{ { -1.0f, 1.0f, -1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } },
@@ -63,8 +87,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	fileLoaded.loadFBXFile(filePath, &vbuf, &ibuf, renderer);
 	*/
 
-	VertexBuffer* vbuf;// = renderer->createVertexBuffer(cube, 8);
-	IndexBuffer* ibuf;// = renderer->createIndexBuffer(index, 36);
+	Transmission::VertexBuffer* vbuf;// = renderer->createVertexBuffer(cube, 8);
+	Transmission::IndexBuffer* ibuf;// = renderer->createIndexBuffer(index, 36);
 	//Model* model = renderer->createModel(vbuf, ibuf);
 
 	//model->move(Vector4(0, 0, 10));
@@ -90,6 +114,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		model->draw();
 
 		renderer->drawFrame();
+
+		moveBlob(window, model); // temp input handler
 	}
 
 	delete model;

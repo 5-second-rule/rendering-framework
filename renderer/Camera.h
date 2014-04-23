@@ -4,36 +4,39 @@
 #include "Vector4.h"
 #include "Matrix4.h"
 
-class FRAMEWORKDLL Camera
-{
-private:
-	Vector4 position;
-	Vector4 target;
-	Vector4 up;
+namespace Transmission {
 
-	float fovY;
-	float aspect;
-	float nearPlane;
-	float farPlane;
+	class FRAMEWORKDLL Camera
+	{
+	private:
+		Vector4 position;
+		Vector4 target;
+		Vector4 up;
 
-	Matrix4 camera;
-	Matrix4 perspective;
+		float fovY;
+		float aspect;
+		float nearPlane;
+		float farPlane;
 
-	void updateCamera();
-	void updatePerspective();
+		Matrix4 camera;
+		Matrix4 perspective;
+
+		void updateCamera();
+		void updatePerspective();
 
 
-public:
-	Camera(Vector4&, Vector4&, Vector4&);
-	Camera(Vector4&, Vector4&, Vector4&, float, float, float, float);
-	
-	~Camera();
+	public:
+		Camera(Vector4&, Vector4&, Vector4&);
+		Camera(Vector4&, Vector4&, Vector4&, float, float, float, float);
 
-	void move(Vector4&);
-	void lookAt(Vector4&);
+		~Camera();
 
-	Matrix4 getCameraInverse();
-	Matrix4 getPerspective();
+		void move(Vector4&);
+		void lookAt(Vector4&);
 
-};
+		Matrix4 getCameraInverse();
+		Matrix4 getPerspective();
 
+	};
+
+}

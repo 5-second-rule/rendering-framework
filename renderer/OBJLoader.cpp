@@ -22,7 +22,7 @@ OBJLoader::~OBJLoader()
 #include <fstream>
 using namespace std;
 
-
+namespace Transmission {
 //////////////
 // TYPEDEFS //
 //////////////
@@ -156,11 +156,11 @@ bool OBJLoader::LoadDataStructures(char* filename, int vertexCount, int textureC
 		return false;
 	}
 
-	normals = new normalType[normalCount];
-	if (!normals)
-	{
-		return false;
-	}
+		normals = new normalType[normalCount];
+		if (!normals)
+		{
+			return false;
+		}
 
 	faces = new FaceType[faceCount];
 	if (!faces)
@@ -188,14 +188,14 @@ bool OBJLoader::LoadDataStructures(char* filename, int vertexCount, int textureC
 		return false;
 	}
 
-	// Read in the vertices, texture coordinates, and normals into the data structures.
-	// Important: Also convert to left hand coordinate system since Maya uses right hand coordinate system.
-	fin.get(input);
-	while (!fin.eof())
-	{
-		if (input == 'v')
+		// Read in the vertices, texture coordinates, and normals into the data structures.
+		// Important: Also convert to left hand coordinate system since Maya uses right hand coordinate system.
+		fin.get(input);
+		while (!fin.eof())
 		{
-			fin.get(input);
+			if (input == 'v')
+			{
+				fin.get(input);
 
 			// Read in the vertices.
 			if (input == ' ')
@@ -346,4 +346,6 @@ bool OBJLoader::LoadDataStructures(char* filename, int vertexCount, int textureC
 	}
 
 	return true;
+	}
+
 }

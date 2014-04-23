@@ -3,12 +3,15 @@
 
 #include "Matrix4.h"
 
-class FRAMEWORKDLL ITransformable
-{
-public:
-	ITransformable();
-	~ITransformable();
+namespace Transmission {
 
-	virtual Matrix4 getTransform() = 0;
-};
+	class FRAMEWORKDLL ITransformable
+	{
+	public:
+		ITransformable();
+		~ITransformable();
 
+		virtual Matrix4 getTransform() = 0;
+	};
+
+}

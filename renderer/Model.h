@@ -7,17 +7,20 @@
 #include "VertexBuffer.h"
 #include "Texture.h"
 
-class FRAMEWORKDLL Model : public Transformer
-{
-protected:
-	VertexBuffer* vertexBuffer;
-	IndexBuffer* indexBuffer;
-	Texture* texture;
+namespace Transmission {
 
-public:
-	Model(VertexBuffer*, IndexBuffer*);
-	~Model();
 
-	virtual void draw() = 0;
-};
+	class FRAMEWORKDLL Model : public Transformer
+	{
+	protected:
+		VertexBuffer* vertexBuffer;
+		IndexBuffer* indexBuffer;
+		Texture* texture;
 
+	public:
+		Model(VertexBuffer*, IndexBuffer*);
+		~Model();
+
+		virtual void draw() = 0;
+	};
+}

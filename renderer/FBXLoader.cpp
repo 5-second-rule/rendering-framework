@@ -6,6 +6,9 @@
 
 #include <cassert>
 
+
+namespace Transmission {
+
 FbxManager* g_pFbxSdkManager = nullptr;
 
 FBXLoader::FBXLoader()
@@ -169,4 +172,6 @@ HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer*
 		}
 	}
 	return S_OK;
+	}
+
 }

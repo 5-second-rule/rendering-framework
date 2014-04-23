@@ -6,14 +6,17 @@
 #include "IndexBuffer.h"
 #include "Renderer.h"
 
-class OBJLoader
-{
-public:
-	OBJLoader();
-	~OBJLoader();
+namespace Transmission {
 
-	HRESULT loadOBJFile(char* filePath, VertexBuffer** vBuf, IndexBuffer** iBuf, Renderer* renderer);
-	bool ReadFileCounts(char* filename, int& vertexCount, int& textureCount, int& normalCount, int& faceCount);
-	bool LoadDataStructures(char* filename, int vertexCount, int textureCount, int normalCount, int faceCount, VertexBuffer** vBuf, IndexBuffer** iBuf, Renderer* renderer);
-};
+	class OBJLoader
+	{
+	public:
+		OBJLoader();
+		~OBJLoader();
 
+		HRESULT loadOBJFile(char* filePath, VertexBuffer** vBuf, IndexBuffer** iBuf, Renderer* renderer);
+		bool ReadFileCounts(char* filename, int& vertexCount, int& textureCount, int& normalCount, int& faceCount);
+		bool LoadDataStructures(char* filename, int vertexCount, int textureCount, int normalCount, int faceCount, VertexBuffer** vBuf, IndexBuffer** iBuf, Renderer* renderer);
+	};
+
+}

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -39,35 +39,17 @@
     <ClCompile Include="Win32\Win32Window.cpp">
       <Filter>Source Files\Win32</Filter>
     </ClCompile>
-    <ClCompile Include="DX11Shader.cpp">
-      <Filter>Source Files\DirectX11</Filter>
-    </ClCompile>
-    <ClCompile Include="DX11VertexShader.cpp">
-      <Filter>Source Files\DirectX11</Filter>
-    </ClCompile>
-    <ClCompile Include="DX11PixelShader.cpp">
-      <Filter>Source Files\DirectX11</Filter>
-    </ClCompile>
     <ClCompile Include="VertexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DX11VertexBuffer.cpp">
-      <Filter>Source Files\DirectX11</Filter>
-    </ClCompile>
     <ClCompile Include="IndexBuffer.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DX11IndexBuffer.cpp">
-      <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Buffer.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DX11Model.cpp">
-      <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
     <ClCompile Include="FBXLoader.cpp">
       <Filter>Source Files</Filter>
@@ -84,10 +66,34 @@
     <ClCompile Include="Transformer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX11\dxerr.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DX11IndexBuffer.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
     <ClCompile Include="DX11Texture.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DX11Model.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DX11PixelShader.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DX11Shader.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DX11VertexBuffer.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DX11VertexShader.cpp">
       <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
     <ClCompile Include="DirectX11\DDSTextureLoader.cpp">
@@ -113,35 +119,17 @@
     <ClInclude Include="renderers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DX11Shader.h">
-      <Filter>Header Files\DirectX11</Filter>
-    </ClInclude>
-    <ClInclude Include="DX11PixelShader.h">
-      <Filter>Header Files\DirectX11</Filter>
-    </ClInclude>
-    <ClInclude Include="DX11VertexShader.h">
-      <Filter>Header Files\DirectX11</Filter>
-    </ClInclude>
     <ClInclude Include="util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VertexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DX11VertexBuffer.h">
-      <Filter>Header Files\DirectX11</Filter>
-    </ClInclude>
     <ClInclude Include="IndexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DX11IndexBuffer.h">
-      <Filter>Header Files\DirectX11</Filter>
-    </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DX11Model.h">
-      <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
     <ClInclude Include="Buffer.h">
       <Filter>Header Files</Filter>
@@ -167,10 +155,34 @@
     <ClInclude Include="Matrix4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX11\dxerr.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DX11IndexBuffer.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
     <ClInclude Include="DX11Texture.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DX11Model.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DX11PixelShader.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DX11Shader.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DX11VertexBuffer.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DX11VertexShader.h">
       <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
     <ClInclude Include="DirectX11\DDSTextureLoader.h">
