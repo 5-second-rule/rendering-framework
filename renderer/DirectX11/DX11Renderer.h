@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include <d3d11.h>
+#include "dxerr.h"
 
 #pragma comment(lib, "d3d11.lib")
 
@@ -10,38 +11,40 @@
 #include "DX11VertexShader.h"
 #include "DX11PixelShader.h"
 
-class DX11Renderer :
-	public Renderer
-{
-protected:
-	IDXGISwapChain* swapchain;
-	ID3D11Device* device;
-	ID3D11DeviceContext* context;
-	ID3D11RenderTargetView* backbuffer;
+namespace Transmission {
 
-	ID3D11Buffer* constantBuffer;
+	class DX11Renderer :
+		public Renderer
+	{
+	protected:
+		IDXGISwapChain* swapchain;
+		ID3D11Device* device;
+		ID3D11DeviceContext* context;
+		ID3D11RenderTargetView* backbuffer;
 
-	DX11VertexShader* vertexShader;
-	DX11PixelShader* pixelShader;
+		ID3D11Buffer* constantBuffer;
 
-	ID3D11InputLayout *layout;
+		DX11VertexShader* vertexShader;
+		DX11PixelShader* pixelShader;
 
-	Camera* camera;
+		ID3D11InputLayout *layout;
 
-	bool windowed = true;
+		Camera* camera;
 
-public:
-	DX11Renderer(Window*);
-	~DX11Renderer();
+		bool windowed = true;
 
-	virtual void clearFrame();
-	virtual void drawFrame();
+	public:
+		DX11Renderer(Window*);
+		~DX11Renderer();
 
-	virtual VertexBuffer* createVertexBuffer(Vertex[], size_t);
-	virtual IndexBuffer* createIndexBuffer(unsigned int[], size_t);
-	virtual Model* createModel(VertexBuffer*, IndexBuffer*);
+		virtual void clearFrame();
+		virtual void drawFrame();
 
-	virtual Camera* getCamera();
-	virtual void setObjectMatrix(ITransformable*);
-};
+		virtual VertexBuffer* createVertexBuffer(Vertex [], size_t);
+		virtual IndexBuffer* createIndexBuffer(unsigned int [], size_t);
+		virtual Model* createModel(VertexBuffer*, IndexBuffer*);
 
+		virtual Camera* getCamera();
+		virtual void setObjectMatrix(ITransformable*);
+	};
+}

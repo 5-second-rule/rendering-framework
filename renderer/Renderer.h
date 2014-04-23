@@ -8,25 +8,27 @@
 #include "Model.h"
 #include "Camera.h"
 
-class FRAMEWORKDLL Renderer
-{
-public:
-	static Renderer* createRenderer(Window*);
+namespace Transmission {
 
-	/* ----- */
+	class FRAMEWORKDLL Renderer
+	{
+	public:
+		static Renderer* createRenderer(Window*);
 
-	virtual void clearFrame() = 0;
-	virtual void drawFrame() = 0;
+		/* ----- */
 
-	virtual VertexBuffer* createVertexBuffer(Vertex[], size_t) = 0;
-	virtual IndexBuffer* createIndexBuffer(unsigned int[], size_t) = 0;
-	virtual Model* createModel(VertexBuffer*, IndexBuffer*) = 0;
+		virtual void clearFrame() = 0;
+		virtual void drawFrame() = 0;
 
-	virtual bool loadModelFile(char* f, VertexBuffer**, IndexBuffer**);
-	virtual Model* createModelFromFile(char* f, VertexBuffer**, IndexBuffer**);
+		virtual VertexBuffer* createVertexBuffer(Vertex [], size_t) = 0;
+		virtual IndexBuffer* createIndexBuffer(unsigned int [], size_t) = 0;
+		virtual Model* createModel(VertexBuffer*, IndexBuffer*) = 0;
 
-virtual Camera* getCamera() = 0;
+		virtual bool loadModelFile(char* f, VertexBuffer**, IndexBuffer**);
+		virtual Model* createModelFromFile(char* f, VertexBuffer**, IndexBuffer**);
 
-	virtual void setObjectMatrix(ITransformable*) = 0;
-};
+		virtual Camera* getCamera() = 0;
 
+		virtual void setObjectMatrix(ITransformable*) = 0;
+	};
+}

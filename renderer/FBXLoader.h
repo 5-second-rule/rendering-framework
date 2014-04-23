@@ -7,14 +7,17 @@
 #include "IndexBuffer.h"
 #include "Renderer.h"
 
-class FRAMEWORKDLL FBXLoader
-{
-public:
-	FBXLoader();
-	~FBXLoader();
+namespace Transmission {
 
-	HRESULT loadFBXFile(char*, VertexBuffer**, IndexBuffer**, Renderer*);
-private:
-	std::vector<unsigned int>* indices;
-};
+	class FRAMEWORKDLL FBXLoader
+	{
+	public:
+		FBXLoader();
+		~FBXLoader();
 
+		HRESULT loadFBXFile(char*, VertexBuffer**, IndexBuffer**, Renderer*);
+	private:
+		std::vector<unsigned int>* indices;
+	};
+
+}

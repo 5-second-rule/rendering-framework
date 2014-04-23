@@ -1,9 +1,13 @@
 #include "VertexBuffer.h"
 
 
-VertexBuffer::VertexBuffer(size_t c) : Buffer(c) {}
+namespace Transmission {
+
+	VertexBuffer::VertexBuffer(size_t c) : Buffer(c) {}
 
 
-VertexBuffer::~VertexBuffer()
-{
+	VertexBuffer::~VertexBuffer()
+	{
+	}
+
 }

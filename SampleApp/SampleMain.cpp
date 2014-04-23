@@ -9,10 +9,10 @@
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-bool messagePump(Window* window) {
-	Window::MessageType t;
-	while ((t = window->getMessage()) != Window::MessageType::None) {
-		if (t == Window::MessageType::Quit) return false;
+bool messagePump(Transmission::Window* window) {
+	Transmission::Window::MessageType t;
+	while ((t = window->getMessage()) != Transmission::Window::MessageType::None) {
+		if (t == Transmission::Window::MessageType::Quit) return false;
 	}
 
 	return true;
@@ -20,30 +20,30 @@ bool messagePump(Window* window) {
 
 static int reduceSpam = 1;
 
-void moveBlob(Window* w, Model* m) {
-	float moveAmt = 1 / 1000.0;
-	Input* inp = (Input*) w->getInput();
+void moveBlob(Transmission::Window* w, Transmission::Model* m) {
+	float moveAmt = 1.0f / 1000.0f;
+	Transmission::Input* inp = (Transmission::Input*) w->getInput();
 
-	if (inp->keys[Input::KEY_W] == Input::STATE_DOWN) {
-		m->move(Vector4(0, moveAmt, 0));
+	if (inp->keys[Transmission::Input::KEY_W] == Transmission::Input::STATE_DOWN) {
+		m->move(Transmission::Vector4(0, moveAmt, 0));
 	}
-	if (inp->keys[Input::KEY_A] == Input::STATE_DOWN) {
-		m->move(Vector4(-moveAmt, 0, 0));
+	if (inp->keys[Transmission::Input::KEY_A] == Transmission::Input::STATE_DOWN) {
+		m->move(Transmission::Vector4(-moveAmt, 0, 0));
 	}
-	if (inp->keys[Input::KEY_S] == Input::STATE_DOWN) {
-		m->move(Vector4(0, -moveAmt, 0));
+	if (inp->keys[Transmission::Input::KEY_S] == Transmission::Input::STATE_DOWN) {
+		m->move(Transmission::Vector4(0, -moveAmt, 0));
 	}
-	if (inp->keys[Input::KEY_D] == Input::STATE_DOWN) {
-		m->move(Vector4(moveAmt, 0, 0));
+	if (inp->keys[Transmission::Input::KEY_D] == Transmission::Input::STATE_DOWN) {
+		m->move(Transmission::Vector4(moveAmt, 0, 0));
 	}	
-	if (inp->keys[Input::KEY_SP] == Input::STATE_DOWN) {
-		m->move(Vector4(0, 0, moveAmt));
+	if (inp->keys[Transmission::Input::KEY_SP] == Transmission::Input::STATE_DOWN) {
+		m->move(Transmission::Vector4(0, 0, moveAmt));
 	}
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-	Window* window = Window::createWindow(hInstance);
-	Renderer* renderer = Renderer::createRenderer(window);
+	Transmission::Window* window = Transmission::Window::createWindow(hInstance);
+	Transmission::Renderer* renderer = Transmission::Renderer::createRenderer(window);
 
 	/*Vertex cube[8] = {
 		{ { -1.0f, 1.0f, -1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } },
@@ -87,8 +87,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	fileLoaded.loadFBXFile(filePath, &vbuf, &ibuf, renderer);
 	*/
 
-	VertexBuffer* vbuf;// = renderer->createVertexBuffer(cube, 8);
-	IndexBuffer* ibuf;// = renderer->createIndexBuffer(index, 36);
+	Transmission::VertexBuffer* vbuf;// = renderer->createVertexBuffer(cube, 8);
+	Transmission::IndexBuffer* ibuf;// = renderer->createIndexBuffer(index, 36);
 	//Model* model = renderer->createModel(vbuf, ibuf);
 
 	//model->move(Vector4(0, 0, 10));
@@ -97,7 +97,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	char* ecoliFbxFilePath = "../SampleApp/ecoli4_animated_binary.fbx";
 	char* ecoliObjFilePath = "../SampleApp/Ecoli4_Object.obj";
 
-	Model* model = renderer->createModelFromFile(ecoliFbxFilePath, &vbuf, &ibuf);
+	Transmission::Model* model = renderer->createModelFromFile(ecoliFbxFilePath, &vbuf, &ibuf);
 
 	while (messagePump(window)) {
 		renderer->clearFrame();

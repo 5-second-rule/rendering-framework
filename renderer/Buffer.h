@@ -2,16 +2,18 @@
 
 #include "render-framework.h"
 
-class FRAMEWORKDLL Buffer
-{
-private:
-	size_t num;
+namespace Transmission {
 
-public:
-	Buffer(size_t);
-	~Buffer();
+	class FRAMEWORKDLL Buffer
+	{
+	private:
+		size_t num;
 
-	virtual void set() = 0;
-	virtual size_t count();
-};
+	public:
+		Buffer(size_t);
+		~Buffer();
 
+		virtual void set() = 0;
+		virtual size_t count();
+	};
+}

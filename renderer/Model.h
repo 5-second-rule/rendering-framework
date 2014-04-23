@@ -6,16 +6,20 @@
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
 
-class FRAMEWORKDLL Model : public Transformer
-{
-protected:
-	VertexBuffer* vertexBuffer;
-	IndexBuffer* indexBuffer;
 
-public:
-	Model(VertexBuffer*, IndexBuffer*);
-	~Model();
+namespace Transmission {
 
-	virtual void draw() = 0;
-};
 
+	class FRAMEWORKDLL Model : public Transformer
+	{
+	protected:
+		VertexBuffer* vertexBuffer;
+		IndexBuffer* indexBuffer;
+
+	public:
+		Model(VertexBuffer*, IndexBuffer*);
+		~Model();
+
+		virtual void draw() = 0;
+	};
+}
