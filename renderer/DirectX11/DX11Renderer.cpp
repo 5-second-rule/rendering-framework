@@ -283,6 +283,7 @@ namespace Transmission {
 	void DX11Renderer::clearFrame() {
 		float color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
 		context->ClearRenderTargetView(backbuffer, color);
+		context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		// set default stuff
 		float world[4][4];
