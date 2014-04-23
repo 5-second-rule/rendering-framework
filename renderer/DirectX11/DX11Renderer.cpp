@@ -149,7 +149,6 @@ namespace Transmission {
 		pDepthStencil->Release();
 		pDepthStencil = NULL;
 
-		depthStencil->Release();
 
 		// setup constant buffer
 		D3D11_BUFFER_DESC cb;
@@ -214,6 +213,8 @@ namespace Transmission {
 		swapchain->Release();
 		backbuffer->Release();
 		constantBuffer->Release();
+		depthStencil->Release();
+
 		device->Release();
 		context->Release();
 	}
