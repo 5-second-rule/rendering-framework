@@ -1,8 +1,5 @@
 #include "OBJLoader.h"
 
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: OBJLoader.cpp
 ////////////////////////////////////////////////////////////////////////////////
@@ -206,7 +203,7 @@ namespace Transmission {
 					fin >> vertices[vertexIndex].x >> vertices[vertexIndex].y >> vertices[vertexIndex].z;
 
 					// Invert the Z vertex to change to left hand system.
-					//vertices[vertexIndex].z = vertices[vertexIndex].z * -1.0f;
+					vertices[vertexIndex].z = vertices[vertexIndex].z * -1.0f;
 					vertexIndex++;
 				}
 
@@ -274,6 +271,7 @@ namespace Transmission {
 			index2 = faces[i].vIndex2 - 1;
 			index3 = faces[i].vIndex3 - 1;
 
+			//1st vertex
 			vertexBufferArray[vertexBufferIndex].point[0] = vertices[index1].x;
 			vertexBufferArray[vertexBufferIndex].point[1] = vertices[index1].y;
 			vertexBufferArray[vertexBufferIndex].point[2] = vertices[index1].z;
@@ -288,6 +286,7 @@ namespace Transmission {
 			indices[vertexBufferIndex] = vertexBufferIndex;
 			vertexBufferIndex++;
 
+			//2nd vertex
 			vertexBufferArray[vertexBufferIndex].point[0] = vertices[index2].x;
 			vertexBufferArray[vertexBufferIndex].point[1] = vertices[index2].y;
 			vertexBufferArray[vertexBufferIndex].point[2] = vertices[index2].z;
@@ -302,6 +301,7 @@ namespace Transmission {
 			indices[vertexBufferIndex] = vertexBufferIndex;
 			vertexBufferIndex++;
 
+			//3rd vertex
 			vertexBufferArray[vertexBufferIndex].point[0] = vertices[index3].x;
 			vertexBufferArray[vertexBufferIndex].point[1] = vertices[index3].y;
 			vertexBufferArray[vertexBufferIndex].point[2] = vertices[index3].z;
