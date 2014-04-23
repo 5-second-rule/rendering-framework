@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -78,9 +78,6 @@
     <ClCompile Include="DirectX11\DX11IndexBuffer.cpp">
       <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
-    <ClCompile Include="DX11Texture.cpp">
-      <Filter>Source Files\DirectX11</Filter>
-    </ClCompile>
     <ClCompile Include="DirectX11\DX11Model.cpp">
       <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
@@ -97,6 +94,9 @@
       <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
     <ClCompile Include="DirectX11\DDSTextureLoader.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DX11Texture.cpp">
       <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
   </ItemGroup>
@@ -167,9 +167,6 @@
     <ClInclude Include="DirectX11\DX11IndexBuffer.h">
       <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
-    <ClInclude Include="DX11Texture.h">
-      <Filter>Header Files\DirectX11</Filter>
-    </ClInclude>
     <ClInclude Include="DirectX11\DX11Model.h">
       <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
@@ -186,6 +183,9 @@
       <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
     <ClInclude Include="DirectX11\DDSTextureLoader.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DX11Texture.h">
       <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
   </ItemGroup>

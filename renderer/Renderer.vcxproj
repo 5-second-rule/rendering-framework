@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -22,7 +22,7 @@
     <ClCompile Include="DirectX11\DX11Shader.cpp" />
     <ClCompile Include="DirectX11\DX11VertexBuffer.cpp" />
     <ClCompile Include="DirectX11\DX11VertexShader.cpp" />
-    <ClCompile Include="DX11Texture.cpp" />
+    <ClCompile Include="DirectX11\DX11Texture.cpp" />
     <ClCompile Include="FBXLoader.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -48,7 +48,7 @@
     <ClInclude Include="DirectX11\DX11Shader.h" />
     <ClInclude Include="DirectX11\DX11VertexBuffer.h" />
     <ClInclude Include="DirectX11\DX11VertexShader.h" />
-    <ClInclude Include="DX11Texture.h" />
+    <ClInclude Include="DirectX11\DX11Texture.h" />
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Input.h" />

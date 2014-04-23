@@ -26,8 +26,8 @@ namespace Transmission {
 		virtual IndexBuffer* createIndexBuffer(unsigned int [], size_t) = 0;
 		virtual Model* createModel(VertexBuffer*, IndexBuffer*, Texture*) = 0;
 
-		virtual bool loadModelFile(char* f, VertexBuffer**, IndexBuffer**, Texture*);
-		virtual Model* createModelFromFile(char* f, VertexBuffer**, IndexBuffer**);
+		virtual bool loadModelFile(char* f, VertexBuffer**, IndexBuffer**);
+		virtual Model* createModelFromFile(char* f, VertexBuffer**, IndexBuffer**, Texture*);
 		virtual Texture* createTextureFromFile(char* f) = 0;
 
 

@@ -103,14 +103,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	char* whiteTexture = "../SampleApp/whitebloodcell_3_TXTR.dds";
 	char* cubeTexture = "../SampleApp/cube_uvmap2.dds";
 
-	Texture* texture = renderer->createTextureFromFile(cubeTexture);
+	Transmission::Texture* texture = renderer->createTextureFromFile(cubeTexture);
 
-	Model* model = renderer->createModelFromFile(boxFbxFilePath, &vbuf, &ibuf, texture);
+	Transmission::Model* model = renderer->createModelFromFile(boxFbxFilePath, &vbuf, &ibuf, texture);
 
 	while (messagePump(window)) {
 		renderer->clearFrame();
 
-		model->rotate(Point(0, 0.01f, 0));
+		model->rotate(Transmission::Vector(0, 0.01f, 0));
 		model->draw();
 
 		renderer->drawFrame();
