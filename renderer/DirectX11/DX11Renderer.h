@@ -20,7 +20,10 @@ namespace Transmission {
 		IDXGISwapChain* swapchain;
 		ID3D11Device* device;
 		ID3D11DeviceContext* context;
+
 		ID3D11RenderTargetView* backbuffer;
+		ID3D11DepthStencilView* depthStencil;
+		ID3D11DepthStencilState * depthStencilState;
 
 		ID3D11Buffer* constantBuffer;
 
