@@ -4,22 +4,19 @@
 namespace Transmission {
 
 
-	DX11Model::DX11Model(VertexBuffer* v, IndexBuffer* i, ID3D11DeviceContext* context, Renderer* renderer) : Model(v, i) {
+	DX11Model::DX11Model(VertexBuffer* v, IndexBuffer* i, ID3D11DeviceContext* context, Texture* texture, Renderer* renderer) : Model(v, i) {
 		this->context = context;
+		this->texture = texture;
 		this->renderer = renderer;
-		vertices = new std::vector<Vertex>();
-		indices = new std::vector<int>();
 	}
 
-	DX11Model::~DX11Model()
-	{
-		delete(vertices);
-	}
+	DX11Model::~DX11Model() {}
 
 
 	void DX11Model::draw() {
 		vertexBuffer->set();
 		indexBuffer->set();
+		texture->set();
 		this->renderer->setObjectMatrix(this);
 		context->DrawIndexed(indexBuffer->count(), 0, 0);
 	}

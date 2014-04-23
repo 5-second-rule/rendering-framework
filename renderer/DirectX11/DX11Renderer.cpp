@@ -11,6 +11,7 @@
 #include "DX11VertexBuffer.h"
 #include "DX11IndexBuffer.h"
 #include "DX11Model.h"
+#include "DX11Texture.h"
 
 namespace Transmission {
 
@@ -148,6 +149,7 @@ namespace Transmission {
 		pDepthStencil->Release();
 		pDepthStencil = NULL;
 
+
 		// setup constant buffer
 		D3D11_BUFFER_DESC cb;
 		ZeroMemory(&cb, sizeof(cb));
@@ -163,9 +165,9 @@ namespace Transmission {
 
 		viewport.TopLeftX = 0.0f;
 		viewport.TopLeftY = 0.0f;
-		// added these in case we need them in future iterations
-		//viewport.MinDepth = 0.0f;
-		//viewport.MaxDepth = 1.0f;
+		// MinDepth and MaxDepth were needed to make depth buffer work
+		viewport.MinDepth = 0.0f;
+		viewport.MaxDepth = 1.0f;
 		viewport.Width = (float) Window::screenWidth;
 		viewport.Height = (float) Window::screenHeight;
 
@@ -211,6 +213,8 @@ namespace Transmission {
 		swapchain->Release();
 		backbuffer->Release();
 		constantBuffer->Release();
+		depthStencil->Release();
+
 		device->Release();
 		context->Release();
 	}
@@ -247,10 +251,13 @@ namespace Transmission {
 	IndexBuffer* DX11Renderer::createIndexBuffer(unsigned int indices [], size_t num) {
 		return new DX11IndexBuffer(indices, num, this->device, this->context);
 	}
+Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture) {
+	return new DX11Model(v, i, context, texture, this);
+}
 
-	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i) {
-		return new DX11Model(v, i, context, this);
-	}
+Texture* DX11Renderer::createTextureFromFile(char* f) {
+	return new DX11Texture(f, this->device, this->context);
+}
 
 	Camera* DX11Renderer::getCamera() {
 		return this->camera;

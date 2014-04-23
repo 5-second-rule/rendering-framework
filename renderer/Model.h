@@ -5,7 +5,7 @@
 
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
-
+#include "Texture.h"
 
 namespace Transmission {
 
@@ -15,6 +15,7 @@ namespace Transmission {
 	protected:
 		VertexBuffer* vertexBuffer;
 		IndexBuffer* indexBuffer;
+		Texture* texture;
 
 	public:
 		Model(VertexBuffer*, IndexBuffer*);

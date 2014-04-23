@@ -94,14 +94,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//model->move(Vector4(0, 0, 10));
 
 	char* whiteBloodFbxFilePath = "../SampleApp/whitey.fbx";
-	char* ecoliFbxFilePath = "../SampleApp/ecoli4_animated_binary.fbx";
-	char* ecoliObjFilePath = "../SampleApp/Ecoli4_Object.obj";
+	char* ecoliFbxFilePath = "../SampleApp/ecoli6_nomedia.fbx";
+	char* ecoliObjFilePath = "../SampleApp/Ecoli6_obj.obj";
+	char* boxFbxFilePath = "../SampleApp/cube.fbx";
 
-	Transmission::Model* model = renderer->createModelFromFile(ecoliFbxFilePath, &vbuf, &ibuf);
+	char* textureLocation = "../SampleApp/ecoli6_TXTR.dds";
+	char* textureLocationW = "../SampleApp/Wood.dds";
+	char* whiteTexture = "../SampleApp/whitebloodcell_3_TXTR.dds";
+	char* cubeTexture = "../SampleApp/cube_uvmap2.dds";
+
+	Transmission::Texture* texture = renderer->createTextureFromFile(textureLocationW);
+
+	Transmission::Model* model = renderer->createModelFromFile(ecoliObjFilePath, &vbuf, &ibuf, texture);
 
 	while (messagePump(window)) {
 		renderer->clearFrame();
 
+		model->rotate(Transmission::Vector(0, 0.01f, 0));
 		model->draw();
 
 		renderer->drawFrame();
@@ -112,6 +121,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	delete model;
 	delete vbuf;
 	delete ibuf;
+	delete texture;
 
 	delete renderer;
 	delete window;

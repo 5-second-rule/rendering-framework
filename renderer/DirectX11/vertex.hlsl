@@ -8,7 +8,7 @@ cbuffer ConstantBuffer : register(b0)
 struct VOut
 {
 	float4 position : SV_POSITION;
-	float4 color : COLOR;
+	float2 tex : TEXCOORD0;
 };
 
 VOut vs_main(float4 position : POSITION, float2 texCoord : TEXCOORD, float4 normal : NORMAL)
@@ -19,7 +19,7 @@ VOut vs_main(float4 position : POSITION, float2 texCoord : TEXCOORD, float4 norm
 
 	//color will be replaced with texture values to be passed to pixel shader
 
-	output.color = float4(1.0,0.0,0.0,1.0);
+	output.tex = texCoord;
 
 	return output;
 }
