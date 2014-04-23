@@ -35,6 +35,9 @@
     <None Include="ecoli6_nomedia.fbx">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="ecoli6_obj.obj">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="whitebloodcell_3_TXTR.tif">
@@ -49,10 +52,5 @@
     <Image Include="Wood.dds">
       <Filter>Resource Files</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="ecoli6_obj.obj">
-      <Filter>Resource Files</Filter>
-    </Object>
   </ItemGroup>
 </Project>
