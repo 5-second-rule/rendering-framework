@@ -102,6 +102,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	while (messagePump(window)) {
 		renderer->clearFrame();
 
+		model->rotate(Transmission::Vector(0.01f, 0.00f, 0.0f));
 		model->draw();
 
 		renderer->drawFrame();

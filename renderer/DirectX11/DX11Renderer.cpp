@@ -156,8 +156,31 @@ namespace Transmission {
 		context->RSSetViewports(1, &viewport);
 
 		// Camera and Perspective Matrices
-		this->camera = new Camera(Point(3, 5, -10), Point(0, 0, 0), Vector(0, 1, 0),
+		this->camera = new Camera(Point(0, 0, -10), Point(0, 0, 0), Vector(0, 1, 0),
 			(float) M_PI / 4.0f, (float) Window::screenWidth / (float) Window::screenHeight, 1, 1000);
+
+	}
+
+	void DX11Renderer::setupConstantBuffer() {
+		if (perFrameBuffer != NULL || perVertexBuffer != NULL) {
+			throw std::runtime_error("You can only setup the constant buffers once");
+		}
+
+		// setup per frame buffer
+		D3D11_BUFFER_DESC cb;
+		ZeroMemory(&cb, sizeof(cb));
+
+		cb.Usage = D3D11_USAGE_DEFAULT;
+		cb.ByteWidth = sizeof(float[4][4]) + sizeof(float[4]);
+		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cb.CPUAccessFlags = 0;
+
+		HR(device->CreateBuffer(&cb, NULL, &this->perFrameBuffer));
+
+		cb.ByteWidth = sizeof(float[4][4]);
+
+		HR(device->CreateBuffer(&cb, NULL, &this->perVertexBuffer));
+
 
 	}
 
@@ -186,29 +209,6 @@ namespace Transmission {
 		context->VSSetShader(vertexShader->getVertexShader(), NULL, 0);
 		context->PSSetShader(pixelShader->getPixelShader(), NULL, 0);
 	}
-
-	void DX11Renderer::setupConstantBuffer() {
-		if (perFrameBuffer != NULL || perVertexBuffer != NULL) {
-			throw std::runtime_error("You can only setup the constant buffers once");
-		}
-
-		// setup per frame buffer
-		D3D11_BUFFER_DESC cb;
-		ZeroMemory(&cb, sizeof(cb));
-
-		cb.Usage = D3D11_USAGE_DEFAULT;
-		cb.ByteWidth = sizeof(float[4][4]);
-		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cb.CPUAccessFlags = 0;
-
-		HR(device->CreateBuffer(&cb, NULL, &this->perFrameBuffer));
-
-		cb.ByteWidth = sizeof(float[4][4]);
-
-		HR(device->CreateBuffer(&cb, NULL, &this->perVertexBuffer));
-
-
-	}
 	
 	//=============================================//
 	//                   Methods                   //
@@ -220,13 +220,20 @@ namespace Transmission {
 
 		// set default stuff
 		float world[4][4];
-		float viewProjection[4][4];
+		float viewProjection[5][4];
 
 		memcpy(world, Matrix4::identity().getPointer(), sizeof(float[4][4]));
 		memcpy(viewProjection, (this->camera->getCameraInverse() * this->camera->getPerspective()).getPointer(), sizeof(float[4][4]));
+		
+		Vector4 cameraPos = this->camera->getPosition();
+		viewProjection[4][0] = cameraPos.x();
+		viewProjection[4][1] = cameraPos.y();
+		viewProjection[4][2] = cameraPos.z();
+		viewProjection[4][3] = 1.0f;
 
-		context->UpdateSubresource(perVertexBuffer, 0, NULL, &world, 0, 0);
+
 		context->UpdateSubresource(perFrameBuffer, 0, NULL, &viewProjection, 0, 0);
+		context->UpdateSubresource(perVertexBuffer, 0, NULL, &world, 0, 0);
 
 		ID3D11Buffer* cBuffers [] = { perFrameBuffer, perVertexBuffer };
 		context->VSSetConstantBuffers(0, 2, cBuffers);

@@ -74,5 +74,9 @@ namespace Transmission {
 		return this->perspective;
 	}
 
+	Vector4 Camera::getPosition() {
+		return this->position;
+	}
+
 
 }
