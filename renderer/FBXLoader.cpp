@@ -69,22 +69,32 @@ HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer*
 			FbxMesh* pMesh = (FbxMesh*)pFbxChildNode->GetNodeAttribute();
 
 			FbxVector4* pVertices = pMesh->GetControlPoints();
-			int controlCount = pMesh->GetControlPointsCount();
+			//int controlCount = pMesh->GetControlPointsCount();
+			int vertexCount = pMesh->GetPolygonCount() * 3; //Note at this point this is the same as numIndices below
 
-			Vertex vertex;
-			Vertex* vertexArray = new Vertex[controlCount];
+			//Vertex vertex;
+			Vertex* vertexArray = new Vertex[vertexCount];
+			//Vertex vertexArray[2592];
 
-			for (int l = 0; l < controlCount; l++)
+			/*for (int l = 0; l < controlCount; l++)
 			{
 				vertex.point[0] = (float)pVertices[l].mData[0];
 				vertex.point[1] = (float)pVertices[l].mData[1];
 				vertex.point[2] = (float)pVertices[l].mData[2];
 
 				vertexArray[l] = vertex;
-			}
+			}*/
 
 			int numIndices = pMesh->GetPolygonVertexCount();
-			unsigned int* indices = (unsigned int*)pMesh->GetPolygonVertices();
+			//unsigned int* indices = (unsigned int*)pMesh->GetPolygonVertices();
+			unsigned int* indexArray = new unsigned int [numIndices];
+
+
+			FbxVector4 fbxNorm(0, 0, 0, 0);
+			FbxVector2 fbxUV(0, 0);
+			bool isMapped;
+
+			int vertexIndex = 0;
 
 			for (int j = 0; j < pMesh->GetPolygonCount(); j++)
 			{
@@ -93,37 +103,69 @@ HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer*
 				assert(iNumVertices == 3);
 
 				//Possibly need to reverse order of vertices for fbx to direct X, but this results in empty spaces
-				//indices->push_back(pMesh->GetPolygonVertex(j, 0));
-				//indices->push_back(pMesh->GetPolygonVertex(j, 2));
-				//indices->push_back(pMesh->GetPolygonVertex(j, 1));
+				int controlIndex = pMesh->GetPolygonVertex(j, 0);
+				pMesh->GetPolygonVertexUV(j, 0, "map1", fbxUV, isMapped);
+				pMesh->GetPolygonVertexNormal(j, 0, fbxNorm);
 
-				FbxVector4 fbxNorm(0, 0, 0, 0);
-				FbxVector2 fbxUV(0, 0);
-				bool isMapped;
-				int iControlPointIndex;
+				vertexArray[vertexIndex].point[0] = (float)pVertices[controlIndex].mData[0];
+				vertexArray[vertexIndex].point[1] = (float)pVertices[controlIndex].mData[1];
+				vertexArray[vertexIndex].point[2] = (float)pVertices[controlIndex].mData[2];
 
-				for (int k = 0; k < iNumVertices; k++)
-				{
-					iControlPointIndex = pMesh->GetPolygonVertex(j, k);
+				vertexArray[vertexIndex].texCoord[0] = (float)fbxUV[0];
+				vertexArray[vertexIndex].texCoord[1] = 1.0f - (float)fbxUV[1];
 
-					pMesh->GetPolygonVertexUV(j, k, "map1", fbxUV, isMapped);
+				vertexArray[vertexIndex].normal[0] = (float)fbxNorm[0];
+				vertexArray[vertexIndex].normal[1] = (float)fbxNorm[1];
+				vertexArray[vertexIndex].normal[2] = (float)fbxNorm[2];
 
-					vertexArray[iControlPointIndex].texCoord[0] = (float) fbxUV[0];
-					vertexArray[iControlPointIndex].texCoord[1] = (float) fbxUV[1];
+				indexArray[vertexIndex] = vertexIndex;
+				vertexIndex++;
 
-					pMesh->GetPolygonVertexNormal(j, k, fbxNorm);
+				controlIndex = pMesh->GetPolygonVertex(j, 1);
+				pMesh->GetPolygonVertexUV(j, 1, "map1", fbxUV, isMapped);
+				pMesh->GetPolygonVertexNormal(j, 1, fbxNorm);
 
-					vertexArray[iControlPointIndex].normal[0] = (float) fbxNorm[0];
-					vertexArray[iControlPointIndex].normal[1] = (float) fbxNorm[1];
-					vertexArray[iControlPointIndex].normal[2] = (float) fbxNorm[2];
-				}
+				vertexArray[vertexIndex].point[0] = (float)pVertices[controlIndex].mData[0];
+				vertexArray[vertexIndex].point[1] = (float)pVertices[controlIndex].mData[1];
+				vertexArray[vertexIndex].point[2] = (float)pVertices[controlIndex].mData[2];
+
+				vertexArray[vertexIndex].texCoord[0] = (float)fbxUV[0];
+				vertexArray[vertexIndex].texCoord[1] = 1.0f - (float)fbxUV[1];
+
+				vertexArray[vertexIndex].normal[0] = (float)fbxNorm[0];
+				vertexArray[vertexIndex].normal[1] = (float)fbxNorm[1];
+				vertexArray[vertexIndex].normal[2] = (float)fbxNorm[2];
+
+				indexArray[vertexIndex] = vertexIndex;
+				vertexIndex++;
+
+				controlIndex = pMesh->GetPolygonVertex(j, 2);
+				pMesh->GetPolygonVertexUV(j, 2, "map1", fbxUV, isMapped);
+				pMesh->GetPolygonVertexNormal(j, 2, fbxNorm);
+
+				vertexArray[vertexIndex].point[0] = (float)pVertices[controlIndex].mData[0];
+				vertexArray[vertexIndex].point[1] = (float)pVertices[controlIndex].mData[1];
+				vertexArray[vertexIndex].point[2] = (float)pVertices[controlIndex].mData[2];
+
+				vertexArray[vertexIndex].texCoord[0] = (float)fbxUV[0];
+				vertexArray[vertexIndex].texCoord[1] = 1.0f - (float)fbxUV[1];
+
+				vertexArray[vertexIndex].normal[0] = (float)fbxNorm[0];
+				vertexArray[vertexIndex].normal[1] = (float)fbxNorm[1];
+				vertexArray[vertexIndex].normal[2] = (float)fbxNorm[2];
+
+				indexArray[vertexIndex] = vertexIndex;
+				vertexIndex++;
 			}
 
-			*vBuf = renderer->createVertexBuffer(vertexArray, controlCount);
-			//*iBuf = renderer->createIndexBuffer(indices->data(), indices->size());
-			*iBuf = renderer->createIndexBuffer(indices, numIndices);
 
-			delete vertexArray;
+
+			*vBuf = renderer->createVertexBuffer(vertexArray, vertexCount);
+			//*iBuf = renderer->createIndexBuffer(indices->data(), indices->size());
+			*iBuf = renderer->createIndexBuffer(indexArray, numIndices);
+
+			delete[] vertexArray;
+			delete[] indexArray;
 		}
 	}
 	return S_OK;

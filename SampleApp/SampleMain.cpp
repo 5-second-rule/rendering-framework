@@ -70,19 +70,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//model->move(Vector4(0, 0, 10));
 
 	char* whiteBloodFbxFilePath = "../SampleApp/whitey.fbx";
-	char* ecoliFbxFilePath = "../SampleApp/ecoli4_animated_binary.fbx";
-	char* ecoliObjFilePath = "../SampleApp/Ecoli4_Object.obj";
+	char* ecoliFbxFilePath = "../SampleApp/ecoli6_nomedia.fbx";
+	char* ecoliObjFilePath = "../SampleApp/Ecoli6_obj.obj";
+	char* boxFbxFilePath = "../SampleApp/cube.fbx";
 
-	char* textureLocation = "../SampleApp/ecoli_TXTR.dds";
+	char* textureLocation = "../SampleApp/ecoli6_TXTR.dds";
 	char* textureLocationW = "../SampleApp/Wood.dds";
+	char* whiteTexture = "../SampleApp/whitebloodcell_3_TXTR.dds";
+	char* cubeTexture = "../SampleApp/cube_uvmap2.dds";
 
-	Texture* texture = renderer->createTextureFromFile(textureLocation);
+	Texture* texture = renderer->createTextureFromFile(cubeTexture);
 
-	Model* model = renderer->createModelFromFile(ecoliObjFilePath, &vbuf, &ibuf, texture);
+	Model* model = renderer->createModelFromFile(boxFbxFilePath, &vbuf, &ibuf, texture);
 
 	while (messagePump(window)) {
 		renderer->clearFrame();
 
+		model->rotate(Point(0, 0.01f, 0));
 		model->draw();
 
 		renderer->drawFrame();
