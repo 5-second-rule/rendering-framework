@@ -149,6 +149,8 @@ namespace Transmission {
 		pDepthStencil->Release();
 		pDepthStencil = NULL;
 
+		depthStencil->Release();
+
 		// setup constant buffer
 		D3D11_BUFFER_DESC cb;
 		ZeroMemory(&cb, sizeof(cb));
@@ -164,9 +166,9 @@ namespace Transmission {
 
 		viewport.TopLeftX = 0.0f;
 		viewport.TopLeftY = 0.0f;
-		// added these in case we need them in future iterations
-		//viewport.MinDepth = 0.0f;
-		//viewport.MaxDepth = 1.0f;
+		// MinDepth and MaxDepth were needed to make depth buffer work
+		viewport.MinDepth = 0.0f;
+		viewport.MaxDepth = 1.0f;
 		viewport.Width = (float) Window::screenWidth;
 		viewport.Height = (float) Window::screenHeight;
 

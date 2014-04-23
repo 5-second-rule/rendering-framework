@@ -72,24 +72,14 @@ HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer*
 			FbxMesh* pMesh = (FbxMesh*)pFbxChildNode->GetNodeAttribute();
 
 			FbxVector4* pVertices = pMesh->GetControlPoints();
-			//int controlCount = pMesh->GetControlPointsCount();
-			int vertexCount = pMesh->GetPolygonCount() * 3; //Note at this point this is the same as numIndices below
+			int vertexCount = pMesh->GetPolygonVertexCount();
 
 			//Vertex vertex;
 			Vertex* vertexArray = new Vertex[vertexCount];
 			//Vertex vertexArray[2592];
 
-			/*for (int l = 0; l < controlCount; l++)
-			{
-				vertex.point[0] = (float)pVertices[l].mData[0];
-				vertex.point[1] = (float)pVertices[l].mData[1];
-				vertex.point[2] = (float)pVertices[l].mData[2];
 
-				vertexArray[l] = vertex;
-			}*/
-
-			int numIndices = pMesh->GetPolygonVertexCount();
-			//unsigned int* indices = (unsigned int*)pMesh->GetPolygonVertices();
+			int numIndices = vertexCount;
 			unsigned int* indexArray = new unsigned int [numIndices];
 
 
@@ -99,13 +89,17 @@ HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer*
 
 			int vertexIndex = 0;
 
+			// Loop iterates through the polygons and fills the vertex and index arrays for the buffers
 			for (int j = 0; j < pMesh->GetPolygonCount(); j++)
 			{
 				int iNumVertices = pMesh->GetPolygonSize(j);
 
 				assert(iNumVertices == 3);
 
-				//Possibly need to reverse order of vertices for fbx to direct X, but this results in empty spaces
+				//Might need to reverse the order of the vertices if the scene conversion to directx isn't working properly
+				//this would also mean the z for position and normals need to be multiplied by -1.0f
+				
+				//1st vertex
 				int controlIndex = pMesh->GetPolygonVertex(j, 0);
 				pMesh->GetPolygonVertexUV(j, 0, "map1", fbxUV, isMapped);
 				pMesh->GetPolygonVertexNormal(j, 0, fbxNorm);
@@ -124,6 +118,7 @@ HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer*
 				indexArray[vertexIndex] = vertexIndex;
 				vertexIndex++;
 
+				//2nd vertex
 				controlIndex = pMesh->GetPolygonVertex(j, 1);
 				pMesh->GetPolygonVertexUV(j, 1, "map1", fbxUV, isMapped);
 				pMesh->GetPolygonVertexNormal(j, 1, fbxNorm);
@@ -142,6 +137,7 @@ HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer*
 				indexArray[vertexIndex] = vertexIndex;
 				vertexIndex++;
 
+				//3rd vertex
 				controlIndex = pMesh->GetPolygonVertex(j, 2);
 				pMesh->GetPolygonVertexUV(j, 2, "map1", fbxUV, isMapped);
 				pMesh->GetPolygonVertexNormal(j, 2, fbxNorm);
@@ -161,10 +157,8 @@ HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer*
 				vertexIndex++;
 			}
 
-
-
+			// Generate vertex and index buffers from the vertex and index arrays
 			*vBuf = renderer->createVertexBuffer(vertexArray, vertexCount);
-			//*iBuf = renderer->createIndexBuffer(indices->data(), indices->size());
 			*iBuf = renderer->createIndexBuffer(indexArray, numIndices);
 
 			delete[] vertexArray;
