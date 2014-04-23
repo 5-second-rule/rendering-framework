@@ -76,11 +76,77 @@ namespace Transmission {
 		HR(device->CreateRenderTargetView(pBackBuffer, NULL, &backbuffer));
 
 
+
+
+		// -----
+		// Depth Stencil
+		// -----
+
+		D3D11_TEXTURE2D_DESC depthStencilDesc;
+		ZeroMemory(&depthStencilDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+		depthStencilDesc.Width = Window::screenWidth;
+		depthStencilDesc.Height = Window::screenHeight;
+		depthStencilDesc.MipLevels = 1;
+		depthStencilDesc.ArraySize = 1;
+		depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+		depthStencilDesc.SampleDesc.Count = 1;
+		depthStencilDesc.SampleDesc.Quality = 0;
+
+		depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthStencilDesc.CPUAccessFlags = 0;
+		depthStencilDesc.MiscFlags = 0;
+
+		ID3D11Texture2D* pDepthStencil;
+
+		HR(device->CreateTexture2D(&depthStencilDesc, NULL, &pDepthStencil));
+		HR(device->CreateDepthStencilView(pDepthStencil, NULL, &depthStencil));
+
+		/* uncomment this if depth testing stops working
+
+		D3D11_DEPTH_STENCIL_DESC dsDesc;
+		ZeroMemory(&dsDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+
+		// Depth test parameters
+		dsDesc.DepthEnable = true;
+		dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+		// Stencil test parameters
+		dsDesc.StencilEnable = true;
+		dsDesc.StencilReadMask = 0xFF;
+		dsDesc.StencilWriteMask = 0xFF;
+
+		// Stencil operations if pixel is front-facing
+		dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+		dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+		// Stencil operations if pixel is back-facing
+		dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+		dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+		// Create depth stencil state
+		HR(device->CreateDepthStencilState(&dsDesc, &depthStencilState));
+
+		context->OMSetDepthStencilState(depthStencilState, 1);
+		*/
+		
+		// -----
+
+		// set the render target
+		context->OMSetRenderTargets(1, &backbuffer, depthStencil);
+
 		pBackBuffer->Release();
 		pBackBuffer = NULL;
 
-		// set the render target
-		context->OMSetRenderTargets(1, &backbuffer, NULL);
+		pDepthStencil->Release();
+		pDepthStencil = NULL;
 
 		// setup constant buffer
 		D3D11_BUFFER_DESC cb;
@@ -152,6 +218,7 @@ namespace Transmission {
 	void DX11Renderer::clearFrame() {
 		float color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
 		context->ClearRenderTargetView(backbuffer, color);
+		context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		// set default stuff
 		float matrices[3][16];
