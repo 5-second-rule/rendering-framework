@@ -141,7 +141,7 @@ namespace Transmission {
 		depthStencilDesc.Height = Window::screenHeight;
 		depthStencilDesc.MipLevels = 1;
 		depthStencilDesc.ArraySize = 1;
-		depthStencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 		depthStencilDesc.SampleDesc.Count = 1;
 		depthStencilDesc.SampleDesc.Quality = 0;
@@ -220,9 +220,8 @@ namespace Transmission {
 
 		viewport.TopLeftX = 0.0f;
 		viewport.TopLeftY = 0.0f;
-		// added these in case we need them in future iterations
-		//viewport.MinDepth = 0.0f;
-		//viewport.MaxDepth = 1.0f;
+		viewport.MinDepth = 0.0f;
+		viewport.MaxDepth = 1.0f;
 		viewport.Width = (float) Window::screenWidth;
 		viewport.Height = (float) Window::screenHeight;
 
