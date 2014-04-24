@@ -105,12 +105,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	Transmission::Texture* texture = renderer->createTextureFromFile(textureLocationW);
 
-	Transmission::Model* model = renderer->createModelFromFile(ecoliObjFilePath, &vbuf, &ibuf, texture);
+	Transmission::Model* model = renderer->createModelFromFile(ecoliFbxFilePath, &vbuf, &ibuf, texture);
+
+	if (model == NULL) throw std::runtime_error("YO! DA MODEL VAS NULL!");
 
 	while (messagePump(window)) {
 		renderer->clearFrame();
 
-		model->rotate(Transmission::Vector(0.01f, 0.00f, 0.0f));
+		model->rotate(Transmission::Vector(0.00f, 0.01f, 0.0f));
 		model->draw();
 
 		renderer->drawFrame();

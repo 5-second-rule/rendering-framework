@@ -24,7 +24,7 @@ float4 ps_main(float4 position : SV_POSITION, float2 texCoord : TEXCOORD0, float
 	float3 diffuse = saturate(dot(N, L)) * DIFFUSE;
 	float3 specular = pow(saturate(dot(N, H)), SPECULARPOWER) * SPECULAR;
 
-	float4 texColor = shaderTexture.Sample(SampleType, tex);
+	float4 texColor = shaderTexture.Sample(SampleType, texCoord);
 
 	float3 outColor = (saturate(ambient + diffuse) * texColor.xyz + specular) * LIGHT_COLOR;
 
