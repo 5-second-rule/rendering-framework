@@ -6,129 +6,166 @@
 
 #include <cassert>
 
+
 namespace Transmission {
 
-	FbxManager* g_pFbxSdkManager = nullptr;
+FbxManager* g_pFbxSdkManager = nullptr;
 
-	FBXLoader::FBXLoader()
+FBXLoader::FBXLoader()
+{
+	indices = new std::vector<unsigned int>();
+}
+
+FBXLoader::~FBXLoader()
+{
+	delete indices;
+}
+
+HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer** iBuf, Renderer* renderer)
+{
+	if (g_pFbxSdkManager == nullptr)
 	{
-		indices = new std::vector<unsigned int>();
+		g_pFbxSdkManager = FbxManager::Create();
+
+		FbxIOSettings* pIOsettings = FbxIOSettings::Create(g_pFbxSdkManager, IOSROOT);
+		g_pFbxSdkManager->SetIOSettings(pIOsettings);
 	}
 
-	FBXLoader::~FBXLoader()
+	FbxImporter* pImporter = FbxImporter::Create(g_pFbxSdkManager, "");
+	FbxScene* pFbxScene = FbxScene::Create(g_pFbxSdkManager, "");
+
+	bool bSuccess = pImporter->Initialize(filePath, -1, g_pFbxSdkManager->GetIOSettings());
+	if (!bSuccess) return E_FAIL;
+
+	bSuccess = pImporter->Import(pFbxScene);
+	if (!bSuccess) return E_FAIL;
+
+	FbxAxisSystem sceneAxisSystem = pFbxScene->GetGlobalSettings().GetAxisSystem();
+	FbxAxisSystem DirectXAxisSystem(FbxAxisSystem::eYAxis, FbxAxisSystem::eParityOdd, FbxAxisSystem::eLeftHanded);
+
+	if (sceneAxisSystem != DirectXAxisSystem)
 	{
-		delete indices;
+		DirectXAxisSystem.ConvertScene(pFbxScene);
 	}
 
-	HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer** iBuf, Renderer* renderer)
+	pImporter->Destroy();
+
+	FbxNode* pFbxRootNode = pFbxScene->GetRootNode();
+
+	if (pFbxRootNode)
 	{
-		if (g_pFbxSdkManager == nullptr)
+		// Check if the getChildCount is > 1  TODO
+		int test = pFbxRootNode->GetChildCount();
+
+		for (int i = 0; i < pFbxRootNode->GetChildCount(); i++)
 		{
-			g_pFbxSdkManager = FbxManager::Create();
+			FbxNode* pFbxChildNode = pFbxRootNode->GetChild(i);
 
-			FbxIOSettings* pIOsettings = FbxIOSettings::Create(g_pFbxSdkManager, IOSROOT);
-			g_pFbxSdkManager->SetIOSettings(pIOsettings);
-		}
+			if (pFbxChildNode->GetNodeAttribute() == NULL)
+				continue;
 
-		FbxImporter* pImporter = FbxImporter::Create(g_pFbxSdkManager, "");
-		FbxScene* pFbxScene = FbxScene::Create(g_pFbxSdkManager, "");
+			FbxNodeAttribute::EType AttributeType = pFbxChildNode->GetNodeAttribute()->GetAttributeType();
 
-		bool bSuccess = pImporter->Initialize(filePath, -1, g_pFbxSdkManager->GetIOSettings());
-		if (!bSuccess) return E_FAIL;
+			if (AttributeType != FbxNodeAttribute::eMesh)
+				continue;
 
-		bSuccess = pImporter->Import(pFbxScene);
-		if (!bSuccess) return E_FAIL;
+			FbxMesh* pMesh = (FbxMesh*)pFbxChildNode->GetNodeAttribute();
 
-		FbxAxisSystem sceneAxisSystem = pFbxScene->GetGlobalSettings().GetAxisSystem();
-		FbxAxisSystem DirectXAxisSystem(FbxAxisSystem::eYAxis, FbxAxisSystem::eParityOdd, FbxAxisSystem::eLeftHanded);
+			FbxVector4* pVertices = pMesh->GetControlPoints();
+			int vertexCount = pMesh->GetPolygonVertexCount();
 
-		if (sceneAxisSystem != DirectXAxisSystem)
-		{
-			DirectXAxisSystem.ConvertScene(pFbxScene);
-		}
+			//Vertex vertex;
+			Vertex* vertexArray = new Vertex[vertexCount];
+			//Vertex vertexArray[2592];
 
-		pImporter->Destroy();
 
-		FbxNode* pFbxRootNode = pFbxScene->GetRootNode();
+			int numIndices = vertexCount;
+			unsigned int* indexArray = new unsigned int [numIndices];
 
-		if (pFbxRootNode)
-		{
-			// Check if the getChildCount is > 1  TODO
-			int test = pFbxRootNode->GetChildCount();
 
-			for (int i = 0; i < pFbxRootNode->GetChildCount(); i++)
+			FbxVector4 fbxNorm(0, 0, 0, 0);
+			FbxVector2 fbxUV(0, 0);
+			bool isMapped;
+
+			int vertexIndex = 0;
+
+			// Loop iterates through the polygons and fills the vertex and index arrays for the buffers
+			for (int j = 0; j < pMesh->GetPolygonCount(); j++)
 			{
-				FbxNode* pFbxChildNode = pFbxRootNode->GetChild(i);
+				int iNumVertices = pMesh->GetPolygonSize(j);
 
-				if (pFbxChildNode->GetNodeAttribute() == NULL)
-					continue;
+				assert(iNumVertices == 3);
 
-				FbxNodeAttribute::EType AttributeType = pFbxChildNode->GetNodeAttribute()->GetAttributeType();
+				//Might need to reverse the order of the vertices if the scene conversion to directx isn't working properly
+				//this would also mean the z for position and normals need to be multiplied by -1.0f
+				
+				//1st vertex
+				int controlIndex = pMesh->GetPolygonVertex(j, 0);
+				pMesh->GetPolygonVertexUV(j, 0, "map1", fbxUV, isMapped);
+				pMesh->GetPolygonVertexNormal(j, 0, fbxNorm);
 
-				if (AttributeType != FbxNodeAttribute::eMesh)
-					continue;
+				vertexArray[vertexIndex].point[0] = (float)pVertices[controlIndex].mData[0];
+				vertexArray[vertexIndex].point[1] = (float)pVertices[controlIndex].mData[1];
+				vertexArray[vertexIndex].point[2] = (float)pVertices[controlIndex].mData[2];
 
-				FbxMesh* pMesh = (FbxMesh*) pFbxChildNode->GetNodeAttribute();
+				vertexArray[vertexIndex].texCoord[0] = (float)fbxUV[0];
+				vertexArray[vertexIndex].texCoord[1] = 1.0f - (float)fbxUV[1];
 
-				FbxVector4* pVertices = pMesh->GetControlPoints();
-				int controlCount = pMesh->GetControlPointsCount();
+				vertexArray[vertexIndex].normal[0] = (float)fbxNorm[0];
+				vertexArray[vertexIndex].normal[1] = (float)fbxNorm[1];
+				vertexArray[vertexIndex].normal[2] = (float)fbxNorm[2];
 
-				Vertex vertex;
-				Vertex* vertexArray = new Vertex[controlCount];
+				indexArray[vertexIndex] = vertexIndex;
+				vertexIndex++;
 
-				for (int l = 0; l < controlCount; l++)
-				{
-					vertex.point[0] = (float) pVertices[l].mData[0];
-					vertex.point[1] = (float) pVertices[l].mData[1];
-					vertex.point[2] = (float) pVertices[l].mData[2];
+				//2nd vertex
+				controlIndex = pMesh->GetPolygonVertex(j, 1);
+				pMesh->GetPolygonVertexUV(j, 1, "map1", fbxUV, isMapped);
+				pMesh->GetPolygonVertexNormal(j, 1, fbxNorm);
 
-					vertexArray[l] = vertex;
-				}
+				vertexArray[vertexIndex].point[0] = (float)pVertices[controlIndex].mData[0];
+				vertexArray[vertexIndex].point[1] = (float)pVertices[controlIndex].mData[1];
+				vertexArray[vertexIndex].point[2] = (float)pVertices[controlIndex].mData[2];
 
-				int numIndices = pMesh->GetPolygonVertexCount();
-				unsigned int* indices = (unsigned int*) pMesh->GetPolygonVertices();
+				vertexArray[vertexIndex].texCoord[0] = (float)fbxUV[0];
+				vertexArray[vertexIndex].texCoord[1] = 1.0f - (float)fbxUV[1];
 
-				for (int j = 0; j < pMesh->GetPolygonCount(); j++)
-				{
-					int iNumVertices = pMesh->GetPolygonSize(j);
+				vertexArray[vertexIndex].normal[0] = (float)fbxNorm[0];
+				vertexArray[vertexIndex].normal[1] = (float)fbxNorm[1];
+				vertexArray[vertexIndex].normal[2] = (float)fbxNorm[2];
 
-					assert(iNumVertices == 3);
+				indexArray[vertexIndex] = vertexIndex;
+				vertexIndex++;
 
-					//Possibly need to reverse order of vertices for fbx to direct X, but this results in empty spaces
-					//indices->push_back(pMesh->GetPolygonVertex(j, 0));
-					//indices->push_back(pMesh->GetPolygonVertex(j, 2));
-					//indices->push_back(pMesh->GetPolygonVertex(j, 1));
+				//3rd vertex
+				controlIndex = pMesh->GetPolygonVertex(j, 2);
+				pMesh->GetPolygonVertexUV(j, 2, "map1", fbxUV, isMapped);
+				pMesh->GetPolygonVertexNormal(j, 2, fbxNorm);
 
-					FbxVector4 fbxNorm(0, 0, 0, 0);
-					FbxVector2 fbxUV(0, 0);
-					bool isMapped;
-					int iControlPointIndex;
+				vertexArray[vertexIndex].point[0] = (float)pVertices[controlIndex].mData[0];
+				vertexArray[vertexIndex].point[1] = (float)pVertices[controlIndex].mData[1];
+				vertexArray[vertexIndex].point[2] = (float)pVertices[controlIndex].mData[2];
 
-					for (int k = 0; k < iNumVertices; k++)
-					{
-						iControlPointIndex = pMesh->GetPolygonVertex(j, k);
+				vertexArray[vertexIndex].texCoord[0] = (float)fbxUV[0];
+				vertexArray[vertexIndex].texCoord[1] = 1.0f - (float)fbxUV[1];
 
-						pMesh->GetPolygonVertexUV(j, k, "map1", fbxUV, isMapped);
+				vertexArray[vertexIndex].normal[0] = (float)fbxNorm[0];
+				vertexArray[vertexIndex].normal[1] = (float)fbxNorm[1];
+				vertexArray[vertexIndex].normal[2] = (float)fbxNorm[2];
 
-						vertexArray[iControlPointIndex].texCoord[0] = (float) fbxUV[0];
-						vertexArray[iControlPointIndex].texCoord[1] = (float) fbxUV[1];
-
-						pMesh->GetPolygonVertexNormal(j, k, fbxNorm);
-
-						vertexArray[iControlPointIndex].normal[0] = (float) fbxNorm[0];
-						vertexArray[iControlPointIndex].normal[1] = (float) fbxNorm[1];
-						vertexArray[iControlPointIndex].normal[2] = (float) fbxNorm[2];
-					}
-				}
-
-				*vBuf = renderer->createVertexBuffer(vertexArray, controlCount);
-				//*iBuf = renderer->createIndexBuffer(indices->data(), indices->size());
-				*iBuf = renderer->createIndexBuffer(indices, numIndices);
-
-				delete vertexArray;
+				indexArray[vertexIndex] = vertexIndex;
+				vertexIndex++;
 			}
+
+			// Generate vertex and index buffers from the vertex and index arrays
+			*vBuf = renderer->createVertexBuffer(vertexArray, vertexCount);
+			*iBuf = renderer->createIndexBuffer(indexArray, numIndices);
+
+			delete[] vertexArray;
+			delete[] indexArray;
 		}
-		return S_OK;
+	}
+	return S_OK;
 	}
 
 }

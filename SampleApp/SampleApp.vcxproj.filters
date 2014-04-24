@@ -20,9 +20,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ecoli.fbx">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="ecoli4_animated_binary.fbx">
       <Filter>Resource Files</Filter>
     </None>
@@ -32,12 +29,27 @@
     <None Include="Ecoli4_Object.obj">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="cube.fbx">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ecoli6_nomedia.fbx">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ecoli6_obj.obj">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="ecoli_TXTR.tif">
+    <Image Include="whitebloodcell_3_TXTR.tif">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="whitebloodcell_3_TXTR.tif">
+    <Image Include="cube_uvmap2.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="ecoli6_TXTR.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Wood.dds">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

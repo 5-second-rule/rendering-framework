@@ -18,11 +18,9 @@ namespace Transmission {
 	private:
 		ID3D11DeviceContext* context;
 		Renderer* renderer;
-		std::vector<Vertex> *vertices;
-		std::vector<int> *indices;
 
 	public:
-		DX11Model(VertexBuffer*, IndexBuffer*, ID3D11DeviceContext*, Renderer*);
+		DX11Model(VertexBuffer*, IndexBuffer*, ID3D11DeviceContext*, Texture*, Renderer*);
 		~DX11Model();
 
 		virtual void draw();

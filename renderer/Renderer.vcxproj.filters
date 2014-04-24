@@ -69,6 +69,9 @@
     <ClCompile Include="Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="DirectX11\dxerr.cpp">
       <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
@@ -88,6 +91,12 @@
       <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
     <ClCompile Include="DirectX11\DX11VertexShader.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DDSTextureLoader.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DX11Texture.cpp">
       <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
   </ItemGroup>
@@ -149,6 +158,9 @@
     <ClInclude Include="Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="DirectX11\dxerr.h">
       <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
@@ -168,6 +180,12 @@
       <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
     <ClInclude Include="DirectX11\DX11VertexShader.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DDSTextureLoader.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DX11Texture.h">
       <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
   </ItemGroup>

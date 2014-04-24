@@ -1,5 +1,11 @@
+/////////////
+// GLOBALS //
+/////////////
 #define LIGHT_DIR float3(10.0, 10.0, 0.0)
 #define LIGHT_COLOR float3(0.9, 0.9, 0.9)
+
+Texture2D shaderTexture;
+SamplerState SampleType;
 
 #define AMBIENT float3(0.1, 0.1, 0.1)
 #define DIFFUSE float3(0.7, 0.5, 0.5)
@@ -18,7 +24,7 @@ float4 ps_main(float4 position : SV_POSITION, float2 texCoord : TEXCOORD0, float
 	float3 diffuse = saturate(dot(N, L)) * DIFFUSE;
 	float3 specular = pow(saturate(dot(N, H)), SPECULARPOWER) * SPECULAR;
 
-	float4 texColor = color; // tex2D(sampTexture, texCoord);
+	float4 texColor = shaderTexture.Sample(SampleType, tex);
 
 	float3 outColor = (saturate(ambient + diffuse) * texColor.xyz + specular) * LIGHT_COLOR;
 

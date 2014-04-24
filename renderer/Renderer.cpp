@@ -4,9 +4,9 @@
 
 // Renderer Choice
 #if RENDERER == RENDERER_DX
-#include "DirectX11\DX11Renderer.h"
+	#include "DirectX11\DX11Renderer.h"
 #elif RENDERER == RENDERER_GL
-#include "OpenGL\GLRenderer.h"
+	#include "OpenGL\GLRenderer.h"
 #endif
 
 namespace Transmission {
@@ -56,10 +56,10 @@ namespace Transmission {
 		- vP: pointer to VertexBuffer pointer
 		- iP: pointer to IndexBuffer pointer
 		*/
-	Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP) {
+	Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex) {
 		// Checks if error occured during model load
 		if (this->loadModelFile(filePath, vP, iP)) {
-			return createModel(*vP, *iP);
+			return createModel(*vP, *iP, tex);
 		}
 		else {
 			return nullptr;
