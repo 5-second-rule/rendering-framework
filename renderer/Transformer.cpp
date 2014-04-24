@@ -44,7 +44,7 @@ namespace Transmission {
 		Matrix4 mRotY = Matrix4::rotateY(this->rotation.y() * (float) M_PI / 180.0f);
 		Matrix4 mRotZ = Matrix4::rotateZ(this->rotation.z() * (float) M_PI / 180.0f);
 		Matrix4 mTrans = Matrix4::translate(this->position);
-		return mScale * mRotX * mRotY * mRotZ * mTrans;
+		return mTrans * mScale * mRotX * mRotY * mRotZ;
 	}
 
 }

@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <fstream>
+#include <stdexcept>
 
 #include "Matrix4.h"
 #include "Vector4.h"
@@ -18,6 +19,49 @@ namespace Transmission {
 
 	DX11Renderer::DX11Renderer(Window* window) : Renderer()
 	{
+		swapchain = NULL; device = NULL; context = NULL;
+		this->setupDeviceAndSwapChain(window);
+
+		backbuffer = NULL;
+		this->setupBackBuffer();
+
+		camera = NULL;
+		this->setupViewportAndCamera(window);
+		/* ---------- */
+
+		perFrameBuffer = NULL; perVertexBuffer = NULL;
+		this->setupConstantBuffer();
+
+		vertexShader = NULL; pixelShader = NULL; layout = NULL;
+		this->setupShaders();
+	}
+
+
+	DX11Renderer::~DX11Renderer()
+	{
+		delete camera;
+
+		swapchain->SetFullscreenState(false, NULL);
+
+		delete vertexShader;
+		delete pixelShader;
+
+		swapchain->Release();
+		backbuffer->Release();
+		perFrameBuffer->Release();
+		perVertexBuffer->Release();
+		device->Release();
+		context->Release();
+	}
+
+	//=============================================//
+	//          Constructor Setup Methods          //
+	//=============================================//
+
+	void DX11Renderer::setupDeviceAndSwapChain(Window* window) {
+		if (device != NULL || swapchain != NULL || context != NULL) {
+			throw std::runtime_error("You can only setup the device and swap chain once");
+		}
 
 		// Create a descriptor for our swap chain
 		DXGI_SWAP_CHAIN_DESC desc;
@@ -34,13 +78,13 @@ namespace Transmission {
 		desc.OutputWindow = (HWND) (window->getHandle());
 		desc.SampleDesc.Count = 1;
 		desc.SampleDesc.Quality = 0;
-		desc.Windowed = windowed; //we should have a variable in config, for now its in header
+		desc.Windowed = this->windowed; //we should have a variable in config, for now its in header
 		desc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		desc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 		desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-		D3D_FEATURE_LEVEL featureLevels [] = {
+		D3D_FEATURE_LEVEL featureLevels[] = {
 			D3D_FEATURE_LEVEL_11_0,
 			D3D_FEATURE_LEVEL_10_1,
 			D3D_FEATURE_LEVEL_10_0,
@@ -63,11 +107,19 @@ namespace Transmission {
 			4,
 			D3D11_SDK_VERSION,
 			&desc,
-			&swapchain,
-			&device,
+			&this->swapchain,
+			&this->device,
 			NULL,
-			&context
-			));
+			&this->context
+		));
+
+	}
+
+	void DX11Renderer::setupBackBuffer() {
+
+		if (this->backbuffer != NULL) {
+			throw std::runtime_error("You can only setup the BackBuffer once");
+		}
 
 		// Get the backbuffer
 		ID3D11Texture2D* pBackBuffer;
@@ -103,6 +155,13 @@ namespace Transmission {
 		ID3D11Texture2D* pDepthStencil;
 
 		HR(device->CreateTexture2D(&depthStencilDesc, NULL, &pDepthStencil));
+
+		D3D11_DEPTH_STENCIL_VIEW_DESC ds;
+		ZeroMemory(&ds, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+		ds.Format = depthStencilDesc.Format;
+		ds.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		ds.Texture2D.MipSlice = 0;
+
 		HR(device->CreateDepthStencilView(pDepthStencil, NULL, &depthStencil));
 
 		/* uncomment this if depth testing stops working
@@ -148,16 +207,13 @@ namespace Transmission {
 
 		pDepthStencil->Release();
 		pDepthStencil = NULL;
+	}
 
+	void DX11Renderer::setupViewportAndCamera(Window* window) {
 
-		// setup constant buffer
-		D3D11_BUFFER_DESC cb;
-		ZeroMemory(&cb, sizeof(cb));
-		cb.Usage = D3D11_USAGE_DEFAULT;
-		cb.ByteWidth = sizeof(float[4][4]) * 3;
-		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		cb.CPUAccessFlags = 0;
-		HR(device->CreateBuffer(&cb, NULL, &this->constantBuffer));
+		if (this->camera != NULL) {
+			throw std::runtime_error("You can only setup the camera and viewport once");
+		}
 
 		// describe the viewport
 		D3D11_VIEWPORT viewport;
@@ -165,7 +221,6 @@ namespace Transmission {
 
 		viewport.TopLeftX = 0.0f;
 		viewport.TopLeftY = 0.0f;
-		// MinDepth and MaxDepth were needed to make depth buffer work
 		viewport.MinDepth = 0.0f;
 		viewport.MaxDepth = 1.0f;
 		viewport.Width = (float) Window::screenWidth;
@@ -174,17 +229,45 @@ namespace Transmission {
 		context->RSSetViewports(1, &viewport);
 
 		// Camera and Perspective Matrices
-		this->camera = new Camera(Point(3, 5, -10), Point(0, 0, 0), Vector(0, 1, 0),
+		this->camera = new Camera(Point(0, 0, -10), Point(0, 0, 0), Vector(0, 1, 0),
 			(float) M_PI / 4.0f, (float) Window::screenWidth / (float) Window::screenHeight, 1, 1000);
 
-		/* ---------- */
+	}
+
+	void DX11Renderer::setupConstantBuffer() {
+		if (perFrameBuffer != NULL || perVertexBuffer != NULL) {
+			throw std::runtime_error("You can only setup the constant buffers once");
+		}
+
+		// setup per frame buffer
+		D3D11_BUFFER_DESC cb;
+		ZeroMemory(&cb, sizeof(cb));
+
+		cb.Usage = D3D11_USAGE_DEFAULT;
+		cb.ByteWidth = sizeof(float[4][4]) + sizeof(float[4]);
+		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cb.CPUAccessFlags = 0;
+
+		HR(device->CreateBuffer(&cb, NULL, &this->perFrameBuffer));
+
+		cb.ByteWidth = sizeof(float[4][4]);
+
+		HR(device->CreateBuffer(&cb, NULL, &this->perVertexBuffer));
+
+
+	}
+
+	void DX11Renderer::setupShaders() {
+		if (pixelShader != NULL || vertexShader != NULL || layout != NULL) {
+			throw std::runtime_error("You can only setup shaders once");
+		}
 
 		// fixed shaders for now
 		this->vertexShader = new DX11VertexShader("vertex.cso", this->device);
 		this->pixelShader = new DX11PixelShader("pixel.cso", this->device);
 
 		// Input Layout for vertex buffers
-		D3D11_INPUT_ELEMENT_DESC ied [] =
+		D3D11_INPUT_ELEMENT_DESC ied[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -199,25 +282,10 @@ namespace Transmission {
 		context->VSSetShader(vertexShader->getVertexShader(), NULL, 0);
 		context->PSSetShader(pixelShader->getPixelShader(), NULL, 0);
 	}
-
-
-	DX11Renderer::~DX11Renderer()
-	{
-		delete camera;
-
-		swapchain->SetFullscreenState(false, NULL);
-
-		delete vertexShader;
-		delete pixelShader;
-
-		swapchain->Release();
-		backbuffer->Release();
-		constantBuffer->Release();
-		depthStencil->Release();
-
-		device->Release();
-		context->Release();
-	}
+	
+	//=============================================//
+	//                   Methods                   //
+	//=============================================//
 
 	void DX11Renderer::clearFrame() {
 		float color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
@@ -225,14 +293,24 @@ namespace Transmission {
 		context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		// set default stuff
-		float matrices[3][16];
+		float world[4][4];
+		float viewProjection[5][4];
 
-		memcpy(matrices[0], Matrix4::identity().getPointer(), sizeof(float[4][4]));
-		memcpy(matrices[1], this->camera->getCameraInverse().getPointer(), sizeof(float[4][4]));
-		memcpy(matrices[2], this->camera->getPerspective().getPointer(), sizeof(float[4][4]));
+		memcpy(world, Matrix4::identity().getPointer(), sizeof(float[4][4]));
+		memcpy(viewProjection, (this->camera->getCameraInverse() * this->camera->getPerspective()).getPointer(), sizeof(float[4][4]));
+		
+		Vector4 cameraPos = this->camera->getPosition();
+		viewProjection[4][0] = cameraPos.x();
+		viewProjection[4][1] = cameraPos.y();
+		viewProjection[4][2] = cameraPos.z();
+		viewProjection[4][3] = 1.0f;
 
-		context->UpdateSubresource(constantBuffer, 0, NULL, &matrices, 0, 0);
-		context->VSSetConstantBuffers(0, 1, &constantBuffer);
+
+		context->UpdateSubresource(perFrameBuffer, 0, NULL, &viewProjection, 0, 0);
+		context->UpdateSubresource(perVertexBuffer, 0, NULL, &world, 0, 0);
+
+		ID3D11Buffer* cBuffers [] = { perFrameBuffer, perVertexBuffer };
+		context->VSSetConstantBuffers(0, 2, cBuffers);
 
 		// set shaders
 		context->VSSetShader(vertexShader->getVertexShader(), NULL, 0);
@@ -263,15 +341,13 @@ Texture* DX11Renderer::createTextureFromFile(char* f) {
 		return this->camera;
 	}
 
-	void DX11Renderer::setObjectMatrix(ITransformable* t) {
+	void DX11Renderer::setObjectMatrix(Matrix4 t) {
 		// set default stuff
-		float matrices[3][16];
+		float world[4][4];
 
-		memcpy(matrices[0], t->getTransform().transpose().getPointer(), sizeof(float[4][4]));
-		memcpy(matrices[1], this->camera->getCameraInverse().getPointer(), sizeof(float[4][4]));
-		memcpy(matrices[2], this->camera->getPerspective().getPointer(), sizeof(float[4][4]));
+		memcpy(world, t.transpose().getPointer(), sizeof(float[4][4]));
 
-		context->UpdateSubresource(constantBuffer, 0, NULL, &matrices, 0, 0);
-		context->VSSetConstantBuffers(0, 1, &constantBuffer);
+		context->UpdateSubresource(perVertexBuffer, 0, NULL, &world, 0, 0);
+		context->VSSetConstantBuffers(1, 1, &perVertexBuffer);
 	}
 }

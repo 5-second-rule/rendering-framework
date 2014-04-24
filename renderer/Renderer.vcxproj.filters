@@ -19,11 +19,11 @@
     <Filter Include="Source Files\DirectX11">
       <UniqueIdentifier>{3a91ab46-12b4-4f6b-8d53-5efd8cb47773}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Win32">
-      <UniqueIdentifier>{db861771-0976-4fe5-8143-2225ad097925}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Win32">
       <UniqueIdentifier>{776b0453-f8e9-4509-8b80-02b63044f119}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win32">
+      <UniqueIdentifier>{db861771-0976-4fe5-8143-2225ad097925}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -111,7 +111,7 @@
       <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
     <ClInclude Include="Win32\Win32Window.h">
-      <Filter>Header Files\Win32</Filter>
+      <Filter>Win32</Filter>
     </ClInclude>
     <ClInclude Include="render-framework.h">
       <Filter>Header Files</Filter>

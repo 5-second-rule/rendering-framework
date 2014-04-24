@@ -17,7 +17,7 @@ namespace Transmission {
 		vertexBuffer->set();
 		indexBuffer->set();
 		texture->set();
-		this->renderer->setObjectMatrix(this);
+		this->renderer->setObjectMatrix(this->getTransform());
 		context->DrawIndexed(indexBuffer->count(), 0, 0);
 	}
 

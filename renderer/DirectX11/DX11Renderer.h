@@ -25,12 +25,13 @@ namespace Transmission {
 		ID3D11DepthStencilView* depthStencil;
 		ID3D11DepthStencilState * depthStencilState;
 
-		ID3D11Buffer* constantBuffer;
-
 		DX11VertexShader* vertexShader;
 		DX11PixelShader* pixelShader;
-
 		ID3D11InputLayout *layout;
+
+		ID3D11Buffer* perFrameBuffer;
+		ID3D11Buffer* perVertexBuffer;
+
 
 		Camera* camera;
 
@@ -40,15 +41,25 @@ namespace Transmission {
 		DX11Renderer(Window*);
 		~DX11Renderer();
 
+	protected:
+		virtual void setupDeviceAndSwapChain(Window*);
+		virtual void setupBackBuffer();
+		virtual void setupViewportAndCamera(Window*);
+		virtual void setupShaders();
+		virtual void setupConstantBuffer();
+
+	public:
+
 		virtual void clearFrame();
 		virtual void drawFrame();
-	virtual Texture* createTextureFromFile(char* f);
 
 		virtual VertexBuffer* createVertexBuffer(Vertex [], size_t);
 		virtual IndexBuffer* createIndexBuffer(unsigned int [], size_t);
 		virtual Model* createModel(VertexBuffer*, IndexBuffer*, Texture*);
+		virtual Texture* createTextureFromFile(char* f);
+
 
 		virtual Camera* getCamera();
-		virtual void setObjectMatrix(ITransformable*);
+		virtual void setObjectMatrix(Matrix4);
 	};
 }

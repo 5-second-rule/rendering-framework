@@ -36,6 +36,7 @@ namespace Transmission {
 
 		Matrix4 getCameraInverse();
 		Matrix4 getPerspective();
+		Vector4 getPosition();
 
 	};
 
