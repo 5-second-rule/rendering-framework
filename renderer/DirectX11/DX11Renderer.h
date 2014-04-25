@@ -18,6 +18,7 @@ namespace Transmission {
 	{
 	protected:
 		D3D_FEATURE_LEVEL featureLevel;
+		UINT msaaQuality;
 
 		ID3D11Device* device;
 		ID3D11DeviceContext* context;

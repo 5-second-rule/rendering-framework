@@ -96,10 +96,10 @@ namespace Transmission {
 			MessageBoxA(0, "Direct3D Feature Level 11 unsupported.", 0, 0);
 		}
 
-		UINT msaaQuality;
-		HR(device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &msaaQuality));
+		UINT msaauality;
+		HR(device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &this->msaaQuality));
 		
-		if (!(msaaQuality > 0)) {
+		if (!(this->msaaQuality > 0)) {
 			MessageBoxA(0, "4x MSAA unsupported", 0, 0);
 		}
 
@@ -117,9 +117,9 @@ namespace Transmission {
 		desc.BufferDesc.RefreshRate.Denominator = 1;
 		desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		desc.OutputWindow = (HWND) (window->getHandle());
-		if (USE_MSAA && msaaQuality > 0) {
+		if (USE_MSAA && this->msaaQuality > 0) {
 			desc.SampleDesc.Count = 4;
-			desc.SampleDesc.Quality = msaaQuality - 1;
+			desc.SampleDesc.Quality = this->msaaQuality - 1;
 		} else {
 			desc.SampleDesc.Count = 1;
 			desc.SampleDesc.Quality = 0;
@@ -177,8 +177,13 @@ namespace Transmission {
 		depthStencilDesc.ArraySize = 1;
 		depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
-		depthStencilDesc.SampleDesc.Count = 1;
-		depthStencilDesc.SampleDesc.Quality = 0;
+		if (USE_MSAA && this->msaaQuality > 0) {
+			depthStencilDesc.SampleDesc.Count = 4;
+			depthStencilDesc.SampleDesc.Quality = this->msaaQuality - 1;
+		} else {
+			depthStencilDesc.SampleDesc.Count = 1;
+			depthStencilDesc.SampleDesc.Quality = 0;
+		}
 
 		depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
 		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
