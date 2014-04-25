@@ -143,6 +143,8 @@ namespace Transmission {
 		HR(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**) &dxgiFactory));
 
 		HR(dxgiFactory->CreateSwapChain(this->device, &desc, &this->swapchain));
+		
+		HR(dxgiFactory->MakeWindowAssociation((HWND)window->getHandle(), DXGI_MWA_NO_WINDOW_CHANGES));
 
 		dxgiDevice->Release();
 		dxgiAdapter->Release();
@@ -315,8 +317,10 @@ namespace Transmission {
 	//                   Methods                   //
 	//=============================================//
 
-	void DX11Renderer::resize(unsigned int width, unsigned int height) {
+	void DX11Renderer::resize(unsigned int width, unsigned int height, bool fullscreen) {
 		
+		HR(swapchain->SetFullscreenState(fullscreen, NULL));
+
 		context->OMSetRenderTargets(0, 0, 0);
 
 		backbuffer->Release();
@@ -327,6 +331,7 @@ namespace Transmission {
 
 		this->setupBackBuffer(width, height);
 
+		camera->resize((float)width / (float)height);
 		
 
 	}

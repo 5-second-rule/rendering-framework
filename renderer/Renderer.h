@@ -17,7 +17,7 @@ namespace Transmission {
 	public:
 		static Renderer* createRenderer(Window*);
 
-		virtual void resize(unsigned int width, unsigned int height) = 0;
+		virtual void resize(unsigned int width, unsigned int height, bool fullscreen) = 0;
 
 		/* ----- */
 

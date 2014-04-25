@@ -80,7 +80,7 @@ namespace Transmission {
 				if (cppWnd->renderer != NULL) {
 					RECT r;
 					GetWindowRect(hwnd, &r);
-					cppWnd->renderer->resize(r.right - r.left, r.bottom - r.top);
+					cppWnd->renderer->resize(r.right - r.left, r.bottom - r.top, false);
 				}
 				break;
 
@@ -111,15 +111,6 @@ namespace Transmission {
 			TranslateMessage(&msg);
 			UINT type = msg.message;
 			DispatchMessage(&msg);
-			
-			if (type == WM_SIZE) {
-				throw 1;
-				if (this->renderer != NULL) {
-					RECT r;
-					GetWindowRect(this->hWnd, &r);
-					this->renderer->resize(r.right - r.left, r.bottom - r.top);
-				}
-			}
 
 			if (type == WM_QUIT)
 				return Quit;

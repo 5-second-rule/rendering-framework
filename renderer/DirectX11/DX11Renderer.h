@@ -53,7 +53,7 @@ namespace Transmission {
 
 	public:
 
-		virtual void resize(unsigned int width, unsigned int height);
+		virtual void resize(unsigned int width, unsigned int height, bool);
 
 		virtual void clearFrame();
 		virtual void drawFrame();
