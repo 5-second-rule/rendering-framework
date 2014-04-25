@@ -97,6 +97,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	char* ecoliFbxFilePath = "../SampleApp/ecoli6_nomedia.fbx";
 	char* ecoliObjFilePath = "../SampleApp/Ecoli6_obj.obj";
 	char* boxFbxFilePath = "../SampleApp/cube.fbx";
+	char* herpesFbxFilePath = "../SampleApp/herpes.fbx";
 
 	char* textureLocation = "../SampleApp/ecoli6_TXTR.dds";
 	char* textureLocationW = "../SampleApp/Wood.dds";
@@ -105,7 +106,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	Transmission::Texture* texture = renderer->createTextureFromFile(textureLocationW);
 
-	Transmission::Model* model = renderer->createModelFromFile(ecoliFbxFilePath, &vbuf, &ibuf, texture);
+	Transmission::Model* model = renderer->createModelFromFile(herpesFbxFilePath, &vbuf, &ibuf, texture);
 
 	if (model == NULL) throw std::runtime_error("YO! DA MODEL VAS NULL!");
 

@@ -229,7 +229,7 @@ namespace Transmission {
 		context->RSSetViewports(1, &viewport);
 
 		// Camera and Perspective Matrices
-		this->camera = new Camera(Point(0, 0, -10), Point(0, 0, 0), Vector(0, 1, 0),
+		this->camera = new Camera(Point(0, 5, -10), Point(0, 5, 0), Vector(0, 1, 0),
 			(float) M_PI / 4.0f, (float) Window::screenWidth / (float) Window::screenHeight, 1, 1000);
 
 	}
