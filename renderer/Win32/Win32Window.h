@@ -18,7 +18,7 @@ namespace Transmission {
 
 		static LRESULT CALLBACK SubclassWndProc(HWND hwnd, UINT wm, WPARAM wParam, LPARAM lParam);
 	public:
-		Win32Window(HINSTANCE);
+		Win32Window(HINSTANCE, const wchar_t*, unsigned int, unsigned int);
 		~Win32Window();
 
 		virtual void* getHandle();

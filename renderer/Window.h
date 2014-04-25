@@ -7,11 +7,16 @@ namespace Transmission {
 
 	class FRAMEWORKDLL Window
 	{
+	protected:
+		unsigned int width;
+		unsigned int height;
+		const wchar_t* name;
+
+		Window(const wchar_t* name, unsigned int width, unsigned int height);
+
 	public:
 
-		static const unsigned int screenWidth = 800;
-		static const unsigned int screenHeight = 600;
-		static Window* createWindow(void* handle);
+		static Window* createWindow(void* handle, const wchar_t* name, unsigned int width, unsigned int height);
 
 		// -----
 
@@ -19,6 +24,10 @@ namespace Transmission {
 		virtual const Input* getInput() = NULL;
 		enum MessageType { None = 0, Message, Quit };
 		virtual MessageType getMessage() = 0;
+
+		const wchar_t* getName();
+		unsigned int getWidth();
+		unsigned int getHeight();
 	};
 
 }

@@ -2,8 +2,8 @@
 
 namespace Transmission {
 
-	Win32Window::Win32Window(HINSTANCE hInstance)
-		: Window()
+	Win32Window::Win32Window(HINSTANCE hInstance, const wchar_t* name, unsigned int width, unsigned int height)
+		: Window(name, width, height)
 		, hInstance(hInstance)
 	{
 		WNDCLASSEX wc;
@@ -15,21 +15,21 @@ namespace Transmission {
 		wc.lpfnWndProc = DefWindowProc;
 		wc.hInstance = hInstance;
 		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-		wc.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1);
+		wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 		wc.lpszClassName = L"WindowClass1";
 		wc.cbWndExtra = sizeof(Win32Window*);
 
 		RegisterClassEx(&wc);
 
-		RECT wr = { 0, 0, screenWidth, screenHeight };
+		RECT wr = { 0, 0, width, height };
 		AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
 
 		// this is all on one line becuse VC++ freaks out otherwise
-		this->hWnd = CreateWindowEx(NULL, L"WindowClass1", L"Window Name", WS_OVERLAPPEDWINDOW, 300, 300, wr.right - wr.left, wr.bottom - wr.top, NULL, NULL, hInstance, NULL);
+		this->hWnd = CreateWindowEx(NULL, L"WindowClass1", name, WS_OVERLAPPEDWINDOW, 300, 300, wr.right - wr.left, wr.bottom - wr.top, NULL, NULL, hInstance, NULL);
 
 		ShowWindow(this->hWnd, SW_SHOWNORMAL);
 
-		this->oldWndproc = (WNDPROC) SetWindowLongPtr(this->hWnd, GWLP_WNDPROC, (LONG_PTR) SubclassWndProc);
+		this->oldWndproc = (WNDPROC)SetWindowLongPtr(this->hWnd, GWLP_WNDPROC, (LONG_PTR)SubclassWndProc);
 
 		// store pointer back to c++ class
 		SetWindowLongPtr(this->hWnd, 0, reinterpret_cast<LONG_PTR>(this));

@@ -42,7 +42,7 @@ void moveBlob(Transmission::Window* w, Transmission::Model* m) {
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-	Transmission::Window* window = Transmission::Window::createWindow(hInstance);
+	Transmission::Window* window = Transmission::Window::createWindow(hInstance, L"5 Second Rule", 800, 600);
 	Transmission::Renderer* renderer = Transmission::Renderer::createRenderer(window);
 
 	/*Vertex cube[8] = {
