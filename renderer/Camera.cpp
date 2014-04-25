@@ -51,6 +51,11 @@ namespace Transmission {
 		this->perspective = Matrix4(a);
 	}
 
+	void Camera::resize(float newAspect) {
+		this->aspect = newAspect;
+		this->updatePerspective();
+	}
+
 	void Camera::move(Vector4& delta) {
 		assert(delta.w() == 0.0f);
 

@@ -1,5 +1,6 @@
 #include "Win32Window.h"
 
+#include "Renderer.h"
 namespace Transmission {
 
 	Win32Window::Win32Window(HINSTANCE hInstance, const wchar_t* name, unsigned int width, unsigned int height)
@@ -29,11 +30,12 @@ namespace Transmission {
 
 		ShowWindow(this->hWnd, SW_SHOWNORMAL);
 
+		
 		this->oldWndproc = (WNDPROC)SetWindowLongPtr(this->hWnd, GWLP_WNDPROC, (LONG_PTR)SubclassWndProc);
 
 		// store pointer back to c++ class
 		SetWindowLongPtr(this->hWnd, 0, reinterpret_cast<LONG_PTR>(this));
-
+		
 		Win32Window::inp = Input();
 	}
 
@@ -68,10 +70,20 @@ namespace Transmission {
 		case WM_RBUTTONUP:
 			cppWnd->inp.keyUp(Input::KEY_RMB);
 			break;
-
 		case WM_DESTROY:
 			PostQuitMessage(EXIT_SUCCESS);
 			return 0;
+
+		case WM_SIZE:
+			if (!(wParam == SIZE_MAXIMIZED)) break;
+		case WM_EXITSIZEMOVE:
+				if (cppWnd->renderer != NULL) {
+					RECT r;
+					GetWindowRect(hwnd, &r);
+					cppWnd->renderer->resize(r.right - r.left, r.bottom - r.top);
+				}
+				break;
+
 		default:
 			return CallWindowProc(cppWnd->oldWndproc, hwnd, wm, wParam, lParam);
 		}
@@ -99,6 +111,15 @@ namespace Transmission {
 			TranslateMessage(&msg);
 			UINT type = msg.message;
 			DispatchMessage(&msg);
+			
+			if (type == WM_SIZE) {
+				throw 1;
+				if (this->renderer != NULL) {
+					RECT r;
+					GetWindowRect(this->hWnd, &r);
+					this->renderer->resize(r.right - r.left, r.bottom - r.top);
+				}
+			}
 
 			if (type == WM_QUIT)
 				return Quit;

@@ -47,12 +47,13 @@ namespace Transmission {
 
 	protected:
 		virtual void setupDeviceAndSwapChain(Window*);
-		virtual void setupBackBuffer(Window*);
-		virtual void setupViewportAndCamera(Window*);
+		virtual void setupBackBuffer(unsigned int width, unsigned int height);
 		virtual void setupShaders();
 		virtual void setupConstantBuffer();
 
 	public:
+
+		virtual void resize(unsigned int width, unsigned int height);
 
 		virtual void clearFrame();
 		virtual void drawFrame();

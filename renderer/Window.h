@@ -3,11 +3,15 @@
 
 #include "Input.h"
 
+
 namespace Transmission {
+
+	class Renderer;
 
 	class FRAMEWORKDLL Window
 	{
 	protected:
+
 		unsigned int width;
 		unsigned int height;
 		const wchar_t* name;
@@ -17,6 +21,9 @@ namespace Transmission {
 	public:
 
 		static Window* createWindow(void* handle, const wchar_t* name, unsigned int width, unsigned int height);
+
+		// this probably shouldn't be public
+		Renderer* renderer;
 
 		// -----
 

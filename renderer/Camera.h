@@ -34,6 +34,8 @@ namespace Transmission {
 		void move(Vector4&);
 		void lookAt(Vector4&);
 
+		void resize(float newAspect);
+
 		Matrix4 getCameraInverse();
 		Matrix4 getPerspective();
 		Vector4 getPosition();

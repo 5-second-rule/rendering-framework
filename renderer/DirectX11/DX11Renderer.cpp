@@ -25,10 +25,12 @@ namespace Transmission {
 		this->setupDeviceAndSwapChain(window);
 
 		backbuffer = NULL;
-		this->setupBackBuffer(window);
+		this->setupBackBuffer(window->getWidth(), window->getHeight());
 
-		camera = NULL;
-		this->setupViewportAndCamera(window);
+		// Camera and Perspective Matrices
+		this->camera = new Camera(Point(0, 5, -10), Point(0, 5, 0), Vector(0, 1, 0),
+			(float)M_PI / 4.0f, (float)window->getWidth() / (float)window->getHeight(), 1, 1000);
+
 		/* ---------- */
 
 		perFrameBuffer = NULL; perVertexBuffer = NULL;
@@ -148,7 +150,7 @@ namespace Transmission {
 
 	}
 
-	void DX11Renderer::setupBackBuffer(Window* window) {
+	void DX11Renderer::setupBackBuffer(unsigned int width, unsigned int height) {
 
 		if (this->backbuffer != NULL) {
 			throw std::runtime_error("You can only setup the BackBuffer once");
@@ -171,8 +173,8 @@ namespace Transmission {
 		D3D11_TEXTURE2D_DESC depthStencilDesc;
 		ZeroMemory(&depthStencilDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
-		depthStencilDesc.Width = window->getWidth();
-		depthStencilDesc.Height = window->getHeight();
+		depthStencilDesc.Width = width;
+		depthStencilDesc.Height = height;
 		depthStencilDesc.MipLevels = 1;
 		depthStencilDesc.ArraySize = 1;
 		depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -245,13 +247,6 @@ namespace Transmission {
 
 		pDepthStencil->Release();
 		pDepthStencil = NULL;
-	}
-
-	void DX11Renderer::setupViewportAndCamera(Window* window) {
-
-		if (this->camera != NULL) {
-			throw std::runtime_error("You can only setup the camera and viewport once");
-		}
 
 		// describe the viewport
 		D3D11_VIEWPORT viewport;
@@ -261,15 +256,10 @@ namespace Transmission {
 		viewport.TopLeftY = 0.0f;
 		viewport.MinDepth = 0.0f;
 		viewport.MaxDepth = 1.0f;
-		viewport.Width = window->getWidth();
-		viewport.Height = window->getHeight();
+		viewport.Width = width;
+		viewport.Height = height;
 
 		context->RSSetViewports(1, &viewport);
-
-		// Camera and Perspective Matrices
-		this->camera = new Camera(Point(0, 5, -10), Point(0, 5, 0), Vector(0, 1, 0),
-			(float)M_PI / 4.0f, (float)window->getWidth() / (float)window->getHeight(), 1, 1000);
-
 	}
 
 	void DX11Renderer::setupConstantBuffer() {
@@ -324,6 +314,22 @@ namespace Transmission {
 	//=============================================//
 	//                   Methods                   //
 	//=============================================//
+
+	void DX11Renderer::resize(unsigned int width, unsigned int height) {
+		
+		context->OMSetRenderTargets(0, 0, 0);
+
+		backbuffer->Release();
+		backbuffer = NULL;
+
+		// automagically get the width and high from the stored HWND
+		HR(swapchain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0));
+
+		this->setupBackBuffer(width, height);
+
+		
+
+	}
 
 	void DX11Renderer::clearFrame() {
 		float color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };

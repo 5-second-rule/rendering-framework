@@ -12,14 +12,16 @@
 namespace Transmission {
 
 	Renderer* Renderer::createRenderer(Window* window) {
-
+		Renderer* r;
 #if RENDERER == RENDERER_DX
-		return new DX11Renderer(window);
+		r = new DX11Renderer(window);
 #elif RENDERER == RENDERER_GL
-		return new GLRenderer(window);
+		r = new GLRenderer(window);
 #else
 #error "Unsupported Renderer"
 #endif
+		window->renderer = r;
+		return r;
 	}
 
 	/*
