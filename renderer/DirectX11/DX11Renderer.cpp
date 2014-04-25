@@ -14,6 +14,8 @@
 #include "DX11Model.h"
 #include "DX11Texture.h"
 
+#define USE_MSAA true
+
 namespace Transmission {
 
 
@@ -63,6 +65,45 @@ namespace Transmission {
 			throw std::runtime_error("You can only setup the device and swap chain once");
 		}
 
+
+		UINT createDeviceFlags = 0;
+
+		#if defined(DEBUG) || defined(_DEBUG)
+		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+		#endif
+
+
+		D3D_FEATURE_LEVEL featureLevels [] = {
+			D3D_FEATURE_LEVEL_11_0,
+			D3D_FEATURE_LEVEL_10_1,
+			D3D_FEATURE_LEVEL_10_0,
+			D3D_FEATURE_LEVEL_9_3
+		};
+
+		HR(D3D11CreateDevice(
+			NULL, //default adapter
+			D3D_DRIVER_TYPE_HARDWARE,
+			0, //no software device
+			createDeviceFlags,
+			featureLevels, 4,
+			D3D11_SDK_VERSION,
+			&this->device,
+			&this->featureLevel,
+			&this->context
+		));
+
+		if (featureLevel != D3D_FEATURE_LEVEL_11_0) {
+			MessageBoxA(0, "Direct3D Feature Level 11 unsupported.", 0, 0);
+		}
+
+		UINT msaaQuality;
+		HR(device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &msaaQuality));
+		
+		if (!(msaaQuality > 0)) {
+			MessageBoxA(0, "4x MSAA unsupported", 0, 0);
+		}
+
+
 		// Create a descriptor for our swap chain
 		DXGI_SWAP_CHAIN_DESC desc;
 
@@ -76,42 +117,34 @@ namespace Transmission {
 		desc.BufferDesc.RefreshRate.Denominator = 1;
 		desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		desc.OutputWindow = (HWND) (window->getHandle());
-		desc.SampleDesc.Count = 1;
-		desc.SampleDesc.Quality = 0;
+		if (USE_MSAA && msaaQuality > 0) {
+			desc.SampleDesc.Count = 4;
+			desc.SampleDesc.Quality = msaaQuality - 1;
+		} else {
+			desc.SampleDesc.Count = 1;
+			desc.SampleDesc.Quality = 0;
+		}
 		desc.Windowed = this->windowed; //we should have a variable in config, for now its in header
 		desc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		desc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 		desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-		D3D_FEATURE_LEVEL featureLevels[] = {
-			D3D_FEATURE_LEVEL_11_0,
-			D3D_FEATURE_LEVEL_10_1,
-			D3D_FEATURE_LEVEL_10_0,
-			D3D_FEATURE_LEVEL_9_3
-		};
 
-		UINT createDeviceFlags = 0;
+		IDXGIDevice* dxgiDevice = NULL;
+		HR(device->QueryInterface(__uuidof(IDXGIDevice), (void**) &dxgiDevice));
 
-#if defined(DEBUG) || defined(_DEBUG)
-		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-#endif
+		IDXGIAdapter* dxgiAdapter = NULL;
+		HR(dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**) &dxgiAdapter));
 
-		// Create the device, device context, and swap chain
-		HR(D3D11CreateDeviceAndSwapChain(
-			NULL,
-			D3D_DRIVER_TYPE_HARDWARE,
-			NULL,
-			createDeviceFlags,
-			featureLevels,
-			4,
-			D3D11_SDK_VERSION,
-			&desc,
-			&this->swapchain,
-			&this->device,
-			NULL,
-			&this->context
-		));
+		IDXGIFactory* dxgiFactory = NULL;
+		HR(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**) &dxgiFactory));
+
+		HR(dxgiFactory->CreateSwapChain(this->device, &desc, &this->swapchain));
+
+		dxgiDevice->Release();
+		dxgiAdapter->Release();
+		dxgiFactory->Release();
 
 	}
 

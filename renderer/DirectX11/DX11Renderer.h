@@ -17,9 +17,12 @@ namespace Transmission {
 		public Renderer
 	{
 	protected:
-		IDXGISwapChain* swapchain;
+		D3D_FEATURE_LEVEL featureLevel;
+
 		ID3D11Device* device;
 		ID3D11DeviceContext* context;
+		IDXGISwapChain* swapchain;
+
 
 		ID3D11RenderTargetView* backbuffer;
 		ID3D11DepthStencilView* depthStencil;
