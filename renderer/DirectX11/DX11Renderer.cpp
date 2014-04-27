@@ -98,7 +98,6 @@ namespace Transmission {
 			MessageBoxA(0, "Direct3D Feature Level 11 unsupported.", 0, 0);
 		}
 
-		UINT msaauality;
 		HR(device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &this->msaaQuality));
 		
 		if (!(this->msaaQuality > 0)) {
@@ -258,8 +257,8 @@ namespace Transmission {
 		viewport.TopLeftY = 0.0f;
 		viewport.MinDepth = 0.0f;
 		viewport.MaxDepth = 1.0f;
-		viewport.Width = width;
-		viewport.Height = height;
+		viewport.Width = (float)width;
+		viewport.Height = (float)height;
 
 		context->RSSetViewports(1, &viewport);
 	}
