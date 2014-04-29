@@ -34,44 +34,48 @@ namespace Transmission {
 		// store pointer back to c++ class
 		SetWindowLongPtr(this->hWnd, 0, reinterpret_cast<LONG_PTR>(this));
 
-		Win32Window::inp = Input();
+		this->input = Win32Input();
 	}
 
 	LRESULT CALLBACK Win32Window::SubclassWndProc(
 		HWND hwnd, UINT wm, WPARAM wParam, LPARAM lParam)
 	{
 		Win32Window* cppWnd = reinterpret_cast<Win32Window*>(GetWindowLongPtr(hwnd, 0));
-		Input::Key key;
+		Win32Input* input = (Win32Input*) cppWnd->getInput();
 
 		switch (wm) {
-		case WM_KEYDOWN:
-			key = Input::findKey(wParam);
-			if (key != Input::NOT_FOUND)
-				cppWnd->inp.keyDown(key);
-			break;
-		case WM_KEYUP:
-			key = Input::findKey(wParam);
-			if (key != Input::NOT_FOUND)
-				cppWnd->inp.keyUp(key);
-			break;
-
-			// Need to handle mouse buttons directly
-		case WM_LBUTTONDOWN:
-			cppWnd->inp.keyDown(Input::KEY_LMB);
-			break;
-		case WM_RBUTTONDOWN:
-			cppWnd->inp.keyDown(Input::KEY_RMB);
-			break;
-		case WM_LBUTTONUP:
-			cppWnd->inp.keyUp(Input::KEY_LMB);
-			break;
-		case WM_RBUTTONUP:
-			cppWnd->inp.keyUp(Input::KEY_RMB);
-			break;
-
 		case WM_DESTROY:
 			PostQuitMessage(EXIT_SUCCESS);
 			return 0;
+
+		case WM_KEYDOWN:
+			if (input != NULL)
+				input->keyDown(wParam);
+			break;
+		case WM_KEYUP:
+			if (input != NULL)
+				input->keyUp(wParam);
+			break;
+		case WM_LBUTTONDOWN:
+		case WM_MBUTTONDOWN:
+		case WM_RBUTTONDOWN:
+		case WM_XBUTTONDOWN:
+			if (input != NULL)
+				input->mouseDown(wParam);
+			break;
+		case WM_LBUTTONUP:
+		case WM_MBUTTONUP:
+		case WM_RBUTTONUP:
+		case WM_XBUTTONUP:
+			if (input != NULL)
+				input->mouseUp(wParam);
+			break;
+
+		case WM_MOUSEMOVE:
+			if (input != NULL)
+				input->setMousePosition(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			break;
+
 		default:
 			return CallWindowProc(cppWnd->oldWndproc, hwnd, wm, wParam, lParam);
 		}
@@ -89,7 +93,7 @@ namespace Transmission {
 	}
 
 	const Input* Win32Window::getInput() {
-		return &(this->inp);
+		return &(this->input);
 	}
 
 	Window::MessageType Win32Window::getMessage() {

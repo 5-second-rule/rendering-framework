@@ -18,25 +18,23 @@ bool messagePump(Transmission::Window* window) {
 	return true;
 }
 
-static int reduceSpam = 1;
-
 void moveBlob(Transmission::Window* w, Transmission::Model* m) {
 	float moveAmt = 1.0f / 1000.0f;
-	Transmission::Input* inp = (Transmission::Input*) w->getInput();
+	Transmission::Input* input = (Transmission::Input*) w->getInput();
 
-	if (inp->keys[Transmission::Input::KEY_W] == Transmission::Input::STATE_DOWN) {
+	if (input->getKeyState(Transmission::Input::Key::W) == Transmission::Input::STATE_DOWN) {
 		m->move(Transmission::Vector4(0, moveAmt, 0));
 	}
-	if (inp->keys[Transmission::Input::KEY_A] == Transmission::Input::STATE_DOWN) {
+	if (input->getKeyState(Transmission::Input::Key::A) == Transmission::Input::STATE_DOWN) {
 		m->move(Transmission::Vector4(-moveAmt, 0, 0));
 	}
-	if (inp->keys[Transmission::Input::KEY_S] == Transmission::Input::STATE_DOWN) {
+	if (input->getKeyState(Transmission::Input::Key::S) == Transmission::Input::STATE_DOWN) {
 		m->move(Transmission::Vector4(0, -moveAmt, 0));
 	}
-	if (inp->keys[Transmission::Input::KEY_D] == Transmission::Input::STATE_DOWN) {
+	if (input->getKeyState(Transmission::Input::Key::D) == Transmission::Input::STATE_DOWN) {
 		m->move(Transmission::Vector4(moveAmt, 0, 0));
-	}	
-	if (inp->keys[Transmission::Input::KEY_SP] == Transmission::Input::STATE_DOWN) {
+	}
+	if (input->getKeyState(Transmission::Input::Key::SPACE) == Transmission::Input::STATE_DOWN) {
 		m->move(Transmission::Vector4(0, 0, moveAmt));
 	}
 }

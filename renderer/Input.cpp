@@ -1,36 +1,36 @@
 #include "Input.h"
 
 namespace Transmission {
-
-	const int Input::keyMap [] = {
-		0x57, 0x41, 0x53, 0x44, 0x51, 0x45,
-		0x5A, 0x58, 0x43, 0x56,
-		0x31, 0x32, 0x33, 0x34, 0x35,
-		VK_SPACE, VK_CONTROL, VK_SHIFT,
-		VK_LBUTTON, VK_RBUTTON
-	};
-
 	Input::Input() {
+		for (int i = 0; i < COUNT; ++i) {
+			this->keys[i] = Input::KeyState::STATE_UP;
+		}
+		this->inputQueue = KeyStateQueue();
 	}
 
-	Input::~Input() {
-	}
-
-	Input::Key Input::findKey(int winKey) {
-		for (int i = 0; i < NUM_KEYS; i++) {
-			if (keyMap[i] == winKey)
-				return (Key) i;
+	Input::KeyState Input::getKeyState(Input::Key k) {
+		if (0 <= k && k < COUNT) {
+			return this->keys[k];
 		}
 
-		return NOT_FOUND;
+		return KeyState::STATE_UP;
 	}
 
-	void Input::keyDown(Key k) {
-		keys[k] = STATE_DOWN;
+	Input::KeyStateQueue Input::getInputQueue() {
+		// Save the list, prepare to pass to engine
+		Input::KeyStateQueue q = this->inputQueue;
+		
+		// Purge current queue
+		this->inputQueue = KeyStateQueue();
+
+		return q;
 	}
 
-	void Input::keyUp(Key k) {
-		keys[k] = STATE_UP;
+	int Input::getCursorXPosition() {
+		return this->cursor_xPos;
 	}
 
+	int Input::getCursorYPosition() {
+		return this->cursor_yPos;
+	}
 }
