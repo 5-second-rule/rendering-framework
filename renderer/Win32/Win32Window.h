@@ -6,6 +6,8 @@
 
 #include "Window.h"
 
+#include "Window.h"
+
 #include "Win32Input.h"
 
 namespace Transmission {

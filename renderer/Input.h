@@ -21,12 +21,17 @@ namespace Transmission {
 			COUNT, NOT_FOUND = -1
 		};
 		enum KeyState { STATE_UP, STATE_DOWN };
+
 		Input();
 
 		KeyState getKeyState(Key k);
+		int getCursorXPosition(); // Signed x client coordinates
+		int getCursorYPosition(); // Signed y client coordinates
 
 	protected:
 		static KeyState keys[(unsigned int)COUNT];
 		static bool keyMap_initialized;
+		static int cursor_xPos;
+		static int cursor_yPos;
 	};
 }

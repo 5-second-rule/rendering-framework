@@ -1,5 +1,5 @@
 #include "Win32Window.h"
-
+#include "Windowsx.h"
 namespace Transmission {
 
 	Win32Window::Win32Window(HINSTANCE hInstance)
@@ -44,29 +44,38 @@ namespace Transmission {
 		Win32Input* input = (Win32Input*) cppWnd->getInput();
 
 		switch (wm) {
-		case WM_KEYDOWN:
-			input->keyDown(wParam);
-			break;
-		case WM_KEYUP:
-			input->keyUp(wParam);
-			break;
-		// Need to handle mouse buttons directly
-		case WM_LBUTTONDOWN:
-			input->keyDown(Input::Key::MOUSE_LMB);
-			break;
-		case WM_RBUTTONDOWN:
-			input->keyDown(Input::Key::MOUSE_RMB);
-			break;
-		case WM_LBUTTONUP:
-			input->keyUp(Input::Key::MOUSE_LMB);
-			break;
-		case WM_RBUTTONUP:
-			input->keyUp(Input::Key::MOUSE_RMB);
-			break;
-
 		case WM_DESTROY:
 			PostQuitMessage(EXIT_SUCCESS);
 			return 0;
+
+		case WM_KEYDOWN:
+			if (input != NULL)
+				input->keyDown(wParam);
+			break;
+		case WM_KEYUP:
+			if (input != NULL)
+				input->keyUp(wParam);
+			break;
+		case WM_LBUTTONDOWN:
+		case WM_MBUTTONDOWN:
+		case WM_RBUTTONDOWN:
+		case WM_XBUTTONDOWN:
+			if (input != NULL)
+				input->mouseDown(wParam);
+			break;
+		case WM_LBUTTONUP:
+		case WM_MBUTTONUP:
+		case WM_RBUTTONUP:
+		case WM_XBUTTONUP:
+			if (input != NULL)
+				input->mouseUp(wParam);
+			break;
+
+		case WM_MOUSEMOVE:
+			if (input != NULL)
+				input->setMousePosition(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			break;
+
 		default:
 			return CallWindowProc(cppWnd->oldWndproc, hwnd, wm, wParam, lParam);
 		}

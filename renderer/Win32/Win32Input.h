@@ -17,6 +17,9 @@ namespace Transmission {
 		static Key keyMap[NUM_KEYS];
 
 		Key findKey(int winKey);
+		void mouseDown(WPARAM wParam);
+		void mouseUp(WPARAM wParam);
+		void setMousePosition(int x, int y);
 		void keyDown(int winKey);
 		void keyUp(int winKey);
 		void keyDown(Key k);

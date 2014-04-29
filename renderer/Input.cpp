@@ -3,6 +3,8 @@
 namespace Transmission {
 	Input::KeyState Input::keys[(unsigned int)Input::Key::COUNT];
 	bool Input::keyMap_initialized = false;
+	int Input::cursor_xPos;
+	int Input::cursor_yPos;
 
 	Input::Input() {
 	}
@@ -13,5 +15,13 @@ namespace Transmission {
 		}
 
 		return KeyState::STATE_UP;
+	}
+
+	int Input::getCursorXPosition() {
+		return Input::cursor_xPos;
+	}
+
+	int Input::getCursorYPosition() {
+		return Input::cursor_yPos;
 	}
 }

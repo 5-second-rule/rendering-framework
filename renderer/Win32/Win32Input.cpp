@@ -23,6 +23,52 @@ namespace Transmission {
 		return Input::Key::NOT_FOUND;
 	}
 
+	void Win32Input::mouseDown(WPARAM wParam) {
+		int btn = GET_KEYSTATE_WPARAM(wParam); // bit mask for all mouse btns
+
+		if (btn & MK_LBUTTON) {
+			Win32Input::keyDown(Input::Key::MOUSE_LMB);
+		}
+		if (btn & MK_MBUTTON) {
+			Win32Input::keyDown(Input::Key::MOUSE_MMB);
+		}
+		if (btn & MK_RBUTTON) {
+			Win32Input::keyDown(Input::Key::MOUSE_RMB);
+		}
+		if (btn & MK_XBUTTON1) {
+			Win32Input::keyDown(Input::Key::MOUSE_XB1);
+		}
+		if (btn & MK_XBUTTON2) {
+			Win32Input::keyDown(Input::Key::MOUSE_XB2);
+		}
+	}
+
+	void Win32Input::mouseUp(WPARAM wParam) {
+		int btn = GET_KEYSTATE_WPARAM(wParam); // bit mask for all mouse btns
+
+		// Note: flags are set if buttons are DOWN
+		if (!(btn & MK_LBUTTON)) {
+			Win32Input::keyUp(Input::Key::MOUSE_LMB);
+		}
+		if (!(btn & MK_MBUTTON)) {
+			Win32Input::keyUp(Input::Key::MOUSE_MMB);
+		}
+		if (!(btn & MK_RBUTTON)) {
+			Win32Input::keyUp(Input::Key::MOUSE_RMB);
+		}
+		if (!(btn & MK_XBUTTON1)) {
+			Win32Input::keyUp(Input::Key::MOUSE_XB1);
+		}
+		if (!(btn & MK_XBUTTON2)) {
+			Win32Input::keyUp(Input::Key::MOUSE_XB2);
+		}
+	}
+
+	void Win32Input::setMousePosition(int x, int y) {
+		Input::cursor_xPos = x;
+		Input::cursor_yPos = y;
+	}
+
 	void Win32Input::keyDown(int winKey) {
 		Input::Key k = findKey(winKey);
 		if (k != Input::Key::NOT_FOUND && k < Input::Key::COUNT) {
