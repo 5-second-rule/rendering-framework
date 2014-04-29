@@ -6,6 +6,8 @@
 
 #include "Window.h"
 
+#include "Win32Input.h"
+
 namespace Transmission {
 	class Win32Window :
 		public Window
@@ -14,7 +16,7 @@ namespace Transmission {
 		HINSTANCE hInstance;
 		HWND hWnd;
 		WNDPROC oldWndproc;
-		Input inp;
+		Input input;
 
 		static LRESULT CALLBACK SubclassWndProc(HWND hwnd, UINT wm, WPARAM wParam, LPARAM lParam);
 	public:
