@@ -6,7 +6,7 @@
 
 #include "Window.h"
 
-#include "Window.h"
+#include "Windowsx.h"
 
 #include "Win32Input.h"
 

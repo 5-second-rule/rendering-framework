@@ -1,5 +1,5 @@
 #include "Win32Window.h"
-#include "Windowsx.h"
+
 namespace Transmission {
 
 	Win32Window::Win32Window(HINSTANCE hInstance)

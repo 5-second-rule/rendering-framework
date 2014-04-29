@@ -13,16 +13,17 @@ namespace Transmission {
 		~Win32Input();
 
 	protected:
-		void initializeKeyMap();
-		static Key keyMap[NUM_KEYS];
+		static Input::Key keyMap[NUM_KEYS];
+		static bool keyMap_initialized;
 
-		Key findKey(int winKey);
+		void initializeKeyMap();
+		Input::Key findKey(int winKey);
 		void mouseDown(WPARAM wParam);
 		void mouseUp(WPARAM wParam);
 		void setMousePosition(int x, int y);
 		void keyDown(int winKey);
 		void keyUp(int winKey);
-		void keyDown(Key k);
-		void keyUp(Key k);
+		void keyDown(Input::Key k);
+		void keyUp(Input::Key k);
 	};
 }

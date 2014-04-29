@@ -3,6 +3,8 @@
 
 #include <Windows.h>
 
+#include <queue>
+
 namespace Transmission {
 	class FRAMEWORKDLL Input
 	{
@@ -21,17 +23,20 @@ namespace Transmission {
 			COUNT, NOT_FOUND = -1
 		};
 		enum KeyState { STATE_UP, STATE_DOWN };
+		typedef std::queue<std::pair<Input::Key, Input::KeyState>> KeyStateQueue;
 
 		Input();
 
 		KeyState getKeyState(Key k);
+		KeyStateQueue getInputQueue();
 		int getCursorXPosition(); // Signed x client coordinates
 		int getCursorYPosition(); // Signed y client coordinates
+		
 
 	protected:
-		static KeyState keys[(unsigned int)COUNT];
-		static bool keyMap_initialized;
-		static int cursor_xPos;
-		static int cursor_yPos;
+		KeyStateQueue inputQueue;
+		KeyState keys[(unsigned int)COUNT];
+		int cursor_xPos;
+		int cursor_yPos;
 	};
 }

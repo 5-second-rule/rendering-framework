@@ -2,10 +2,11 @@
 
 namespace Transmission {
 	Input::Key Win32Input::keyMap[Win32Input::NUM_KEYS];
+	bool Win32Input::keyMap_initialized = false;
 
 	Win32Input::Win32Input()
 	{
-		if (!keyMap_initialized) {
+		if (!Win32Input::keyMap_initialized) {
 			Win32Input::initializeKeyMap();
 		}
 	}
@@ -26,20 +27,20 @@ namespace Transmission {
 	void Win32Input::mouseDown(WPARAM wParam) {
 		int btn = GET_KEYSTATE_WPARAM(wParam); // bit mask for all mouse btns
 
-		if (btn & MK_LBUTTON) {
-			Win32Input::keyDown(Input::Key::MOUSE_LMB);
+		if (getKeyState(Input::Key::MOUSE_LMB) == Input::KeyState::STATE_UP && btn & MK_LBUTTON) {
+			this->keyDown(Input::Key::MOUSE_LMB);
 		}
-		if (btn & MK_MBUTTON) {
-			Win32Input::keyDown(Input::Key::MOUSE_MMB);
+		if (getKeyState(Input::Key::MOUSE_MMB) == Input::KeyState::STATE_UP && btn & MK_MBUTTON) {
+			this->keyDown(Input::Key::MOUSE_MMB);
 		}
-		if (btn & MK_RBUTTON) {
-			Win32Input::keyDown(Input::Key::MOUSE_RMB);
+		if (getKeyState(Input::Key::MOUSE_RMB) == Input::KeyState::STATE_UP && btn & MK_RBUTTON) {
+			this->keyDown(Input::Key::MOUSE_RMB);
 		}
-		if (btn & MK_XBUTTON1) {
-			Win32Input::keyDown(Input::Key::MOUSE_XB1);
+		if (getKeyState(Input::Key::MOUSE_XB1) == Input::KeyState::STATE_UP && btn & MK_XBUTTON1) {
+			this->keyDown(Input::Key::MOUSE_XB1);
 		}
-		if (btn & MK_XBUTTON2) {
-			Win32Input::keyDown(Input::Key::MOUSE_XB2);
+		if (getKeyState(Input::Key::MOUSE_XB2) == Input::KeyState::STATE_UP && btn & MK_XBUTTON2) {
+			this->keyDown(Input::Key::MOUSE_XB2);
 		}
 	}
 
@@ -47,48 +48,52 @@ namespace Transmission {
 		int btn = GET_KEYSTATE_WPARAM(wParam); // bit mask for all mouse btns
 
 		// Note: flags are set if buttons are DOWN
-		if (!(btn & MK_LBUTTON)) {
-			Win32Input::keyUp(Input::Key::MOUSE_LMB);
+		if (getKeyState(Input::Key::MOUSE_LMB) == Input::KeyState::STATE_DOWN && !(btn & MK_LBUTTON)) {
+			this->keyUp(Input::Key::MOUSE_LMB);
 		}
-		if (!(btn & MK_MBUTTON)) {
-			Win32Input::keyUp(Input::Key::MOUSE_MMB);
+		if (getKeyState(Input::Key::MOUSE_MMB) == Input::KeyState::STATE_DOWN &&!(btn & MK_MBUTTON)) {
+			this->keyUp(Input::Key::MOUSE_MMB);
 		}
-		if (!(btn & MK_RBUTTON)) {
-			Win32Input::keyUp(Input::Key::MOUSE_RMB);
+		if (getKeyState(Input::Key::MOUSE_RMB) == Input::KeyState::STATE_DOWN &&!(btn & MK_RBUTTON)) {
+			this->keyUp(Input::Key::MOUSE_RMB);
 		}
-		if (!(btn & MK_XBUTTON1)) {
-			Win32Input::keyUp(Input::Key::MOUSE_XB1);
+		if (getKeyState(Input::Key::MOUSE_XB1) == Input::KeyState::STATE_DOWN &&!(btn & MK_XBUTTON1)) {
+			this->keyUp(Input::Key::MOUSE_XB1);
 		}
-		if (!(btn & MK_XBUTTON2)) {
-			Win32Input::keyUp(Input::Key::MOUSE_XB2);
+		if (getKeyState(Input::Key::MOUSE_XB2) == Input::KeyState::STATE_DOWN &&!(btn & MK_XBUTTON2)) {
+			this->keyUp(Input::Key::MOUSE_XB2);
 		}
 	}
 
 	void Win32Input::setMousePosition(int x, int y) {
-		Input::cursor_xPos = x;
-		Input::cursor_yPos = y;
+		this->cursor_xPos = x;
+		this->cursor_yPos = y;
 	}
 
 	void Win32Input::keyDown(int winKey) {
-		Input::Key k = findKey(winKey);
+		Input::Key k = this->findKey(winKey);
 		if (k != Input::Key::NOT_FOUND && k < Input::Key::COUNT) {
-			keys[k] = Input::KeyState::STATE_DOWN;
+			this->keys[k] = Input::KeyState::STATE_DOWN;
+			this->inputQueue.emplace(k, Input::KeyState::STATE_DOWN);
 		}
 	}
 
 	void Win32Input::keyUp(int winKey) {
-		Input::Key k = findKey(winKey);
+		Input::Key k = this->findKey(winKey);
 		if (k != Input::Key::NOT_FOUND && k < Input::Key::COUNT) {
-			keys[k] = Input::KeyState::STATE_UP;
+			this->keys[k] = Input::KeyState::STATE_UP;
+			this->inputQueue.emplace(k, Input::KeyState::STATE_UP);
 		}
 	}
 
-	void Win32Input::keyDown(Key key) {
-		keys[key] = STATE_DOWN;
+	void Win32Input::keyDown(Input::Key key) {
+		this->keys[key] = STATE_DOWN;
+		this->inputQueue.emplace(key, Input::KeyState::STATE_DOWN);
 	}
 
-	void Win32Input::keyUp(Key key) {
-		keys[key] = STATE_UP;
+	void Win32Input::keyUp(Input::Key key) {
+		this->keys[key] = STATE_UP;
+		this->inputQueue.emplace(key, Input::KeyState::STATE_UP);
 	}
 
 	void Win32Input::initializeKeyMap() {
@@ -198,6 +203,6 @@ namespace Transmission {
 		Win32Input::keyMap[VK_LCONTROL] = CONTROL;
 		Win32Input::keyMap[VK_RCONTROL] = CONTROL;
 
-		keyMap_initialized = true;
+		Win32Input::keyMap_initialized = true;
 	}
 }

@@ -1,27 +1,36 @@
 #include "Input.h"
 
 namespace Transmission {
-	Input::KeyState Input::keys[(unsigned int)Input::Key::COUNT];
-	bool Input::keyMap_initialized = false;
-	int Input::cursor_xPos;
-	int Input::cursor_yPos;
-
 	Input::Input() {
+		for (int i = 0; i < COUNT; ++i) {
+			this->keys[i] = Input::KeyState::STATE_UP;
+		}
+		this->inputQueue = KeyStateQueue();
 	}
 
 	Input::KeyState Input::getKeyState(Input::Key k) {
 		if (0 <= k && k < COUNT) {
-			return Input::keys[k];
+			return this->keys[k];
 		}
 
 		return KeyState::STATE_UP;
 	}
 
+	Input::KeyStateQueue Input::getInputQueue() {
+		// Save the list, prepare to pass to engine
+		Input::KeyStateQueue q = this->inputQueue;
+		
+		// Purge current queue
+		this->inputQueue = KeyStateQueue();
+
+		return q;
+	}
+
 	int Input::getCursorXPosition() {
-		return Input::cursor_xPos;
+		return this->cursor_xPos;
 	}
 
 	int Input::getCursorYPosition() {
-		return Input::cursor_yPos;
+		return this->cursor_yPos;
 	}
 }
