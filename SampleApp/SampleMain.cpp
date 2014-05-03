@@ -106,7 +106,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	Transmission::Model* model = renderer->createModelFromFile(herpesFbxFilePath, &vbuf, &ibuf, texture);
 
-	if (model == NULL) throw std::runtime_error("YO! DA MODEL VAS NULL!");
+	//if (model == NULL) throw std::runtime_error("YO! DA MODEL VAS NULL!");
+	if( model == NULL ) exit(-1);
 
 	while (messagePump(window)) {
 		renderer->clearFrame();

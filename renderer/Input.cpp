@@ -5,7 +5,11 @@ namespace Transmission {
 		for (int i = 0; i < COUNT; ++i) {
 			this->keys[i] = Input::KeyState::STATE_UP;
 		}
-		this->inputQueue = KeyStateQueue();
+		this->inputQueue = new KeyStateQueue();
+	}
+
+	Input::~Input() {
+		delete this->inputQueue;
 	}
 
 	Input::KeyState Input::getKeyState(Input::Key k) {
@@ -16,12 +20,13 @@ namespace Transmission {
 		return KeyState::STATE_UP;
 	}
 
-	Input::KeyStateQueue Input::getInputQueue() {
+	Input::KeyStateQueue* Input::getInputQueue() {
 		// Save the list, prepare to pass to engine
-		Input::KeyStateQueue q = this->inputQueue;
+		Input::KeyStateQueue* q = this->inputQueue;
 		
 		// Purge current queue
-		this->inputQueue = KeyStateQueue();
+		delete this->inputQueue;
+		this->inputQueue = new KeyStateQueue();
 
 		return q;
 	}
