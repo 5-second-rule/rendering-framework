@@ -47,4 +47,7 @@ namespace Transmission {
 		return mTrans * mScale * mRotX * mRotY * mRotZ;
 	}
 
+	void Transformer::setPosition(const Vector4& position) {
+		this->position = position;
+	}
 }

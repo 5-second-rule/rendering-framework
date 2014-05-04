@@ -18,6 +18,7 @@ namespace Transmission {
 		virtual void move(const Vector4&);
 		virtual void rotate(const Vector4&);
 		virtual void setScale(const Vector4&);
+		virtual void setPosition(const Vector4&);
 
 		virtual Matrix4 getTransform();
 	};
