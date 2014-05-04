@@ -74,7 +74,7 @@ namespace Transmission {
 		Input::Key k = this->findKey(winKey);
 		if (k != Input::Key::NOT_FOUND && k < Input::Key::COUNT) {
 			this->keys[k] = Input::KeyState::STATE_DOWN;
-			this->inputQueue->emplace(k, Input::KeyState::STATE_DOWN);
+			this->inputQueue.emplace(k, Input::KeyState::STATE_DOWN);
 		}
 	}
 
@@ -82,18 +82,18 @@ namespace Transmission {
 		Input::Key k = this->findKey(winKey);
 		if (k != Input::Key::NOT_FOUND && k < Input::Key::COUNT) {
 			this->keys[k] = Input::KeyState::STATE_UP;
-			this->inputQueue->emplace(k, Input::KeyState::STATE_UP);
+			this->inputQueue.emplace(k, Input::KeyState::STATE_UP);
 		}
 	}
 
 	void Win32Input::keyDown(Input::Key key) {
 		this->keys[key] = STATE_DOWN;
-		this->inputQueue->emplace(key, Input::KeyState::STATE_DOWN);
+		this->inputQueue.emplace(key, Input::KeyState::STATE_DOWN);
 	}
 
 	void Win32Input::keyUp(Input::Key key) {
 		this->keys[key] = STATE_UP;
-		this->inputQueue->emplace(key, Input::KeyState::STATE_UP);
+		this->inputQueue.emplace(key, Input::KeyState::STATE_UP);
 	}
 
 	void Win32Input::initializeKeyMap() {

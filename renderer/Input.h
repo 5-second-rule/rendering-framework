@@ -29,13 +29,13 @@ namespace Transmission {
 		~Input();
 
 		KeyState getKeyState(Key k);
-		KeyStateQueue* getInputQueue();
+		KeyStateQueue getInputQueue();
 		int getCursorXPosition(); // Signed x client coordinates
 		int getCursorYPosition(); // Signed y client coordinates
 		
 
 	protected:
-		KeyStateQueue* inputQueue;
+		KeyStateQueue inputQueue;
 		KeyState keys[(unsigned int)COUNT];
 		int cursor_xPos;
 		int cursor_yPos;
