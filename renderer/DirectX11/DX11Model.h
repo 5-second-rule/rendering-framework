@@ -21,8 +21,12 @@ namespace Transmission {
 
 	public:
 		DX11Model(VertexBuffer*, IndexBuffer*, ID3D11DeviceContext*, Texture*, Renderer*);
+		DX11Model(VertexBuffer*, IndexBuffer*, ID3D11DeviceContext*, Texture*, Renderer*, Shader* vs, Shader* ps);
 		~DX11Model();
 
+		virtual void setShaders(Shader*, Shader*);
+		virtual void setVertexShader(Shader*);
+		virtual void setPixelShader(Shader*);
 		virtual void draw();
 	};
 }

@@ -102,6 +102,15 @@
     <ClCompile Include="Win32\Win32Input.cpp">
       <Filter>Source Files\Win32</Filter>
     </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX11\DX11Timer.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -194,12 +203,39 @@
     <ClInclude Include="Win32\Win32Input.h">
       <Filter>Header Files\Win32</Filter>
     </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DX11Timer.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="DirectX11\defaultPixel.hlsl">
+      <Filter>Source Files\DirectX11</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectX11\defaultVertex.hlsl">
+      <Filter>Source Files\DirectX11</Filter>
+    </FxCompile>
     <FxCompile Include="DirectX11\pixel.hlsl">
       <Filter>Source Files\DirectX11</Filter>
     </FxCompile>
-    <FxCompile Include="DirectX11\vertex.hlsl">
+    <FxCompile Include="DirectX11\pixelCelShaded.hlsl">
+      <Filter>Source Files\DirectX11</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectX11\pixelNoSpec.hlsl">
+      <Filter>Source Files\DirectX11</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectX11\vertexRipple.hlsl">
+      <Filter>Source Files\DirectX11</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectX11\vertexSpring.hlsl">
+      <Filter>Source Files\DirectX11</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectX11\vertexWiggle.hlsl">
       <Filter>Source Files\DirectX11</Filter>
     </FxCompile>
   </ItemGroup>

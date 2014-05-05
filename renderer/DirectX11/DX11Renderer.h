@@ -8,8 +8,6 @@
 
 #include "Renderer.h"
 #include "Window.h"
-#include "DX11VertexShader.h"
-#include "DX11PixelShader.h"
 
 namespace Transmission {
 
@@ -25,13 +23,16 @@ namespace Transmission {
 		ID3D11DepthStencilView* depthStencil;
 		ID3D11DepthStencilState * depthStencilState;
 
-		DX11VertexShader* vertexShader;
-		DX11PixelShader* pixelShader;
+		Shader* defaultVertexShader;
+		Shader* defaultPixelShader;
 		ID3D11InputLayout *layout;
+		D3D11_INPUT_ELEMENT_DESC* ied;
+
+		Timer* renderTimer;
 
 		ID3D11Buffer* perFrameBuffer;
 		ID3D11Buffer* perVertexBuffer;
-
+		ID3D11Buffer* timeBuffer;
 
 		Camera* camera;
 
@@ -56,10 +57,21 @@ namespace Transmission {
 		virtual VertexBuffer* createVertexBuffer(Vertex [], size_t);
 		virtual IndexBuffer* createIndexBuffer(unsigned int [], size_t);
 		virtual Model* createModel(VertexBuffer*, IndexBuffer*, Texture*);
+		virtual Model* createModel(VertexBuffer*, IndexBuffer*, Texture*, Shader*, Shader*);
 		virtual Texture* createTextureFromFile(char* f);
 
+		virtual Shader* createVertexShader(char*);
+		virtual Shader* createPixelShader(char*);
+
+		virtual Shader* getDefaultVertexShader();
+		virtual Shader* getDefaultPixelShader();
+
+		ID3D11InputLayout * getLayout();
+		ID3D11InputLayout ** getLayoutAddress();
+		D3D11_INPUT_ELEMENT_DESC* getInputElementDesc();
 
 		virtual Camera* getCamera();
+		virtual Timer* getTimer();
 		virtual void setObjectMatrix(Matrix4);
 	};
 }

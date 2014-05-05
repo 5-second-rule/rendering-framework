@@ -241,9 +241,9 @@ namespace Transmission {
 					faceIndex++;
 
 					/*fin >> faces[faceIndex].vIndex1 >> input2 >> faces[faceIndex].tIndex1 >> input2 >> faces[faceIndex].nIndex1
-						>> faces[faceIndex].vIndex2 >> input2 >> faces[faceIndex].tIndex2 >> input2 >> faces[faceIndex].nIndex2
-						>> faces[faceIndex].vIndex3 >> input2 >> faces[faceIndex].tIndex3 >> input2 >> faces[faceIndex].nIndex3;
-						faceIndex++;*/
+					>> faces[faceIndex].vIndex2 >> input2 >> faces[faceIndex].tIndex2 >> input2 >> faces[faceIndex].nIndex2
+					>> faces[faceIndex].vIndex3 >> input2 >> faces[faceIndex].tIndex3 >> input2 >> faces[faceIndex].nIndex3;
+					faceIndex++;*/
 				}
 			}
 
@@ -260,11 +260,63 @@ namespace Transmission {
 		// Close the file.
 		fin.close();
 
+		bool initial = true;
+		float xMin, yMin, zMin;
+		float xMax, yMax, zMax;
+		float xIn, yIn, zIn;
+
+		for (int c = 0; c < vertexCount; c++) {
+			xIn = vertices[c].x;
+			yIn = vertices[c].y;
+			zIn = vertices[c].z;
+
+			if (initial) {
+				xMin = xIn;
+				yMin = yIn;
+				zMin = zIn;
+
+				xMax = xIn;
+				yMax = yIn;
+				zMax = zIn;
+
+				initial = false;
+			}
+			else {
+				if (xIn < xMin) {
+					xMin = xIn;
+				}
+
+				if (yIn < yMin) {
+					yMin = yIn;
+				}
+
+				if (zIn < zMin) {
+					zMin = zIn;
+				}
+
+				if (xIn > xMax) {
+					xMax = xIn;
+				}
+
+				if (yIn > yMax) {
+					yMax = yIn;
+				}
+
+				if (zIn > zMax) {
+					zMax = zIn;
+				}
+			}
+		}
+
+		float xCenter, yCenter, zCenter;
+		xCenter = (xMin + xMax) / 2.0f;
+		yCenter = (yMin + yMax) / 2.0f;
+		zCenter = (zMin + zMax) / 2.0f;
 
 		int numIndices = numVertBuffer;
 		unsigned int* indices = new unsigned int[numIndices];
 		int index1, index2, index3;
-		// Now loop through all the faces and create the index buffer
+		// Now loop through all the faces and create the vertex and index buffers
 		for (int i = 0; i < faceIndex; i++)
 		{
 			index1 = faces[i].vIndex1 - 1;
@@ -272,9 +324,9 @@ namespace Transmission {
 			index3 = faces[i].vIndex3 - 1;
 
 			//1st vertex
-			vertexBufferArray[vertexBufferIndex].point[0] = vertices[index1].x;
-			vertexBufferArray[vertexBufferIndex].point[1] = vertices[index1].y;
-			vertexBufferArray[vertexBufferIndex].point[2] = vertices[index1].z;
+			vertexBufferArray[vertexBufferIndex].point[0] = vertices[index1].x - xCenter;
+			vertexBufferArray[vertexBufferIndex].point[1] = vertices[index1].y - yCenter;
+			vertexBufferArray[vertexBufferIndex].point[2] = vertices[index1].z - zCenter;
 
 			vertexBufferArray[vertexBufferIndex].texCoord[0] = texcoords[faces[i].tIndex1 - 1].u;
 			vertexBufferArray[vertexBufferIndex].texCoord[1] = texcoords[faces[i].tIndex1 - 1].v;
@@ -287,9 +339,9 @@ namespace Transmission {
 			vertexBufferIndex++;
 
 			//2nd vertex
-			vertexBufferArray[vertexBufferIndex].point[0] = vertices[index2].x;
-			vertexBufferArray[vertexBufferIndex].point[1] = vertices[index2].y;
-			vertexBufferArray[vertexBufferIndex].point[2] = vertices[index2].z;
+			vertexBufferArray[vertexBufferIndex].point[0] = vertices[index2].x - xCenter;
+			vertexBufferArray[vertexBufferIndex].point[1] = vertices[index2].y - yCenter;
+			vertexBufferArray[vertexBufferIndex].point[2] = vertices[index2].z - zCenter;
 
 			vertexBufferArray[vertexBufferIndex].texCoord[0] = texcoords[faces[i].tIndex2 - 1].u;
 			vertexBufferArray[vertexBufferIndex].texCoord[1] = texcoords[faces[i].tIndex2 - 1].v;
@@ -302,9 +354,9 @@ namespace Transmission {
 			vertexBufferIndex++;
 
 			//3rd vertex
-			vertexBufferArray[vertexBufferIndex].point[0] = vertices[index3].x;
-			vertexBufferArray[vertexBufferIndex].point[1] = vertices[index3].y;
-			vertexBufferArray[vertexBufferIndex].point[2] = vertices[index3].z;
+			vertexBufferArray[vertexBufferIndex].point[0] = vertices[index3].x - xCenter;
+			vertexBufferArray[vertexBufferIndex].point[1] = vertices[index3].y - yCenter;
+			vertexBufferArray[vertexBufferIndex].point[2] = vertices[index3].z - zCenter;
 
 			vertexBufferArray[vertexBufferIndex].texCoord[0] = texcoords[faces[i].tIndex3 - 1].u;
 			vertexBufferArray[vertexBufferIndex].texCoord[1] = texcoords[faces[i].tIndex3 - 1].v;
@@ -321,30 +373,30 @@ namespace Transmission {
 		*vBuf = renderer->createVertexBuffer(vertexBufferArray, numVertBuffer);
 		*iBuf = renderer->createIndexBuffer(indices, numIndices);
 
-		delete [] vertexBufferArray;
-		delete [] indices;
+		delete[] vertexBufferArray;
+		delete[] indices;
 		vertexBufferArray = 0;
 		indices = 0;
 
 		// Release the four data structures.
 		if (vertices)
 		{
-			delete [] vertices;
+			delete[] vertices;
 			vertices = 0;
 		}
 		if (texcoords)
 		{
-			delete [] texcoords;
+			delete[] texcoords;
 			texcoords = 0;
 		}
 		if (normals)
 		{
-			delete [] normals;
+			delete[] normals;
 			normals = 0;
 		}
 		if (faces)
 		{
-			delete [] faces;
+			delete[] faces;
 			faces = 0;
 		}
 

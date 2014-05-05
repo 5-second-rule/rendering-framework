@@ -51,15 +51,33 @@ namespace Transmission {
 	}
 
 	/*
-		Creates a model from a file path. Returns pointer to model or nullptr if model failed to load or incorrect filepath.
-		- filePath: path to 3D model file
-		- vP: pointer to VertexBuffer pointer
-		- iP: pointer to IndexBuffer pointer
-		*/
+	Creates a model from a file path. Returns pointer to model or nullptr if model failed to load or incorrect filepath.
+	- filePath: path to 3D model file
+	- vP: pointer to VertexBuffer pointer
+	- iP: pointer to IndexBuffer pointer
+	*/
 	Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex) {
 		// Checks if error occured during model load
 		if (this->loadModelFile(filePath, vP, iP)) {
 			return createModel(*vP, *iP, tex);
+		}
+		else {
+			return nullptr;
+		}
+	}
+
+	/*
+	Creates a model from a file path that uses set shaders. Returns pointer to model or nullptr if model failed to load or incorrect filepath.
+	- filePath: path to 3D model file
+	- vP: pointer to VertexBuffer pointer
+	- iP: pointer to IndexBuffer pointer
+	- vertexShader : pointer to vertex shader
+	- pixelShader : pointer to pixel shader
+	*/
+	Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, Shader* vertexShader, Shader* pixelShader) {
+		// Checks if error occured during model load
+		if (this->loadModelFile(filePath, vP, iP)) {
+			return createModel(*vP, *iP, tex, vertexShader, pixelShader);
 		}
 		else {
 			return nullptr;
