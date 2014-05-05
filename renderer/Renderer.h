@@ -8,6 +8,8 @@
 #include "Model.h"
 #include "Camera.h"
 #include "Texture.h"
+#include "Shader.h"
+#include "Timer.h"
 
 namespace Transmission {
 
@@ -25,13 +27,21 @@ namespace Transmission {
 		virtual VertexBuffer* createVertexBuffer(Vertex [], size_t) = 0;
 		virtual IndexBuffer* createIndexBuffer(unsigned int [], size_t) = 0;
 		virtual Model* createModel(VertexBuffer*, IndexBuffer*, Texture*) = 0;
+		virtual Model* createModel(VertexBuffer*, IndexBuffer*, Texture*, Shader*, Shader*) = 0;
 
-		virtual bool loadModelFile(char* f, VertexBuffer**, IndexBuffer**);
-		virtual Model* createModelFromFile(char* f, VertexBuffer**, IndexBuffer**, Texture*);
-		virtual Texture* createTextureFromFile(char* f) = 0;
+		virtual bool loadModelFile(char*, VertexBuffer**, IndexBuffer**);
+		virtual Model* createModelFromFile(char*, VertexBuffer**, IndexBuffer**, Texture*);
+		virtual Model* createModelFromFile(char*, VertexBuffer**, IndexBuffer**, Texture*, Shader*, Shader*);
+		virtual Texture* createTextureFromFile(char*) = 0;
+		virtual Shader* createVertexShader(char*) = 0;
+		virtual Shader* createPixelShader(char*) = 0;
 
+		virtual Shader* getDefaultVertexShader() = 0;
+		virtual Shader* getDefaultPixelShader() = 0;
 
 		virtual Camera* getCamera() = 0;
+
+		virtual Timer* getTimer() = 0;
 
 		virtual void setObjectMatrix(Matrix4) = 0;
 	};

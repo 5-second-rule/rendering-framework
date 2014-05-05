@@ -1,13 +1,13 @@
 /////////////
 // GLOBALS //
 /////////////
-#define LIGHT_DIR float3(10.0, 10.0, -10.0)
+#define LIGHT_DIR float3(5.0, 5.5, -10.0)
 #define LIGHT_COLOR float3(0.9, 0.9, 0.9)
 
 Texture2D shaderTexture;
 SamplerState SampleType;
 
-#define AMBIENT float3(0.1, 0.1, 0.1)
+#define AMBIENT float3(0.0, 0.0, 0.0)
 #define SPECULAR float3(1.0, 1.0, 1.0)
 
 #define SPECULARPOWER 100.0

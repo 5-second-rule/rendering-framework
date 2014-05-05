@@ -13,6 +13,9 @@
 #include "DX11IndexBuffer.h"
 #include "DX11Model.h"
 #include "DX11Texture.h"
+#include "DX11VertexShader.h"
+#include "DX11PixelShader.h"
+#include "DX11Timer.h"
 
 namespace Transmission {
 
@@ -29,10 +32,12 @@ namespace Transmission {
 		this->setupViewportAndCamera(window);
 		/* ---------- */
 
-		perFrameBuffer = NULL; perVertexBuffer = NULL;
+		renderTimer = NULL;
+		perFrameBuffer = NULL; perVertexBuffer = NULL; timeBuffer = NULL;
 		this->setupConstantBuffer();
 
-		vertexShader = NULL; pixelShader = NULL; layout = NULL;
+		defaultVertexShader = NULL; defaultPixelShader = NULL; layout = NULL;
+		ied = NULL;
 		this->setupShaders();
 	}
 
@@ -43,13 +48,21 @@ namespace Transmission {
 
 		swapchain->SetFullscreenState(false, NULL);
 
-		delete vertexShader;
-		delete pixelShader;
+		delete defaultVertexShader;
+		delete defaultPixelShader;
+		delete[] ied;
+		delete renderTimer;
+
+		defaultVertexShader = NULL;
+		defaultPixelShader = NULL;
+		ied = NULL;
+		renderTimer = NULL;
 
 		swapchain->Release();
 		backbuffer->Release();
 		perFrameBuffer->Release();
 		perVertexBuffer->Release();
+		timeBuffer->Release();
 		device->Release();
 		context->Release();
 	}
@@ -229,13 +242,13 @@ namespace Transmission {
 		context->RSSetViewports(1, &viewport);
 
 		// Camera and Perspective Matrices
-		this->camera = new Camera(Point(0, 5, -10), Point(0, 5, 0), Vector(0, 1, 0),
-			(float) M_PI / 4.0f, (float) Window::screenWidth / (float) Window::screenHeight, 1, 1000);
+		this->camera = new Camera(Point(0, 0, -10), Point(0, 0, 0), Vector(0, 1, 0),
+			(float) M_PI / 4.0f, (float)Window::screenWidth / (float)Window::screenHeight, 1, 1000);
 
 	}
 
 	void DX11Renderer::setupConstantBuffer() {
-		if (perFrameBuffer != NULL || perVertexBuffer != NULL) {
+		if (perFrameBuffer != NULL || perVertexBuffer != NULL || timeBuffer != NULL) {
 			throw std::runtime_error("You can only setup the constant buffers once");
 		}
 
@@ -254,33 +267,32 @@ namespace Transmission {
 
 		HR(device->CreateBuffer(&cb, NULL, &this->perVertexBuffer));
 
+		renderTimer = new DX11Timer();
 
+		cb.ByteWidth = sizeof(float[4]);
+
+		HR(device->CreateBuffer(&cb, NULL, &this->timeBuffer));
 	}
 
 	void DX11Renderer::setupShaders() {
-		if (pixelShader != NULL || vertexShader != NULL || layout != NULL) {
+		if (defaultPixelShader != NULL || defaultVertexShader != NULL || layout != NULL) {
 			throw std::runtime_error("You can only setup shaders once");
 		}
 
-		// fixed shaders for now
-		this->vertexShader = new DX11VertexShader("vertex.cso", this->device);
-		this->pixelShader = new DX11PixelShader("pixel.cso", this->device);
+		// default shaders
+		this->defaultVertexShader = new DX11VertexShader("defaultVertex.cso", this, this->device, this->context);
+		this->defaultPixelShader = new DX11PixelShader("defaultPixel.cso", this, this->device, this->context);
 
 		// Input Layout for vertex buffers
-		D3D11_INPUT_ELEMENT_DESC ied[] =
-		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-		};
+		ied = new D3D11_INPUT_ELEMENT_DESC[3];
+		ied[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+		ied[1] = { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+		ied[2] = { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 };
 
-		DX11Shader::Buffer VSbytecode = vertexShader->getBytecode();
-		HR(device->CreateInputLayout(ied, 3, VSbytecode.buf, VSbytecode.len, &this->layout));
-		context->IASetInputLayout(this->layout);
+		//Kept the following in case something is using the default vs and ps without a model
 
-		// set shaders
-		context->VSSetShader(vertexShader->getVertexShader(), NULL, 0);
-		context->PSSetShader(pixelShader->getPixelShader(), NULL, 0);
+		defaultVertexShader->set();
+		defaultPixelShader->set();
 	}
 	
 	//=============================================//
@@ -295,6 +307,7 @@ namespace Transmission {
 		// set default stuff
 		float world[4][4];
 		float viewProjection[5][4];
+		float time[1][2];
 
 		memcpy(world, Matrix4::identity().getPointer(), sizeof(float[4][4]));
 		memcpy(viewProjection, (this->camera->getCameraInverse() * this->camera->getPerspective()).getPointer(), sizeof(float[4][4]));
@@ -305,16 +318,18 @@ namespace Transmission {
 		viewProjection[4][2] = cameraPos.z();
 		viewProjection[4][3] = 1.0f;
 
+		renderTimer->GetElapsedTimeAndTimeSinceLastFrame(&time[0][0], &time[0][1]);
 
 		context->UpdateSubresource(perFrameBuffer, 0, NULL, &viewProjection, 0, 0);
 		context->UpdateSubresource(perVertexBuffer, 0, NULL, &world, 0, 0);
+		context->UpdateSubresource(timeBuffer, 0, NULL, &time, 0, 0);
 
-		ID3D11Buffer* cBuffers [] = { perFrameBuffer, perVertexBuffer };
-		context->VSSetConstantBuffers(0, 2, cBuffers);
+		ID3D11Buffer* cBuffers[] = { perFrameBuffer, perVertexBuffer, timeBuffer };
+		context->VSSetConstantBuffers(0, 3, cBuffers);
 
-		// set shaders
-		context->VSSetShader(vertexShader->getVertexShader(), NULL, 0);
-		context->PSSetShader(pixelShader->getPixelShader(), NULL, 0);
+		// set shaders without layout
+		defaultVertexShader->setWithNoLayout();
+		defaultPixelShader->setWithNoLayout(); //using this function for consistency
 	}
 
 	void DX11Renderer::drawFrame() {
@@ -322,23 +337,60 @@ namespace Transmission {
 		swapchain->Present(0, 0);
 	}
 
-	VertexBuffer* DX11Renderer::createVertexBuffer(Vertex vertices [], size_t num) {
+	VertexBuffer* DX11Renderer::createVertexBuffer(Vertex vertices[], size_t num) {
 		return new DX11VertexBuffer(vertices, num, this->device, this->context);
 	}
 
-	IndexBuffer* DX11Renderer::createIndexBuffer(unsigned int indices [], size_t num) {
+	IndexBuffer* DX11Renderer::createIndexBuffer(unsigned int indices[], size_t num) {
 		return new DX11IndexBuffer(indices, num, this->device, this->context);
 	}
-Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture) {
-	return new DX11Model(v, i, context, texture, this);
-}
 
-Texture* DX11Renderer::createTextureFromFile(char* f) {
-	return new DX11Texture(f, this->device, this->context);
-}
+	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture) {
+		return new DX11Model(v, i, context, texture, this);
+	}
+
+	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Shader* vs, Shader* ps) {
+		return new DX11Model(v, i, context, texture, this, vs, ps);
+	}
+
+	Texture* DX11Renderer::createTextureFromFile(char* f) {
+		return new DX11Texture(f, this->device, this->context);
+	}
+
+	Shader* DX11Renderer::createVertexShader(char* f) {
+		return new DX11VertexShader(f, this, this->device, this->context);
+	}
+
+	Shader* DX11Renderer::createPixelShader(char* f) {
+		return new DX11PixelShader(f, this, this->device, this->context);
+	}
+
+	Shader* DX11Renderer::getDefaultVertexShader() {
+		return defaultVertexShader;
+	}
+
+	Shader* DX11Renderer::getDefaultPixelShader() {
+		return defaultPixelShader;
+	}
+
+	ID3D11InputLayout * DX11Renderer::getLayout() {
+		return layout;
+	}
+
+	ID3D11InputLayout ** DX11Renderer::getLayoutAddress() {
+		return &layout;
+	}
+
+	D3D11_INPUT_ELEMENT_DESC* DX11Renderer::getInputElementDesc() {
+		return ied;
+	}
 
 	Camera* DX11Renderer::getCamera() {
 		return this->camera;
+	}
+
+	Timer* DX11Renderer::getTimer() {
+		return this->renderTimer;
 	}
 
 	void DX11Renderer::setObjectMatrix(Matrix4 t) {
