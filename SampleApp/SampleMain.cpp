@@ -23,25 +23,25 @@ void moveBlob(Transmission::Window* w, Transmission::Model* m) {
 	Transmission::Input* input = (Transmission::Input*) w->getInput();
 
 	if (input->getKeyState(Transmission::Input::Key::W) == Transmission::Input::STATE_DOWN) {
-		m->move(Transmission::Vector4(0, moveAmt, 0));
+		m->move(Common::Vector4(0, moveAmt, 0));
 	}
 	if (input->getKeyState(Transmission::Input::Key::A) == Transmission::Input::STATE_DOWN) {
-		m->move(Transmission::Vector4(-moveAmt, 0, 0));
+		m->move(Common::Vector4(-moveAmt, 0, 0));
 	}
 	if (input->getKeyState(Transmission::Input::Key::S) == Transmission::Input::STATE_DOWN) {
-		m->move(Transmission::Vector4(0, -moveAmt, 0));
+		m->move(Common::Vector4(0, -moveAmt, 0));
 	}
 	if (input->getKeyState(Transmission::Input::Key::D) == Transmission::Input::STATE_DOWN) {
-		m->move(Transmission::Vector4(moveAmt, 0, 0));
+		m->move(Common::Vector4(moveAmt, 0, 0));
 	}
 	if (input->getKeyState(Transmission::Input::Key::SPACE) == Transmission::Input::STATE_DOWN) {
-		m->move(Transmission::Vector4(0, 0, moveAmt));
+		m->move(Common::Vector4(0, 0, moveAmt));
 	}
 	if (input->getKeyState(Transmission::Input::Key::Q) == Transmission::Input::STATE_DOWN) {
-		m->rotate(Transmission::Vector(0.00f, moveAmt, 0.0f));
+		m->rotate(Common::Vector(0.00f, moveAmt, 0.0f));
 	}
 	if (input->getKeyState(Transmission::Input::Key::E) == Transmission::Input::STATE_DOWN) {
-		m->rotate(Transmission::Vector(0.00f, -moveAmt, 0.0f));
+		m->rotate(Common::Vector(0.00f, -moveAmt, 0.0f));
 	}
 
 }
@@ -122,10 +122,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (malariaModel == NULL) exit(-1);
 	if (poxModel == NULL) exit(-1);
 
-	herpesModel->move(Transmission::Vector4(0, 0, 35));
-	malariaModel->move(Transmission::Vector4(-15, 0, 35));
-	poxModel->move(Transmission::Vector4(15, 0, 35));
-	poxModel->setScale(Transmission::Vector4(3.0, 3.0, 3.0, 0.0));
+	herpesModel->move(Common::Vector4(0, 0, 35));
+	malariaModel->move(Common::Vector4(-15, 0, 35));
+	poxModel->move(Common::Vector4(15, 0, 35));
+	poxModel->setScale(Common::Vector4(3.0, 3.0, 3.0, 0.0));
 
 	renderer->getTimer()->StartTimer();
 
@@ -143,7 +143,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			renderer->getTimer()->ResetFPSTimer();
 		}
 
-		poxModel->rotate(Transmission::Vector(0.00f, 200.0f*renderer->getTimer()->GetCalculatedTimeSinceLastFrame(), 0.0f));
+		poxModel->rotate(Common::Vector(0.00f, 200.0f*renderer->getTimer()->GetCalculatedTimeSinceLastFrame(), 0.0f));
 
 		herpesModel->draw();
 		malariaModel->draw();

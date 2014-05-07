@@ -1,8 +1,10 @@
 #pragma once
 #include "render-framework.h"
 
-#include "Vector4.h"
-#include "Matrix4.h"
+#define _EXPORT_COMMON
+#include "common/Vector4.h"
+#include "common/Matrix4.h"
+using namespace Common;
 
 namespace Transmission {
 

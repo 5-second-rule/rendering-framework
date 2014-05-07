@@ -58,7 +58,6 @@
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="ITransformable.h" />
-    <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="render-framework.h" />
@@ -69,7 +68,6 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transformer.h" />
     <ClInclude Include="util.h" />
-    <ClInclude Include="Vector4.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Win32\Win32Input.h" />
     <ClInclude Include="Win32\Win32Window.h" />
@@ -162,7 +160,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WINVER=0x600;_WIN32_WINNT=0x0600;RENDERER=1;_IS_RENDER_FRAMEWORK;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>FBX SDK\2014.2.1\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>FBX SDK\2014.2.1\include\;$(SolutionDir)..\common\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
