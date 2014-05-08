@@ -1,7 +1,10 @@
 #include "Win32Input.h"
 
+#include <iostream>
+
 namespace Transmission {
 	Input::Key Win32Input::keyMap[Win32Input::NUM_KEYS];
+
 	bool Win32Input::keyMap_initialized = false;
 
 	Win32Input::Win32Input()
@@ -14,6 +17,72 @@ namespace Transmission {
 
 	Win32Input::~Win32Input()
 	{
+	}
+
+	Input::KeyState Win32Input::getKeyState(Input::Key key) const {
+		((Win32Input*)this)->queryController(key);
+		return Input::getKeyState(key);
+	}
+
+	float Win32Input::getAnalogTriggerValue(Input::Key key) const {
+		float depression;
+
+		switch (key) {
+		case Input::Key::GAMEPAD_LEFT_TRIGGER:
+			depression = this->controllerState.Gamepad.bLeftTrigger;
+			break;
+		case Input::Key::GAMEPAD_RIGHT_TRIGGER:
+			depression = this->controllerState.Gamepad.bRightTrigger;
+			break;
+		default:
+			return 0.0;
+		}
+
+		depression -= TRIGGER_DEADZONE;
+
+		if (depression <= 0) {
+			return 0.0;
+		}
+
+		return depression / (255.0 - TRIGGER_DEADZONE);
+	}
+
+	std::pair<Common::Vector4, float> Win32Input::getAnalogStickPosition(Input::Key key) const {
+		float x, y, deadzone;
+
+		switch (key) {
+		case Input::Key::GAMEPAD_LEFT_STICK:
+			x = this->controllerState.Gamepad.sThumbLX;
+			y = this->controllerState.Gamepad.sThumbLY;
+			deadzone = LEFT_STICK_DEADZONE;
+			break;
+		case Input::Key::GAMEPAD_RIGHT_STICK:
+			x = this->controllerState.Gamepad.sThumbRX;
+			y = this->controllerState.Gamepad.sThumbRY;
+			deadzone = RIGHT_STICK_DEADZONE;
+			break;
+		default:
+			return std::pair<Common::Vector4, float>(Common::Vector4(), 0.0);
+		}
+
+		// Deadzone calculations given by Microsoft DirectX SDK, "Getting Started With XInput"
+		float magnitude = sqrt(x*x + y*y);
+		float normalizedX = x / magnitude;
+		float normalizedY = y / magnitude;
+		float normalizedMagnitude;
+
+		if (magnitude <= deadzone) {
+			magnitude = 0.0;
+			normalizedMagnitude = 0.0;
+			normalizedX = 0.0;
+			normalizedY = 0.0;
+		}
+
+		magnitude = min(magnitude, STICK_MAX);
+		magnitude -= deadzone;
+		normalizedMagnitude = magnitude / (STICK_MAX - deadzone);
+
+		return std::pair<Common::Vector4, float>(Common::Vector4(normalizedX, normalizedY, 0, 0), normalizedMagnitude);
 	}
 
 	Input::Key Win32Input::findKey(int winKey) {
@@ -204,5 +273,65 @@ namespace Transmission {
 		Win32Input::keyMap[VK_RCONTROL] = CONTROL;
 
 		Win32Input::keyMap_initialized = true;
+	}
+
+	void Win32Input::getControllerState() {
+		// Code from Microsoft DirectX SDK, "Getting Started With XInput"
+		ZeroMemory(&this->controllerState, sizeof(XINPUT_STATE));
+
+		if (XInputGetState(0, &this->controllerState) == ERROR_SUCCESS) {
+			this->controllerConnected = true;
+		} else {
+			this->controllerConnected = false;
+		}
+	}
+
+	int Win32Input::getControllerButton(Input::Key key) {
+		switch (key) {
+		case GAMEPAD_A:
+			return XINPUT_GAMEPAD_A;
+		case GAMEPAD_B:
+			return XINPUT_GAMEPAD_B;
+		case GAMEPAD_X:
+			return XINPUT_GAMEPAD_X;
+		case GAMEPAD_Y:
+			return XINPUT_GAMEPAD_Y;
+		case GAMEPAD_DPAD_LEFT:
+			return XINPUT_GAMEPAD_DPAD_LEFT;
+		case GAMEPAD_DPAD_RIGHT:
+			return XINPUT_GAMEPAD_DPAD_RIGHT;
+		case GAMEPAD_DPAD_UP:
+			return XINPUT_GAMEPAD_DPAD_UP;
+		case GAMEPAD_DPAD_DOWN:
+			return XINPUT_GAMEPAD_DPAD_DOWN;
+		case GAMEPAD_LEFT_SHOULDER:
+			return XINPUT_GAMEPAD_LEFT_SHOULDER;
+		case GAMEPAD_RIGHT_SHOULDER:
+			return XINPUT_GAMEPAD_RIGHT_SHOULDER;
+		case GAMEPAD_LEFT_THUMB:
+			return XINPUT_GAMEPAD_LEFT_THUMB;
+		case GAMEPAD_RIGHT_THUMB:
+			return XINPUT_GAMEPAD_RIGHT_THUMB;
+		case GAMEPAD_BACK:
+			return XINPUT_GAMEPAD_BACK;
+		case GAMEPAD_START:
+			return XINPUT_GAMEPAD_START;
+		default:
+			return 0;
+		}
+	}
+	
+	void Win32Input::queryController(Input::Key key) {
+		this->getControllerState();
+		int buttonCode = this->getControllerButton(key);
+		Input::KeyState currentState = Input::getKeyState(key);
+
+		if (this->controllerConnected && key >= Input::Key::GAMEPAD_A && key <= Input::Key::GAMEPAD_START) {
+			if (currentState == Input::KeyState::STATE_UP && ((this->controllerState.Gamepad.wButtons & buttonCode) != 0)) {
+				this->keyDown(key);
+			} else if (currentState == Input::KeyState::STATE_DOWN && ((this->controllerState.Gamepad.wButtons & buttonCode) == 0)) {
+				this->keyUp(key);
+			}
+		}
 	}
 }

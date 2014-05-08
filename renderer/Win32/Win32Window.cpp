@@ -34,7 +34,7 @@ namespace Transmission {
 		// store pointer back to c++ class
 		SetWindowLongPtr(this->hWnd, 0, reinterpret_cast<LONG_PTR>(this));
 
-		this->input = Win32Input();
+		this->input = Win32Input(); 
 	}
 
 	LRESULT CALLBACK Win32Window::SubclassWndProc(

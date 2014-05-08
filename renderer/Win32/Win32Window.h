@@ -18,7 +18,7 @@ namespace Transmission {
 		HINSTANCE hInstance;
 		HWND hWnd;
 		WNDPROC oldWndproc;
-		Input input;
+		Win32Input input;
 
 		static LRESULT CALLBACK SubclassWndProc(HWND hwnd, UINT wm, WPARAM wParam, LPARAM lParam);
 	public:
