@@ -1,7 +1,6 @@
 #pragma once
 
-#define Point(x, y, z) Vector4((x), (y), (z), 1.0f)
-#define Vector(x, y, z) Vector4((x), (y), (z), 0.0f)
+
 
 namespace Transmission {
 

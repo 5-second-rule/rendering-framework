@@ -6,8 +6,10 @@
 #include <fstream>
 #include <stdexcept>
 
-#include "Matrix4.h"
-#include "Vector4.h"
+#define _EXPORT_COMMON
+#include "common/Matrix4.h"
+#include "common/Vector4.h"
+using namespace Common;
 
 #include "DX11VertexBuffer.h"
 #include "DX11IndexBuffer.h"
