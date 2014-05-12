@@ -4,6 +4,7 @@
 #include <Windows.h>
 
 #include <queue>
+#include "../../common/common/Vector4.h"
 
 namespace Transmission {
 	class FRAMEWORKDLL Input
@@ -20,15 +21,25 @@ namespace Transmission {
 			NUM_MULT, NUM_ADD, NUM_SUB, NUM_DEC, NUM_DIV,
 			F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
 			NUM_LOCK, SCROLL_LOCK,
+			GAMEPAD_A, GAMEPAD_B, GAMEPAD_X, GAMEPAD_Y,
+			GAMEPAD_DPAD_LEFT, GAMEPAD_DPAD_RIGHT, GAMEPAD_DPAD_UP, GAMEPAD_DPAD_DOWN,
+			GAMEPAD_LEFT_SHOULDER, GAMEPAD_RIGHT_SHOULDER,
+			GAMEPAD_LEFT_THUMB, GAMEPAD_RIGHT_THUMB,
+			GAMEPAD_BACK, GAMEPAD_START,
+			GAMEPAD_LEFT_TRIGGER, GAMEPAD_RIGHT_TRIGGER,  // analog
+			GAMEPAD_LEFT_STICK, GAMEPAD_RIGHT_STICK,      // analog
 			COUNT, NOT_FOUND = -1
 		};
-		enum KeyState { STATE_UP, STATE_DOWN };
+		enum KeyState { STATE_UP, STATE_DOWN, ANALOG };
 		typedef std::queue<std::pair<Input::Key, Input::KeyState>> KeyStateQueue;
 
 		Input();
 		~Input();
 
-		KeyState getKeyState(Key k);
+		virtual KeyState getKeyState(Key k) const;
+		virtual float getAnalogTriggerValue(Key k) const;
+		virtual std::pair<Common::Vector4,float> getAnalogStickPosition(Key k) const;
+		bool isControllerConnected() const;
 		KeyStateQueue getInputQueue();
 		int getCursorXPosition(); // Signed x client coordinates
 		int getCursorYPosition(); // Signed y client coordinates
@@ -39,5 +50,6 @@ namespace Transmission {
 		KeyState keys[(unsigned int)COUNT];
 		int cursor_xPos;
 		int cursor_yPos;
+		bool controllerConnected;
 	};
 }
