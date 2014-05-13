@@ -18,32 +18,66 @@ bool messagePump(Transmission::Window* window) {
 	return true;
 }
 
-void moveBlob(Transmission::Window* w, Transmission::Model* m) {
-	float moveAmt = 100.0f / 1000.0f;
+void moveBlob(Transmission::Window* w, Transmission::Model* m, Transmission::Camera* cam) {
+	float moveAmt = 1000.0f / 1000.0f;
 	Transmission::Input* input = (Transmission::Input*) w->getInput();
 
 	if (input->getKeyState(Transmission::Input::Key::W) == Transmission::Input::STATE_DOWN) {
 		m->move(Transmission::Vector4(0, moveAmt, 0));
+		cam->move(Transmission::Vector4(0, moveAmt, 0));
+		cam->lookAt(m->getPosition());
 	}
 	if (input->getKeyState(Transmission::Input::Key::A) == Transmission::Input::STATE_DOWN) {
 		m->move(Transmission::Vector4(-moveAmt, 0, 0));
+		cam->move(Transmission::Vector4(-moveAmt, 0, 0));
+		cam->lookAt(m->getPosition());
 	}
 	if (input->getKeyState(Transmission::Input::Key::S) == Transmission::Input::STATE_DOWN) {
 		m->move(Transmission::Vector4(0, -moveAmt, 0));
+		cam->move(Transmission::Vector4(0, -moveAmt, 0));
+		cam->lookAt(m->getPosition());
 	}
 	if (input->getKeyState(Transmission::Input::Key::D) == Transmission::Input::STATE_DOWN) {
 		m->move(Transmission::Vector4(moveAmt, 0, 0));
+		cam->move(Transmission::Vector4(moveAmt, 0, 0));
+		cam->lookAt(m->getPosition());
 	}
 	if (input->getKeyState(Transmission::Input::Key::SPACE) == Transmission::Input::STATE_DOWN) {
 		m->move(Transmission::Vector4(0, 0, moveAmt));
+		cam->move(Transmission::Vector4(0, 0, moveAmt));
+		cam->lookAt(m->getPosition());
 	}
+
+	if (input->getKeyState(Transmission::Input::Key::DOWN_ARROW) == Transmission::Input::STATE_DOWN) {
+		m->move(Transmission::Vector4(0, 0, -moveAmt));
+		cam->move(Transmission::Vector4(0, 0, -moveAmt));
+		cam->lookAt(m->getPosition());
+	}
+
+	// THESE ROTATIONS ARE BROKEN, JUST DID SOMETHING TO TURN THE CAMERA A LITTLE
 	if (input->getKeyState(Transmission::Input::Key::Q) == Transmission::Input::STATE_DOWN) {
 		m->rotate(Transmission::Vector(0.00f, moveAmt, 0.0f));
+		cam->lookAt(m->getPosition());
+		cam->move(Transmission::Vector4(moveAmt, 0, moveAmt));
 	}
 	if (input->getKeyState(Transmission::Input::Key::E) == Transmission::Input::STATE_DOWN) {
 		m->rotate(Transmission::Vector(0.00f, -moveAmt, 0.0f));
+		cam->lookAt(m->getPosition());
+		cam->move(Transmission::Vector4(-moveAmt, 0, -moveAmt));
 	}
 
+}
+
+void changeShader(Transmission::Window* w, Transmission::Model* m, Transmission::Shader* defaultPixel, Transmission::Shader* otherPixel) {
+	Transmission::Input* input = (Transmission::Input*) w->getInput();
+
+	if (input->getKeyState(Transmission::Input::Key::O) == Transmission::Input::STATE_DOWN) {
+		m->setPixelShader(defaultPixel);
+	}
+
+	if (input->getKeyState(Transmission::Input::Key::P) == Transmission::Input::STATE_DOWN) {
+		m->setPixelShader(otherPixel);
+	}
 }
 
 // Temporary formatted output function for writing to the output window
@@ -87,6 +121,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Transmission::VertexBuffer* poxVbuf;
 	Transmission::IndexBuffer* poxIbuf;
 
+	Transmission::VertexBuffer* tubeVbuf;
+	Transmission::IndexBuffer* tubeIbuf;
+
 	char* whiteBloodFbxFilePath = "../SampleApp/whitey.fbx";
 	char* ecoliFbxFilePath = "../SampleApp/ecoli6_nomedia.fbx";
 	char* ecoliObjFilePath = "../SampleApp/Ecoli6_obj.obj";
@@ -102,10 +139,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	char* herpesTexture = "../SampleApp/herpes_3_TXTR.dds";
 	char* malariaTexture = "../SampleApp/malaria_TXTR.dds";
 	char* poxTexture = "../SampleApp/pox_TXTR.dds";
+	char* pipeTexture = "../SampleApp/bloodCell_TXTR.dds";
 
+	Transmission::Shader* defaultVertexShad = renderer->createVertexShader("defaultVertex.cso");
 	Transmission::Shader* vertRipple = renderer->createVertexShader("vertexRipple.cso");
 	Transmission::Shader* vertSpring = renderer->createVertexShader("vertexSpring.cso");
 	Transmission::Shader* vertWiggle = renderer->createVertexShader("vertexWiggle.cso");
+	Transmission::Shader* defaultPixShad = renderer->createPixelShader("defaultPixel.cso");
 	Transmission::Shader* pixShader = renderer->createPixelShader("pixel.cso");
 	Transmission::Shader* pixShaderNoSpec = renderer->createPixelShader("pixelNoSpec.cso");
 	Transmission::Shader* pixCelShader = renderer->createPixelShader("pixelCelShaded.cso");
@@ -113,14 +153,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Transmission::Texture* herpesTex = renderer->createTextureFromFile(herpesTexture);
 	Transmission::Texture* malariaTex = renderer->createTextureFromFile(malariaTexture);
 	Transmission::Texture* poxTex = renderer->createTextureFromFile(poxTexture);
+	Transmission::Texture* pipeTex = renderer->createTextureFromFile(pipeTexture);
 
-	Transmission::Model* herpesModel = renderer->createModelFromFile(herpesFbxFilePath, &herpesVbuf, &herpesIbuf, herpesTex, vertRipple, pixShader);
-	Transmission::Model* malariaModel = renderer->createModelFromFile(malariaFbxFilePath, &malariaVbuf, &malariaIbuf, malariaTex, vertWiggle, pixShader);
-	Transmission::Model* poxModel = renderer->createModelFromFile(poxFbxFilePath, &poxVbuf, &poxIbuf, poxTex, vertSpring, pixShader);
+	Transmission::Model* herpesModel = renderer->createModelFromFile(herpesFbxFilePath, &herpesVbuf, &herpesIbuf, herpesTex, true, vertRipple, pixShader);
+	Transmission::Model* malariaModel = renderer->createModelFromFile(malariaFbxFilePath, &malariaVbuf, &malariaIbuf, malariaTex, true, vertWiggle, pixShader);
+	Transmission::Model* poxModel = renderer->createModelFromFile(poxFbxFilePath, &poxVbuf, &poxIbuf, poxTex, true, vertSpring, pixShader);
+
+	Transmission::Model* tubeModel = renderer->createModelFromFile("../SampleApp/track.obj", &tubeVbuf, &tubeIbuf, pipeTex, false);
+	tubeModel->setPixelShader(pixShader);
 
 	if (herpesModel == NULL) exit(-1);
 	if (malariaModel == NULL) exit(-1);
 	if (poxModel == NULL) exit(-1);
+	if (tubeModel == NULL) exit(-1);
 
 	herpesModel->move(Transmission::Vector4(0, 0, 35));
 	malariaModel->move(Transmission::Vector4(-15, 0, 35));
@@ -148,24 +193,30 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		herpesModel->draw();
 		malariaModel->draw();
 		poxModel->draw();
+		tubeModel->draw();
 
 		renderer->drawFrame();
 
 		odprintf("FPS: %d", fps);
 		odprintf("Time: %f", renderer->getTimer()->GetTime());
 
-		moveBlob(window, herpesModel); // temp input handler
-		moveBlob(window, malariaModel); // temp input handler
-		moveBlob(window, poxModel); // temp input handler
+		moveBlob(window, herpesModel, renderer->getCamera()); // temp input handler
+		//moveBlob(window, malariaModel); // temp input handler
+		//moveBlob(window, poxModel); // temp input handler
+		//moveBlob(window, tubeModel);
+		changeShader(window, tubeModel, defaultPixShad, pixShader);
 	}
 
 	delete herpesModel;
 	delete malariaModel;
 	delete poxModel;
+	delete tubeModel;
 
+	delete defaultVertexShad;
 	delete vertRipple;
 	delete vertSpring;
 	delete vertWiggle;
+	delete defaultPixShad;
 	delete pixShader;
 	delete pixShaderNoSpec;
 
@@ -175,10 +226,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	delete malariaIbuf;
 	delete poxVbuf;
 	delete poxIbuf;
+	delete tubeVbuf;
+	delete tubeIbuf;
 
 	delete herpesTex;
 	delete malariaTex;
 	delete poxTex;
+	delete pipeTex;
 
 	delete renderer;
 	delete window;
