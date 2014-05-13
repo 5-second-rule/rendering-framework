@@ -59,6 +59,15 @@ namespace Transmission {
 		this->updateCamera();
 	}
 
+	void Camera::set(const Vector4& position, const Vector4& lookAt) {
+		assert(position.w() == 1.0f);
+		assert(lookAt.w() == 1.0f);
+
+		this->position = position;
+		this->target = lookAt;
+		this->updateCamera();
+	}
+
 	void Camera::lookAt(const Vector4& point) {
 		assert(point.w() == 1.0f);
 
