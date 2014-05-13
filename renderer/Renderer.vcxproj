@@ -159,7 +159,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WINVER=0x600;_WIN32_WINNT=0x0600;RENDERER=1;_IS_RENDER_FRAMEWORK;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_EXPORT_COMMON;WINVER=0x600;_WIN32_WINNT=0x0600;RENDERER=1;_IS_RENDER_FRAMEWORK;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>FBX SDK\2014.2.1\include\;$(SolutionDir)..\common\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
