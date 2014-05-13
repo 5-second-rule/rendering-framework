@@ -28,7 +28,7 @@ namespace Transmission {
 	- vP: pointer to VertexBuffer pointer
 	- iP: pointer to IndexBuffer pointer
 	*/
-	bool Renderer::loadModelFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP) {
+	bool Renderer::loadModelFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, bool centerShift) {
 		char* extension;
 		HRESULT result;
 
@@ -37,11 +37,11 @@ namespace Transmission {
 		// Check extension and used necessary model loader
 		if (strcmp(extension, ".obj") == 0){
 			OBJLoader objLoaded;
-			result = objLoaded.loadOBJFile(filePath, vP, iP, this);
+			result = objLoaded.loadOBJFile(filePath, vP, iP, this, centerShift); //TODO handle selecting center shift for some objects
 		}
 		else if (strcmp(extension, ".fbx") == 0){
 			FBXLoader fileLoaded;
-			result = fileLoaded.loadFBXFile(filePath, vP, iP, this);
+			result = fileLoaded.loadFBXFile(filePath, vP, iP, this, centerShift);
 		}
 		else {
 			return false;
@@ -56,9 +56,9 @@ namespace Transmission {
 	- vP: pointer to VertexBuffer pointer
 	- iP: pointer to IndexBuffer pointer
 	*/
-	Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex) {
+	Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, bool centerShift) {
 		// Checks if error occured during model load
-		if (this->loadModelFile(filePath, vP, iP)) {
+		if (this->loadModelFile(filePath, vP, iP, centerShift)) {
 			return createModel(*vP, *iP, tex);
 		}
 		else {
@@ -74,9 +74,9 @@ namespace Transmission {
 	- vertexShader : pointer to vertex shader
 	- pixelShader : pointer to pixel shader
 	*/
-	Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, Shader* vertexShader, Shader* pixelShader) {
+	Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, bool centerShift, Shader* vertexShader, Shader* pixelShader) {
 		// Checks if error occured during model load
-		if (this->loadModelFile(filePath, vP, iP)) {
+		if (this->loadModelFile(filePath, vP, iP, centerShift)) {
 			return createModel(*vP, *iP, tex, vertexShader, pixelShader);
 		}
 		else {

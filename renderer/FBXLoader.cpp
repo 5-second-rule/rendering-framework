@@ -20,7 +20,7 @@ namespace Transmission {
 		delete indices;
 	}
 
-	HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer** iBuf, Renderer* renderer)
+	HRESULT FBXLoader::loadFBXFile(char* filePath, VertexBuffer** vBuf, IndexBuffer** iBuf, Renderer* renderer, bool centerShift)
 	{
 		if (g_pFbxSdkManager == nullptr)
 		{
@@ -29,6 +29,8 @@ namespace Transmission {
 			FbxIOSettings* pIOsettings = FbxIOSettings::Create(g_pFbxSdkManager, IOSROOT);
 			g_pFbxSdkManager->SetIOSettings(pIOsettings);
 		}
+
+		this->shiftCenter = centerShift;
 
 		FbxImporter* pImporter = FbxImporter::Create(g_pFbxSdkManager, "");
 		FbxScene* pFbxScene = FbxScene::Create(g_pFbxSdkManager, "");
@@ -76,53 +78,61 @@ namespace Transmission {
 				float xMax, yMax, zMax;
 				float xIn, yIn, zIn;
 
-				for (int c = 0; c < numControlPoints; c++) {
-					xIn = (float)pMesh->GetControlPointAt(c).mData[0];
-					yIn = (float)pMesh->GetControlPointAt(c).mData[1];
-					zIn = (float)pMesh->GetControlPointAt(c).mData[2];
-
-					if (initial) {
-						xMin = xIn;
-						yMin = yIn;
-						zMin = zIn;
-
-						xMax = xIn;
-						yMax = yIn;
-						zMax = zIn;
-
-						initial = false;
-					}
-					else {
-						if (xIn < xMin) {
-							xMin = xIn;
-						}
-
-						if (yIn < yMin) {
-							yMin = yIn;
-						}
-
-						if (zIn < zMin) {
-							zMin = zIn;
-						}
-
-						if (xIn > xMax) {
-							xMax = xIn;
-						}
-
-						if (yIn > yMax) {
-							yMax = yIn;
-						}
-
-						if (zIn > zMax) {
-							zMax = zIn;
-						}
-					}
-				}
-
 				float xCenter, yCenter, zCenter;
-				xCenter = (xMin + xMax) / 2.0f;
-				yCenter = (yMin + yMax) / 2.0f;
-				zCenter = (zMin + zMax) / 2.0f;
+
+				if (this->shiftCenter){
+
+					for (int c = 0; c < numControlPoints; c++) {
+						xIn = (float)pMesh->GetControlPointAt(c).mData[0];
+						yIn = (float)pMesh->GetControlPointAt(c).mData[1];
+						zIn = (float)pMesh->GetControlPointAt(c).mData[2];
+
+						if (initial) {
+							xMin = xIn;
+							yMin = yIn;
+							zMin = zIn;
+
+							xMax = xIn;
+							yMax = yIn;
+							zMax = zIn;
+
+							initial = false;
+						}
+						else {
+							if (xIn < xMin) {
+								xMin = xIn;
+							}
+
+							if (yIn < yMin) {
+								yMin = yIn;
+							}
+
+							if (zIn < zMin) {
+								zMin = zIn;
+							}
+
+							if (xIn > xMax) {
+								xMax = xIn;
+							}
+
+							if (yIn > yMax) {
+								yMax = yIn;
+							}
+
+							if (zIn > zMax) {
+								zMax = zIn;
+							}
+						}
+					}
+					xCenter = (xMin + xMax) / 2.0f;
+					yCenter = (yMin + yMax) / 2.0f;
+					zCenter = (zMin + zMax) / 2.0f;
+				}
+				else {
+					xCenter = 0;
+					yCenter = 0;
+					zCenter = 0;
+				}
 
 				FbxVector4* pVertices = pMesh->GetControlPoints();
 				int vertexCount = pMesh->GetPolygonVertexCount();
