@@ -33,8 +33,8 @@ namespace Transmission {
 
 		~Camera();
 
-		void move(Vector4&);
-		void lookAt(Vector4&);
+		void move(const Vector4&);
+		void lookAt(const Vector4&);
 
 		Matrix4 getCameraInverse();
 		Matrix4 getPerspective();

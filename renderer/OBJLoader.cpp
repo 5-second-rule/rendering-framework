@@ -52,10 +52,11 @@ namespace Transmission {
 	{
 	}
 
-	HRESULT OBJLoader::loadOBJFile(char* filePath, VertexBuffer** vBuf, IndexBuffer** iBuf, Renderer* renderer) {
+	HRESULT OBJLoader::loadOBJFile(char* filePath, VertexBuffer** vBuf, IndexBuffer** iBuf, Renderer* renderer, bool centerShift) {
 		bool result;
 		int vertexCount, textureCount, normalCount, faceCount;
 
+		this->shiftCenter = centerShift;
 		// Read in the number of vertices, tex coords, normals, and faces so that the data structures can be initialized with the exact sizes needed.
 		result = ReadFileCounts(filePath, vertexCount, textureCount, normalCount, faceCount);
 		if (!result)
@@ -264,54 +265,61 @@ namespace Transmission {
 		float xMin, yMin, zMin;
 		float xMax, yMax, zMax;
 		float xIn, yIn, zIn;
-
-		for (int c = 0; c < vertexCount; c++) {
-			xIn = vertices[c].x;
-			yIn = vertices[c].y;
-			zIn = vertices[c].z;
-
-			if (initial) {
-				xMin = xIn;
-				yMin = yIn;
-				zMin = zIn;
-
-				xMax = xIn;
-				yMax = yIn;
-				zMax = zIn;
-
-				initial = false;
-			}
-			else {
-				if (xIn < xMin) {
-					xMin = xIn;
-				}
-
-				if (yIn < yMin) {
-					yMin = yIn;
-				}
-
-				if (zIn < zMin) {
-					zMin = zIn;
-				}
-
-				if (xIn > xMax) {
-					xMax = xIn;
-				}
-
-				if (yIn > yMax) {
-					yMax = yIn;
-				}
-
-				if (zIn > zMax) {
-					zMax = zIn;
-				}
-			}
-		}
-
 		float xCenter, yCenter, zCenter;
-		xCenter = (xMin + xMax) / 2.0f;
-		yCenter = (yMin + yMax) / 2.0f;
-		zCenter = (zMin + zMax) / 2.0f;
+
+		if (this->shiftCenter){
+
+			for (int c = 0; c < vertexCount; c++) {
+				xIn = vertices[c].x;
+				yIn = vertices[c].y;
+				zIn = vertices[c].z;
+
+				if (initial) {
+					xMin = xIn;
+					yMin = yIn;
+					zMin = zIn;
+
+					xMax = xIn;
+					yMax = yIn;
+					zMax = zIn;
+
+					initial = false;
+				}
+				else {
+					if (xIn < xMin) {
+						xMin = xIn;
+					}
+
+					if (yIn < yMin) {
+						yMin = yIn;
+					}
+
+					if (zIn < zMin) {
+						zMin = zIn;
+					}
+
+					if (xIn > xMax) {
+						xMax = xIn;
+					}
+
+					if (yIn > yMax) {
+						yMax = yIn;
+					}
+
+					if (zIn > zMax) {
+						zMax = zIn;
+					}
+				}
+			}
+
+			xCenter = (xMin + xMax) / 2.0f;
+			yCenter = (yMin + yMax) / 2.0f;
+			zCenter = (zMin + zMax) / 2.0f;
+		} else {
+			xCenter = 0;
+			yCenter = 0;
+			zCenter = 0;
+		}
 
 		int numIndices = numVertBuffer;
 		unsigned int* indices = new unsigned int[numIndices];
@@ -324,9 +332,9 @@ namespace Transmission {
 			index3 = faces[i].vIndex3 - 1;
 
 			//1st vertex
-			vertexBufferArray[vertexBufferIndex].point[0] = vertices[index1].x - xCenter;
-			vertexBufferArray[vertexBufferIndex].point[1] = vertices[index1].y - yCenter;
-			vertexBufferArray[vertexBufferIndex].point[2] = vertices[index1].z - zCenter;
+			vertexBufferArray[vertexBufferIndex].point[0] = vertices[index1].x -xCenter;
+			vertexBufferArray[vertexBufferIndex].point[1] = vertices[index1].y -yCenter;
+			vertexBufferArray[vertexBufferIndex].point[2] = vertices[index1].z -zCenter;
 
 			vertexBufferArray[vertexBufferIndex].texCoord[0] = texcoords[faces[i].tIndex1 - 1].u;
 			vertexBufferArray[vertexBufferIndex].texCoord[1] = texcoords[faces[i].tIndex1 - 1].v;
@@ -339,9 +347,9 @@ namespace Transmission {
 			vertexBufferIndex++;
 
 			//2nd vertex
-			vertexBufferArray[vertexBufferIndex].point[0] = vertices[index2].x - xCenter;
-			vertexBufferArray[vertexBufferIndex].point[1] = vertices[index2].y - yCenter;
-			vertexBufferArray[vertexBufferIndex].point[2] = vertices[index2].z - zCenter;
+			vertexBufferArray[vertexBufferIndex].point[0] = vertices[index2].x -xCenter;
+			vertexBufferArray[vertexBufferIndex].point[1] = vertices[index2].y -yCenter;
+			vertexBufferArray[vertexBufferIndex].point[2] = vertices[index2].z -zCenter;
 
 			vertexBufferArray[vertexBufferIndex].texCoord[0] = texcoords[faces[i].tIndex2 - 1].u;
 			vertexBufferArray[vertexBufferIndex].texCoord[1] = texcoords[faces[i].tIndex2 - 1].v;
@@ -354,9 +362,9 @@ namespace Transmission {
 			vertexBufferIndex++;
 
 			//3rd vertex
-			vertexBufferArray[vertexBufferIndex].point[0] = vertices[index3].x - xCenter;
-			vertexBufferArray[vertexBufferIndex].point[1] = vertices[index3].y - yCenter;
-			vertexBufferArray[vertexBufferIndex].point[2] = vertices[index3].z - zCenter;
+			vertexBufferArray[vertexBufferIndex].point[0] = vertices[index3].x -xCenter;
+			vertexBufferArray[vertexBufferIndex].point[1] = vertices[index3].y -yCenter;
+			vertexBufferArray[vertexBufferIndex].point[2] = vertices[index3].z -zCenter;
 
 			vertexBufferArray[vertexBufferIndex].texCoord[0] = texcoords[faces[i].tIndex3 - 1].u;
 			vertexBufferArray[vertexBufferIndex].texCoord[1] = texcoords[faces[i].tIndex3 - 1].v;

@@ -10,11 +10,13 @@ namespace Transmission {
 
 	class OBJLoader
 	{
+	private :
+		bool shiftCenter;
 	public:
 		OBJLoader();
 		~OBJLoader();
 
-		HRESULT loadOBJFile(char* filePath, VertexBuffer** vBuf, IndexBuffer** iBuf, Renderer* renderer);
+		HRESULT loadOBJFile(char* filePath, VertexBuffer** vBuf, IndexBuffer** iBuf, Renderer* renderer, bool shftCenter);
 		bool ReadFileCounts(char* filename, int& vertexCount, int& textureCount, int& normalCount, int& faceCount);
 		bool LoadDataStructures(char* filename, int vertexCount, int textureCount, int normalCount, int faceCount, VertexBuffer** vBuf, IndexBuffer** iBuf, Renderer* renderer);
 	};

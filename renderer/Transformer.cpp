@@ -50,4 +50,8 @@ namespace Transmission {
 	void Transformer::setPosition(const Vector4& position) {
 		this->position = position;
 	}
+
+	const Vector4& Transformer::getPosition(){
+		return this->position;
+	}
 }

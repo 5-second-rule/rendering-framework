@@ -29,9 +29,9 @@ namespace Transmission {
 		virtual Model* createModel(VertexBuffer*, IndexBuffer*, Texture*) = 0;
 		virtual Model* createModel(VertexBuffer*, IndexBuffer*, Texture*, Shader*, Shader*) = 0;
 
-		virtual bool loadModelFile(char*, VertexBuffer**, IndexBuffer**);
-		virtual Model* createModelFromFile(char*, VertexBuffer**, IndexBuffer**, Texture*);
-		virtual Model* createModelFromFile(char*, VertexBuffer**, IndexBuffer**, Texture*, Shader*, Shader*);
+		virtual bool loadModelFile(char*, VertexBuffer**, IndexBuffer**, bool);
+		virtual Model* createModelFromFile(char*, VertexBuffer**, IndexBuffer**, Texture*, bool);
+		virtual Model* createModelFromFile(char*, VertexBuffer**, IndexBuffer**, Texture*, bool, Shader*, Shader*);
 		virtual Texture* createTextureFromFile(char*) = 0;
 		virtual Shader* createVertexShader(char*) = 0;
 		virtual Shader* createPixelShader(char*) = 0;

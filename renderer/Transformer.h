@@ -21,5 +21,6 @@ namespace Transmission {
 		virtual void setPosition(const Vector4&);
 
 		virtual Matrix4 getTransform();
+		virtual const Vector4& getPosition();
 	};
 }
