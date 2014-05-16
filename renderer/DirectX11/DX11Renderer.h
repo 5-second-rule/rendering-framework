@@ -22,6 +22,9 @@ namespace Transmission {
 		ID3D11RenderTargetView* backbuffer;
 		ID3D11DepthStencilView* depthStencil;
 		ID3D11DepthStencilState * depthStencilState;
+		ID3D11DepthStencilState * depthStencilStateDepthOff;
+
+		ID3D11BlendState* transparency;
 
 		Shader* defaultVertexShader;
 		Shader* defaultPixelShader;
@@ -46,12 +49,15 @@ namespace Transmission {
 		virtual void setupDeviceAndSwapChain(Window*);
 		virtual void setupBackBuffer();
 		virtual void setupViewportAndCamera(Window*);
+		virtual void setupAlphaBlending();
 		virtual void setupShaders();
 		virtual void setupConstantBuffer();
 
 	public:
 
 		virtual void clearFrame();
+		virtual void makeTransparent();
+		virtual void makeOpaque();
 		virtual void drawFrame();
 
 		virtual VertexBuffer* createVertexBuffer(Vertex [], size_t);

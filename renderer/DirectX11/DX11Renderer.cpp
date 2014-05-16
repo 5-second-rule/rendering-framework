@@ -34,6 +34,8 @@ namespace Transmission {
 		this->setupViewportAndCamera(window);
 		/* ---------- */
 
+		this->setupAlphaBlending();
+
 		renderTimer = NULL;
 		perFrameBuffer = NULL; perVertexBuffer = NULL; timeBuffer = NULL;
 		this->setupConstantBuffer();
@@ -62,6 +64,9 @@ namespace Transmission {
 
 		swapchain->Release();
 		backbuffer->Release();
+		transparency->Release();
+		depthStencilState->Release();
+		depthStencilStateDepthOff->Release();
 		perFrameBuffer->Release();
 		perVertexBuffer->Release();
 		timeBuffer->Release();
@@ -179,7 +184,7 @@ namespace Transmission {
 
 		HR(device->CreateDepthStencilView(pDepthStencil, NULL, &depthStencil));
 
-		/* uncomment this if depth testing stops working
+		// uncomment this if depth testing stops working
 
 		D3D11_DEPTH_STENCIL_DESC dsDesc;
 		ZeroMemory(&dsDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
@@ -209,8 +214,16 @@ namespace Transmission {
 		// Create depth stencil state
 		HR(device->CreateDepthStencilState(&dsDesc, &depthStencilState));
 
+		// Depth test parameters
+		dsDesc.DepthEnable = false;
+
+		// Create depth stencil state
+		HR(device->CreateDepthStencilState(&dsDesc, &depthStencilStateDepthOff));
+
+
+
 		context->OMSetDepthStencilState(depthStencilState, 1);
-		*/
+		
 		
 		// -----
 
@@ -276,6 +289,28 @@ namespace Transmission {
 		HR(device->CreateBuffer(&cb, NULL, &this->timeBuffer));
 	}
 
+	void DX11Renderer::setupAlphaBlending() {
+		D3D11_BLEND_DESC blendDesc;
+		ZeroMemory(&blendDesc, sizeof(blendDesc));
+
+		D3D11_RENDER_TARGET_BLEND_DESC renderTargetBlendDesc;
+		ZeroMemory(&renderTargetBlendDesc, sizeof(renderTargetBlendDesc));
+
+		renderTargetBlendDesc.BlendEnable = true;
+		renderTargetBlendDesc.SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		renderTargetBlendDesc.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		renderTargetBlendDesc.BlendOp = D3D11_BLEND_OP_ADD;
+		renderTargetBlendDesc.SrcBlendAlpha = D3D11_BLEND_ONE;
+		renderTargetBlendDesc.DestBlendAlpha = D3D11_BLEND_ZERO;
+		renderTargetBlendDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		renderTargetBlendDesc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+		blendDesc.AlphaToCoverageEnable = false;
+		blendDesc.RenderTarget[0] = renderTargetBlendDesc;
+
+		HR(device->CreateBlendState(&blendDesc, &transparency));
+	}
+
 	void DX11Renderer::setupShaders() {
 		if (defaultPixelShader != NULL || defaultVertexShader != NULL || layout != NULL) {
 			throw std::runtime_error("You can only setup shaders once");
@@ -333,6 +368,20 @@ namespace Transmission {
 		// set shaders without layout
 		defaultVertexShader->setWithNoLayout();
 		defaultPixelShader->setWithNoLayout(); //using this function for consistency
+	}
+
+	void DX11Renderer::makeTransparent() {
+		context->OMSetDepthStencilState(depthStencilStateDepthOff, 1);
+
+		float blendFactor[] = { 0.00f, 0.00f, 0.00f, 1.0f };
+
+		context->OMSetBlendState(transparency, blendFactor, 0xffffffff);
+	}
+
+	void DX11Renderer::makeOpaque() {
+		context->OMSetDepthStencilState(depthStencilState, 1);
+
+		context->OMSetBlendState(0, 0, 0xffffffff);
 	}
 
 	void DX11Renderer::drawFrame() {

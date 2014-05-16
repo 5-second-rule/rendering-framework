@@ -22,6 +22,8 @@ namespace Transmission {
 		/* ----- */
 
 		virtual void clearFrame() = 0;
+		virtual void makeTransparent() = 0;
+		virtual void makeOpaque() = 0;
 		virtual void drawFrame() = 0;
 
 		virtual VertexBuffer* createVertexBuffer(Vertex [], size_t) = 0;

@@ -175,7 +175,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (poxModel == NULL) exit(-1);
 	if (tubeModel == NULL) exit(-1);
 
-	ecoliModel->move(Common::Vector4(-7.5, 0, 35));
+	ecoliModel->move(Common::Vector4(-7.5, 0, 235));
 	herpesModel->move(Common::Vector4(7.5, 0, 35));
 	malariaModel->move(Common::Vector4(-20, 0, 35));
 	poxModel->move(Common::Vector4(20, 0, 35));
@@ -199,11 +199,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		poxModel->rotate(Common::Vector(0.00f, 200.0f*renderer->getTimer()->GetCalculatedTimeSinceLastFrame(), 0.0f));
 
+		tubeModel->draw();
+
 		ecoliModel->draw();
 		herpesModel->draw();
 		malariaModel->draw();
 		poxModel->draw();
-		tubeModel->draw();
 
 		renderer->drawFrame();
 

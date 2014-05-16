@@ -40,5 +40,5 @@ float4 ps_main(float4 position : SV_POSITION, float2 texCoord : TEXCOORD0, float
 
 	float3 outColor = (saturate(ambient + diffuse) + specular) * LIGHT_COLOR;
 
-	return float4(outColor,1.0f);
+	return float4(outColor,0.95f);
 }
