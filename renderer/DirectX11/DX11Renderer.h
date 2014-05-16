@@ -56,8 +56,10 @@ namespace Transmission {
 
 		virtual VertexBuffer* createVertexBuffer(Vertex [], size_t);
 		virtual IndexBuffer* createIndexBuffer(unsigned int [], size_t);
-		virtual Model* createModel(VertexBuffer*, IndexBuffer*, Texture*);
-		virtual Model* createModel(VertexBuffer*, IndexBuffer*, Texture*, Shader*, Shader*);
+		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture);
+		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump);
+		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Shader* vs, Shader* ps);
+		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump, Shader* vs, Shader* ps);
 		virtual Texture* createTextureFromFile(char* f);
 
 		virtual Shader* createVertexShader(char*);

@@ -17,6 +17,7 @@ namespace Transmission {
 		VertexBuffer* vertexBuffer;
 		IndexBuffer* indexBuffer;
 		Texture* texture;
+		Texture* bumpMap;
 		Shader* vertexShader;
 		Shader* pixelShader;
 

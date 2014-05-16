@@ -111,6 +111,9 @@
     <ClCompile Include="DirectX11\DX11Timer.cpp">
       <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
+    <ClCompile Include="TRKLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -206,6 +209,9 @@
     <ClInclude Include="DirectX11\DX11Timer.h">
       <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
+    <ClInclude Include="TRKLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectX11\defaultPixel.hlsl">
@@ -230,6 +236,12 @@
       <Filter>Source Files\DirectX11</Filter>
     </FxCompile>
     <FxCompile Include="DirectX11\vertexWiggle.hlsl">
+      <Filter>Source Files\DirectX11</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectX11\pixelBump.hlsl">
+      <Filter>Source Files\DirectX11</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectX11\vertexTrack.hlsl">
       <Filter>Source Files\DirectX11</Filter>
     </FxCompile>
   </ItemGroup>

@@ -8,6 +8,7 @@ namespace Transmission {
 		float point[3];
 		float texCoord[2];
 		float normal[3];
+		float tangent[3];
 	};
 
 	typedef unsigned int Index;

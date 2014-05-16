@@ -7,6 +7,16 @@ namespace Transmission {
 	DX11Model::DX11Model(VertexBuffer* v, IndexBuffer* i, ID3D11DeviceContext* context, Texture* texture, Renderer* renderer) : Model(v, i) {
 		this->context = context;
 		this->texture = texture;
+		this->bumpMap = nullptr;
+		this->renderer = renderer;
+		this->vertexShader = renderer->getDefaultVertexShader();
+		this->pixelShader = renderer->getDefaultPixelShader();
+	}
+
+	DX11Model::DX11Model(VertexBuffer* v, IndexBuffer* i, ID3D11DeviceContext* context, Texture* texture, Texture* bumpMap, Renderer* renderer) : Model(v, i) {
+		this->context = context;
+		this->texture = texture;
+		this->bumpMap = bumpMap;
 		this->renderer = renderer;
 		this->vertexShader = renderer->getDefaultVertexShader();
 		this->pixelShader = renderer->getDefaultPixelShader();
@@ -15,6 +25,16 @@ namespace Transmission {
 	DX11Model::DX11Model(VertexBuffer* v, IndexBuffer* i, ID3D11DeviceContext* context, Texture* texture, Renderer* renderer, Shader* vertexShader, Shader* pixelShader) : Model(v, i) {
 		this->context = context;
 		this->texture = texture;
+		this->bumpMap = nullptr;
+		this->renderer = renderer;
+		this->vertexShader = vertexShader;
+		this->pixelShader = pixelShader;
+	}
+
+	DX11Model::DX11Model(VertexBuffer* v, IndexBuffer* i, ID3D11DeviceContext* context, Texture* texture, Texture* bumpMap, Renderer* renderer, Shader* vertexShader, Shader* pixelShader) : Model(v, i) {
+		this->context = context;
+		this->texture = texture;
+		this->bumpMap = bumpMap;
 		this->renderer = renderer;
 		this->vertexShader = vertexShader;
 		this->pixelShader = pixelShader;
@@ -40,7 +60,11 @@ namespace Transmission {
 		indexBuffer->set();
 		vertexShader->setWithNoLayout();
 		pixelShader->set();
-		texture->set();
+		texture->set(0); 
+		if (bumpMap != nullptr) {
+			bumpMap->set(1);
+		}
+
 		this->renderer->setObjectMatrix(this->getTransform());
 		context->DrawIndexed(indexBuffer->count(), 0, 0);
 	}

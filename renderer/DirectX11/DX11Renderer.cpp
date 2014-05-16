@@ -245,7 +245,7 @@ namespace Transmission {
 
 		// Camera and Perspective Matrices
 		this->camera = new Camera(Point(0, 0, -10), Point(0, 0, 0), Vector(0, 1, 0),
-			(float) M_PI / 4.0f, (float)Window::screenWidth / (float)Window::screenHeight, 1, 1000);
+			(float) M_PI / 4.0f, (float)Window::screenWidth / (float)Window::screenHeight, 1, 10000);
 
 	}
 
@@ -286,10 +286,11 @@ namespace Transmission {
 		this->defaultPixelShader = new DX11PixelShader("defaultPixel.cso", this, this->device, this->context);
 
 		// Input Layout for vertex buffers
-		ied = new D3D11_INPUT_ELEMENT_DESC[3];
+		ied = new D3D11_INPUT_ELEMENT_DESC[4];
 		ied[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 };
 		ied[1] = { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 };
 		ied[2] = { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+		ied[3] = { "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 };
 
 		//Kept the following in case something is using the default vs and ps without a model
 
@@ -351,8 +352,16 @@ namespace Transmission {
 		return new DX11Model(v, i, context, texture, this);
 	}
 
+	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump) {
+		return new DX11Model(v, i, context, texture, bump, this);
+	}
+
 	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Shader* vs, Shader* ps) {
 		return new DX11Model(v, i, context, texture, this, vs, ps);
+	}
+
+	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump, Shader* vs, Shader* ps) {
+		return new DX11Model(v, i, context, texture, bump, this, vs, ps);
 	}
 
 	Texture* DX11Renderer::createTextureFromFile(char* f) {

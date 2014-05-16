@@ -26,7 +26,7 @@ struct VOut
 
 #define M_PI 3.1415926535897932384626433832795
 
-VOut vs_main(float4 position : POSITION, float2 texCoord : TEXCOORD, float4 normal : NORMAL)
+VOut vs_main(float4 position : POSITION, float2 texCoord : TEXCOORD, float4 normal : NORMAL, float4 tangent : TANGENT)
 {
 	VOut output;
 

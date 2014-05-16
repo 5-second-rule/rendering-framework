@@ -20,7 +20,7 @@ namespace Transmission {
 	void DX11VertexShader::set()
 	{
 		DX11Shader::Buffer VSbytecode = this->getBytecode();
-		HR(device->CreateInputLayout(renderer->getInputElementDesc(), 3, VSbytecode.buf, VSbytecode.len, renderer->getLayoutAddress()));
+		HR(device->CreateInputLayout(renderer->getInputElementDesc(), 4, VSbytecode.buf, VSbytecode.len, renderer->getLayoutAddress()));
 		context->IASetInputLayout(renderer->getLayout());
 		context->VSSetShader(this->getVertexShader(), NULL, 0);
 	}

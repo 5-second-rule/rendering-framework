@@ -9,7 +9,7 @@ namespace Transmission {
 		Texture(const char*);
 		~Texture();
 
-		virtual void set() = 0;
+		virtual void set(int slot) = 0;
 	};
 
 }
