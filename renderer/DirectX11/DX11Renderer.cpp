@@ -22,7 +22,7 @@ using namespace Common;
 namespace Transmission {
 
 
-	DX11Renderer::DX11Renderer(Window* window) : Renderer()
+	DX11Renderer::DX11Renderer(Window* window, char* vertex, char* pixel) : Renderer()
 	{
 		swapchain = NULL; device = NULL; context = NULL;
 		this->setupDeviceAndSwapChain(window);
@@ -40,7 +40,7 @@ namespace Transmission {
 
 		defaultVertexShader = NULL; defaultPixelShader = NULL; layout = NULL;
 		ied = NULL;
-		this->setupShaders();
+		this->setupShaders(vertex, pixel);
 	}
 
 
@@ -276,14 +276,14 @@ namespace Transmission {
 		HR(device->CreateBuffer(&cb, NULL, &this->timeBuffer));
 	}
 
-	void DX11Renderer::setupShaders() {
+	void DX11Renderer::setupShaders(char* vertex, char* pixel) {
 		if (defaultPixelShader != NULL || defaultVertexShader != NULL || layout != NULL) {
 			throw std::runtime_error("You can only setup shaders once");
 		}
 
 		// default shaders
-		this->defaultVertexShader = new DX11VertexShader("defaultVertex.cso", this, this->device, this->context);
-		this->defaultPixelShader = new DX11PixelShader("defaultPixel.cso", this, this->device, this->context);
+		this->defaultVertexShader = new DX11VertexShader(vertex, this, this->device, this->context);
+		this->defaultPixelShader = new DX11PixelShader(pixel, this, this->device, this->context);
 
 		// Input Layout for vertex buffers
 		ied = new D3D11_INPUT_ELEMENT_DESC[3];

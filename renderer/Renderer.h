@@ -17,7 +17,7 @@ namespace Transmission {
 	class FRAMEWORKDLL Renderer
 	{
 	public:
-		static Renderer* createRenderer(Window*);
+		static Renderer* createRenderer( Window* window, char* vertex, char* pixel );
 
 		/* ----- */
 

@@ -39,14 +39,14 @@ namespace Transmission {
 		bool windowed = true;
 
 	public:
-		DX11Renderer(Window*);
+		DX11Renderer( Window* window, char* vertex, char* pixel );
 		~DX11Renderer();
 
 	protected:
 		virtual void setupDeviceAndSwapChain(Window*);
 		virtual void setupBackBuffer();
 		virtual void setupViewportAndCamera(Window*);
-		virtual void setupShaders();
+		virtual void setupShaders( char* vertex, char* pixel );
 		virtual void setupConstantBuffer();
 
 	public:
