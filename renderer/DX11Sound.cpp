@@ -237,7 +237,7 @@ namespace Transmission {
 		return secondaryBuffers->size() - 1;
 	}
 
-	bool DX11Sound::PlaySoundAt(int index, bool loop) {
+	bool DX11Sound::PlaySoundAt(size_t index, bool loop) {
 		if( index >= this->secondaryBuffers->size() ) {
 			return false;
 		}
@@ -272,7 +272,7 @@ namespace Transmission {
 		return true;
 	}
 
-	bool DX11Sound::StopSoundAt( int index ) {
+	bool DX11Sound::StopSoundAt( size_t index ) {
 		if( index >= this->secondaryBuffers->size() ) {
 			return false;
 		}
