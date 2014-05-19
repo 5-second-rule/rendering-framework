@@ -35,10 +35,10 @@
     <None Include="pox.fbx">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="track.obj">
+    <None Include="ecoliii.fbx">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ecoliii.fbx">
+    <None Include="track.trk">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

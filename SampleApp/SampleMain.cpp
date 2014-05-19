@@ -134,6 +134,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	char* malariaFbxFilePath = "../SampleApp/malaria.fbx";
 	char* poxFbxFilePath = "../SampleApp/pox.fbx";
 
+	char* trackFilePath = "../SampleApp/track.trk";
+
 	char* ecoliTexture = "../SampleApp/ecolizzz_TXTR.dds";
 	char* whiteTexture = "../SampleApp/whitebloodcell_3_TXTR.dds";
 	char* cubeTexture = "../SampleApp/cube_uvmap2.dds";
@@ -167,7 +169,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Transmission::Model* malariaModel = renderer->createModelFromFile(malariaFbxFilePath, &malariaVbuf, &malariaIbuf, malariaTex, true, vertWiggle, pixShader);
 	Transmission::Model* poxModel = renderer->createModelFromFile(poxFbxFilePath, &poxVbuf, &poxIbuf, poxTex, true, vertSpring, pixShader);
 
-	Transmission::Model* tubeModel = renderer->createModelFromFile("../SampleApp/track.trk", &tubeVbuf, &tubeIbuf, pipeTex, pipeBumpTex, false, vertTrack, pixBump);
+	Transmission::Model* tubeModel = renderer->createModelFromFile(trackFilePath, &tubeVbuf, &tubeIbuf, pipeTex, pipeBumpTex, false, vertTrack, pixBump);
 
 	if (ecoliModel == NULL) exit(-1);
 	if (herpesModel == NULL) exit(-1);
