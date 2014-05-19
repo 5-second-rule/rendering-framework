@@ -60,6 +60,9 @@ namespace Transmission {
 		virtual void makeOpaque();
 		virtual void drawFrame();
 
+		virtual void turnDepthTestOff();
+		virtual void turnDepthTestOn();
+
 		virtual VertexBuffer* createVertexBuffer(Vertex [], size_t);
 		virtual IndexBuffer* createIndexBuffer(unsigned int [], size_t);
 		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture);

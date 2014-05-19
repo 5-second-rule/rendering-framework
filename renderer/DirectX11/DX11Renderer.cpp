@@ -389,6 +389,19 @@ namespace Transmission {
 		swapchain->Present(0, 0);
 	}
 
+	/* Turns the depth testing off
+	 - Note: Once finished with using no depth, should be followed by turnDepthTestOn()
+	*/
+	void DX11Renderer::turnDepthTestOff() {
+		context->OMSetDepthStencilState(depthStencilStateDepthOff, 1);
+	}
+
+	/* Turns the depth testing back on
+	*/
+	void DX11Renderer::turnDepthTestOn() {
+		context->OMSetDepthStencilState(depthStencilState, 1);
+	}
+
 	VertexBuffer* DX11Renderer::createVertexBuffer(Vertex vertices[], size_t num) {
 		return new DX11VertexBuffer(vertices, num, this->device, this->context);
 	}
