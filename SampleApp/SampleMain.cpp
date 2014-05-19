@@ -42,15 +42,57 @@ void moveBlob(Transmission::Window* w, Transmission::Model* m, Transmission::Cam
 		cam->move(Common::Vector4(moveAmt, 0, 0));
 		cam->lookAt(m->getPosition());
 	}
-	if (input->getKeyState(Transmission::Input::Key::SPACE) == Transmission::Input::STATE_DOWN) {
+	if (input->getKeyState(Transmission::Input::Key::I) == Transmission::Input::STATE_DOWN) {
 		m->move(Common::Vector4(0, 0, moveAmt));
 		cam->move(Common::Vector4(0, 0, moveAmt));
 		cam->lookAt(m->getPosition());
 	}
 
-	if (input->getKeyState(Transmission::Input::Key::DOWN_ARROW) == Transmission::Input::STATE_DOWN) {
+	if (input->getKeyState(Transmission::Input::Key::O) == Transmission::Input::STATE_DOWN) {
 		m->move(Common::Vector4(0, 0, -moveAmt));
 		cam->move(Common::Vector4(0, 0, -moveAmt));
+		cam->lookAt(m->getPosition());
+	}
+
+	//Rotate Up
+	if (input->getKeyState(Transmission::Input::Key::UP_ARROW) == Transmission::Input::STATE_DOWN) {
+		m->rotate(Common::Vector4(moveAmt, 0, 0));
+		cam->lookAt(m->getPosition());
+	}
+
+	//Rotate Down
+	if (input->getKeyState(Transmission::Input::Key::DOWN_ARROW) == Transmission::Input::STATE_DOWN) {
+		m->rotate(Common::Vector4(-moveAmt, 0, 0));
+		cam->lookAt(m->getPosition());
+	}
+
+	//Rotate Left
+	if (input->getKeyState(Transmission::Input::Key::LEFT_ARROW) == Transmission::Input::STATE_DOWN) {
+		m->rotate(Common::Vector4(0, moveAmt, 0));
+		cam->lookAt(m->getPosition());
+	}
+
+	//Rotate Right
+	if (input->getKeyState(Transmission::Input::Key::RIGHT_ARROW) == Transmission::Input::STATE_DOWN) {
+		m->rotate(Common::Vector4(0, -moveAmt, 0));
+		cam->lookAt(m->getPosition());
+	}
+
+	//Zoom in
+	if (input->getKeyState(Transmission::Input::Key::Z) == Transmission::Input::STATE_DOWN) {
+		Common::Vector4 direction;
+		direction = (m->getPosition() - cam->getPosition());
+		direction.normalize();
+		cam->move(direction*moveAmt);
+		cam->lookAt(m->getPosition());
+	}
+
+	//Zoom out
+	if (input->getKeyState(Transmission::Input::Key::X) == Transmission::Input::STATE_DOWN) {
+		Common::Vector4 direction;
+		direction = (cam->getPosition() - m->getPosition());
+		direction.normalize();
+		cam->move(direction*moveAmt);
 		cam->lookAt(m->getPosition());
 	}
 
@@ -71,11 +113,11 @@ void moveBlob(Transmission::Window* w, Transmission::Model* m, Transmission::Cam
 void changeShader(Transmission::Window* w, Transmission::Model* m, Transmission::Shader* defaultPixel, Transmission::Shader* otherPixel) {
 	Transmission::Input* input = (Transmission::Input*) w->getInput();
 
-	if (input->getKeyState(Transmission::Input::Key::O) == Transmission::Input::STATE_DOWN) {
+	if (input->getKeyState(Transmission::Input::Key::K) == Transmission::Input::STATE_DOWN) {
 		m->setPixelShader(defaultPixel);
 	}
 
-	if (input->getKeyState(Transmission::Input::Key::P) == Transmission::Input::STATE_DOWN) {
+	if (input->getKeyState(Transmission::Input::Key::L) == Transmission::Input::STATE_DOWN) {
 		m->setPixelShader(otherPixel);
 	}
 }
@@ -149,8 +191,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Transmission::Shader* defaultVertexShad = renderer->createVertexShader("defaultVertex.cso");
 	Transmission::Shader* vertRipple = renderer->createVertexShader("vertexRipple.cso");
 	Transmission::Shader* vertSpring = renderer->createVertexShader("vertexSpring.cso");
+	Transmission::Shader* vertTent = renderer->createVertexShader("vertexTentacle.cso");
 	Transmission::Shader* vertTrack = renderer->createVertexShader("vertexTrack.cso");
 	Transmission::Shader* vertWiggle = renderer->createVertexShader("vertexWiggle.cso");
+
 	Transmission::Shader* defaultPixShad = renderer->createPixelShader("defaultPixel.cso");
 	Transmission::Shader* pixShader = renderer->createPixelShader("pixel.cso");
 	Transmission::Shader* pixBump = renderer->createPixelShader("pixelBump.cso");
@@ -164,7 +208,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Transmission::Texture* pipeTex = renderer->createTextureFromFile(pipeTexture);
 	Transmission::Texture* pipeBumpTex = renderer->createTextureFromFile(pipeBump);
 
-	Transmission::Model* ecoliModel = renderer->createModelFromFile(ecoliFbxFilePath, &ecoliVbuf, &ecoliIbuf, ecoliTex, true, defaultVertexShad, pixShader);
+	Transmission::Model* ecoliModel = renderer->createModelFromFile(ecoliFbxFilePath, &ecoliVbuf, &ecoliIbuf, ecoliTex, true, vertTent, pixShader);
 	Transmission::Model* herpesModel = renderer->createModelFromFile(herpesFbxFilePath, &herpesVbuf, &herpesIbuf, herpesTex, true, vertRipple, pixShader);
 	Transmission::Model* malariaModel = renderer->createModelFromFile(malariaFbxFilePath, &malariaVbuf, &malariaIbuf, malariaTex, true, vertWiggle, pixShader);
 	Transmission::Model* poxModel = renderer->createModelFromFile(poxFbxFilePath, &poxVbuf, &poxIbuf, poxTex, true, vertSpring, pixShader);
@@ -177,7 +221,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (poxModel == NULL) exit(-1);
 	if (tubeModel == NULL) exit(-1);
 
-	ecoliModel->move(Common::Vector4(-7.5, 0, 235));
+	ecoliModel->move(Common::Vector4(-7.5, 0, 35));
 	herpesModel->move(Common::Vector4(7.5, 0, 35));
 	malariaModel->move(Common::Vector4(-20, 0, 35));
 	poxModel->move(Common::Vector4(20, 0, 35));
@@ -213,7 +257,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		odprintf("FPS: %d", fps);
 		odprintf("Time: %f", renderer->getTimer()->GetTime());
 
-		moveBlob(window, herpesModel, renderer->getCamera()); // temp input handler
+		moveBlob(window, ecoliModel, renderer->getCamera()); // temp input handler
 		//moveBlob(window, malariaModel); // temp input handler
 		//moveBlob(window, poxModel); // temp input handler
 		//moveBlob(window, tubeModel);
@@ -229,10 +273,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	delete defaultVertexShad;
 	delete vertRipple;
 	delete vertSpring;
+	delete vertTent;
+	delete vertTrack;
 	delete vertWiggle;
+
 	delete defaultPixShad;
 	delete pixShader;
+	delete pixBump;
 	delete pixShaderNoSpec;
+	delete pixCelShader;
 
 	delete ecoliVbuf;
 	delete ecoliIbuf;
