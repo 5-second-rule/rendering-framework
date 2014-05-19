@@ -38,6 +38,7 @@ namespace Transmission {
 		int LoadWaveFile( char* file );
 
 		bool PlaySoundAt( int index, bool loop );
+		bool StopSoundAt( int index );
 
 		IDirectSound8* m_DirectSound;
 		IDirectSoundBuffer* m_primaryBuffer;

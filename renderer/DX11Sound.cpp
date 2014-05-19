@@ -238,7 +238,9 @@ namespace Transmission {
 	}
 
 	bool DX11Sound::PlaySoundAt(int index, bool loop) {
-		//TODO check to make sure index is in range
+		if( index >= this->secondaryBuffers->size() ) {
+			return false;
+		}
 
 		HRESULT result;
 
@@ -263,6 +265,25 @@ namespace Transmission {
 		} else {
 			result = secondaryBuffer->Play( 0, 0, 0 );
 		}
+		if( FAILED( result ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	bool DX11Sound::StopSoundAt( int index ) {
+		if( index >= this->secondaryBuffers->size() ) {
+			return false;
+		}
+
+		HRESULT result;
+
+		IDirectSoundBuffer8* secondaryBuffer = this->secondaryBuffers->at( index );
+
+		// stop the contents of the secondary sound buffer.
+		result = secondaryBuffer->Stop();
+
 		if( FAILED( result ) ) {
 			return false;
 		}
