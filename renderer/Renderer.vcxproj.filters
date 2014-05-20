@@ -114,6 +114,9 @@
     <ClCompile Include="TRKLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX11\DX11Model2D.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="TRKLoader.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DX11Model2D.h">
+      <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

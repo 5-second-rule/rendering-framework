@@ -14,6 +14,7 @@
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DirectX11\DDSTextureLoader.cpp" />
+    <ClCompile Include="DirectX11\DX11Model2D.cpp" />
     <ClCompile Include="DirectX11\DX11Renderer.cpp" />
     <ClCompile Include="DirectX11\DX11Timer.cpp" />
     <ClCompile Include="DirectX11\dxerr.cpp" />
@@ -45,6 +46,7 @@
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DirectX11\DDSTextureLoader.h" />
+    <ClInclude Include="DirectX11\DX11Model2D.h" />
     <ClInclude Include="DirectX11\DX11Renderer.h" />
     <ClInclude Include="DirectX11\DX11Timer.h" />
     <ClInclude Include="DirectX11\dxerr.h" />

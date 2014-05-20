@@ -15,7 +15,7 @@ namespace Transmission {
 
 	class DX11Model : public Model
 	{
-	private:
+	protected:
 		ID3D11DeviceContext* context;
 		Renderer* renderer;
 
