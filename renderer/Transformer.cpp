@@ -34,6 +34,15 @@ namespace Transmission {
 			);
 	}
 
+	void Transformer::setRotation(const Vector4& xyz) {
+		this->rotation = xyz;
+		this->rotation.set(
+			FLOATMOD(this->rotation.x(), 360),
+			FLOATMOD(this->rotation.y(), 360),
+			FLOATMOD(this->rotation.z(), 360)
+			);
+	}
+
 	void Transformer::setScale(const Vector4& scale) {
 		this->scale = scale;
 	}
