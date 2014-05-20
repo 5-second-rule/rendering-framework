@@ -256,10 +256,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	char* titleTexture = "../SampleApp/select-title.dds";
 	char* windowBgTexture = "../SampleApp/select-background.dds";
 	char* playerBgTexture = "../SampleApp/select-rectangle.dds";
-	char* playerTexture[4] = { "../SampleApp/select-chickenpox.dds",
-	                           "../SampleApp/select-Ecoli.dds",
-		                       "../SampleApp/select-malaria.dds",
-		                       "../SampleApp/select-syphilis.dds" };
 
 	Transmission::Shader* defaultVertexShad = renderer->createVertexShader("defaultVertex.cso");
 	Transmission::Shader* vertRipple = renderer->createVertexShader("vertexRipple.cso");
@@ -298,7 +294,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Transmission::Model* tubeModel = renderer->createModelFromFile(trackFilePath, &tubeVbuf, &tubeIbuf, pipeTex, pipeBumpTex, false, vertTrack, pixBump);
 
 
-
 	Transmission::Index indices[] = { 0, 1, 2, 3, 0, 2 };
 	Transmission::Vertex vertices[4];
 
@@ -318,8 +313,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	for (int i = 0; i < 4; ++i) {
 		centers[i] = player(vertices, i, margin) * 5.5;
-		playerTex[i] = renderer->createTextureFromFile(playerTexture[i]);
-		//playerModels[i] = renderer->create2DModelFromVertices(vertices, 4, indices, 6, playerTex[i]);
 		playerBgModel[i] = renderer->create2DModelFromVertices(vertices, 4, indices, 6, playerBgTex);
 	}
 
