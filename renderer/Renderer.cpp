@@ -12,10 +12,10 @@
 
 namespace Transmission {
 
-	Renderer* Renderer::createRenderer(Window* window) {
+	Renderer* Renderer::createRenderer(Window* window, char* vertex, char* pixel) {
 
 #if RENDERER == RENDERER_DX
-		return new DX11Renderer(window);
+		return new DX11Renderer(window, vertex, pixel);
 #elif RENDERER == RENDERER_GL
 		return new GLRenderer(window);
 #else

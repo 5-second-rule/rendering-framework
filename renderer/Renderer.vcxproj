@@ -24,6 +24,7 @@
     <ClCompile Include="DirectX11\DX11VertexBuffer.cpp" />
     <ClCompile Include="DirectX11\DX11VertexShader.cpp" />
     <ClCompile Include="DirectX11\DX11Texture.cpp" />
+    <ClCompile Include="DX11Sound.cpp" />
     <ClCompile Include="FBXLoader.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -32,6 +33,7 @@
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transformer.cpp" />
@@ -55,6 +57,7 @@
     <ClInclude Include="DirectX11\DX11VertexBuffer.h" />
     <ClInclude Include="DirectX11\DX11VertexShader.h" />
     <ClInclude Include="DirectX11\DX11Texture.h" />
+    <ClInclude Include="DX11Sound.h" />
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Input.h" />
@@ -65,6 +68,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="renderers.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Sound.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transformer.h" />
