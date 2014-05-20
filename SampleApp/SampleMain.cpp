@@ -425,7 +425,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	for (int i = 0; i < 4; ++i) {
 		delete playerModels[i];
 		delete playerBgModel[i];
-		delete playerTex[i];
 	}
 
 	delete defaultVertexShad;
