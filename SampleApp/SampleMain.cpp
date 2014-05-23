@@ -56,25 +56,25 @@ void moveBlob(Transmission::Window* w, Transmission::Model* m, Transmission::Cam
 
 	//Rotate Up
 	if (input->getKeyState(Transmission::Input::Key::UP_ARROW) == Transmission::Input::STATE_DOWN) {
-		m->rotate(Common::Vector4(moveAmt, 0, 0));
+		m->rotate(moveAmt, 0, 0);
 		cam->lookAt(m->getPosition());
 	}
 
 	//Rotate Down
 	if (input->getKeyState(Transmission::Input::Key::DOWN_ARROW) == Transmission::Input::STATE_DOWN) {
-		m->rotate(Common::Vector4(-moveAmt, 0, 0));
+		m->rotate(-moveAmt, 0, 0);
 		cam->lookAt(m->getPosition());
 	}
 
 	//Rotate Left
 	if (input->getKeyState(Transmission::Input::Key::LEFT_ARROW) == Transmission::Input::STATE_DOWN) {
-		m->rotate(Common::Vector4(0, moveAmt, 0));
+		m->rotate(0, moveAmt, 0);
 		cam->lookAt(m->getPosition());
 	}
 
 	//Rotate Right
 	if (input->getKeyState(Transmission::Input::Key::RIGHT_ARROW) == Transmission::Input::STATE_DOWN) {
-		m->rotate(Common::Vector4(0, -moveAmt, 0));
+		m->rotate(0, -moveAmt, 0);
 		cam->lookAt(m->getPosition());
 	}
 
@@ -98,12 +98,12 @@ void moveBlob(Transmission::Window* w, Transmission::Model* m, Transmission::Cam
 
 	// THESE ROTATIONS ARE BROKEN, JUST DID SOMETHING TO TURN THE CAMERA A LITTLE
 	if (input->getKeyState(Transmission::Input::Key::Q) == Transmission::Input::STATE_DOWN) {
-		m->rotate(Common::Vector(0.00f, moveAmt, 0.0f));
+		m->rotate(0.00f, moveAmt, 0.0f);
 		cam->lookAt(m->getPosition());
 		cam->move(Common::Vector4(moveAmt, 0, moveAmt));
 	}
 	if (input->getKeyState(Transmission::Input::Key::E) == Transmission::Input::STATE_DOWN) {
-		m->rotate(Common::Vector(0.00f, -moveAmt, 0.0f));
+		m->rotate(0.00f, -moveAmt, 0.0f);
 		cam->lookAt(m->getPosition());
 		cam->move(Common::Vector4(-moveAmt, 0, -moveAmt));
 	}
@@ -225,7 +225,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	herpesModel->move(Common::Vector4(7.5, 0, 35));
 	malariaModel->move(Common::Vector4(-20, 0, 35));
 	poxModel->move(Common::Vector4(20, 0, 35));
-	poxModel->setScale(Common::Vector4(3.0, 3.0, 3.0, 0.0));
+	poxModel->setScale(3.0);
 
 	renderer->getTimer()->StartTimer();
 
@@ -243,7 +243,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			renderer->getTimer()->ResetFPSTimer();
 		}
 
-		poxModel->rotate(Common::Vector(0.00f, 200.0f*renderer->getTimer()->GetCalculatedTimeSinceLastFrame(), 0.0f));
+		poxModel->rotate(0.00f, 200.0f*renderer->getTimer()->GetCalculatedTimeSinceLastFrame(), 0.0f);
 
 		tubeModel->draw();
 
