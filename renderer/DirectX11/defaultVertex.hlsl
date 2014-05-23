@@ -18,7 +18,7 @@ struct VOut
 	float4 color : COLOR;
 };
 
-VOut vs_main(float4 position : POSITION, float2 texCoord : TEXCOORD, float4 normal : NORMAL)
+VOut vs_main(float4 position : POSITION, float2 texCoord : TEXCOORD, float4 normal : NORMAL, float4 tangent : TANGENT)
 {
 	VOut output;
 

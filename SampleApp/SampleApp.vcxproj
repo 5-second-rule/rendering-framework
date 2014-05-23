@@ -89,36 +89,23 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cube.fbx" />
-    <None Include="ecoli4_animated_binary.fbx" />
-    <None Include="ecoli6_nomedia.fbx" />
+    <None Include="ecoliii.fbx" />
     <None Include="herpes2.fbx" />
     <None Include="malaria.fbx" />
     <None Include="pox.fbx" />
+    <None Include="track.trk" />
     <None Include="whitey.fbx" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="bloodCellBump.dds" />
+    <Image Include="bloodCell_TXTR.dds" />
     <Image Include="cube_uvmap2.dds" />
-    <Image Include="ecoli6_TXTR.dds" />
+    <Image Include="ecolizzz_TXTR.dds" />
     <Image Include="herpes_3_TXTR.dds" />
     <Image Include="malaria_TXTR.dds" />
     <Image Include="pox_TXTR.dds" />
     <Image Include="whitebloodcell_3_TXTR.tif" />
     <Image Include="Wood.dds" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Ecoli4_Object.obj">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ecoli6_obj.obj">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="track.obj">
-      <FileType>Document</FileType>
-    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

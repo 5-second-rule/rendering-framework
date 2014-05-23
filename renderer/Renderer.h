@@ -22,16 +22,25 @@ namespace Transmission {
 		/* ----- */
 
 		virtual void clearFrame() = 0;
+		virtual void makeTransparent() = 0;
+		virtual void makeOpaque() = 0;
 		virtual void drawFrame() = 0;
+
+		virtual void turnDepthTestOff() = 0;
+		virtual void turnDepthTestOn() = 0;
 
 		virtual VertexBuffer* createVertexBuffer(Vertex [], size_t) = 0;
 		virtual IndexBuffer* createIndexBuffer(unsigned int [], size_t) = 0;
-		virtual Model* createModel(VertexBuffer*, IndexBuffer*, Texture*) = 0;
-		virtual Model* createModel(VertexBuffer*, IndexBuffer*, Texture*, Shader*, Shader*) = 0;
+		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture) = 0;
+		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump) = 0;
+		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Shader* vs, Shader* ps) = 0;
+		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump, Shader* vs, Shader* ps) = 0;
 
-		virtual bool loadModelFile(char*, VertexBuffer**, IndexBuffer**, bool);
-		virtual Model* createModelFromFile(char*, VertexBuffer**, IndexBuffer**, Texture*, bool);
-		virtual Model* createModelFromFile(char*, VertexBuffer**, IndexBuffer**, Texture*, bool, Shader*, Shader*);
+		virtual bool loadModelFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, bool centerShift);
+		virtual Model* createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, bool centerShift);
+		virtual Model* createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, Texture* bump, bool centerShift);
+		virtual Model* createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, bool centerShift, Shader* vs, Shader* ps);
+		virtual Model* createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, Texture* bump, bool centerShift, Shader* vs, Shader* ps);
 		virtual Texture* createTextureFromFile(char*) = 0;
 		virtual Shader* createVertexShader(char*) = 0;
 		virtual Shader* createPixelShader(char*) = 0;

@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include "OBJLoader.h"
 #include "FBXLoader.h"
+#include "TRKLoader.h"
 
 // Renderer Choice
 #if RENDERER == RENDERER_DX
@@ -43,6 +44,10 @@ namespace Transmission {
 			FBXLoader fileLoaded;
 			result = fileLoaded.loadFBXFile(filePath, vP, iP, this, centerShift);
 		}
+		else if (strcmp(extension, ".trk") == 0){
+			TRKLoader fileLoaded;
+			result = fileLoaded.loadTRKFile(filePath, vP, iP, this);
+		}
 		else {
 			return false;
 		}
@@ -55,6 +60,7 @@ namespace Transmission {
 	- filePath: path to 3D model file
 	- vP: pointer to VertexBuffer pointer
 	- iP: pointer to IndexBuffer pointer
+	- tex: pointer to texture
 	*/
 	Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, bool centerShift) {
 		// Checks if error occured during model load
@@ -67,10 +73,29 @@ namespace Transmission {
 	}
 
 	/*
+	Creates a model from a file path. Returns pointer to model or nullptr if model failed to load or incorrect filepath.
+	- filePath: path to 3D model file
+	- vP: pointer to VertexBuffer pointer
+	- iP: pointer to IndexBuffer pointer
+	- tex: pointer to texture
+	- bump: pointer to bumpMap texture
+	*/
+	Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, Texture* bump, bool centerShift) {
+		// Checks if error occured during model load
+		if (this->loadModelFile(filePath, vP, iP, centerShift)) {
+			return createModel(*vP, *iP, tex, bump);
+		}
+		else {
+			return nullptr;
+		}
+	}
+
+	/*
 	Creates a model from a file path that uses set shaders. Returns pointer to model or nullptr if model failed to load or incorrect filepath.
 	- filePath: path to 3D model file
 	- vP: pointer to VertexBuffer pointer
 	- iP: pointer to IndexBuffer pointer
+	- tex: pointer to texture
 	- vertexShader : pointer to vertex shader
 	- pixelShader : pointer to pixel shader
 	*/
@@ -78,6 +103,26 @@ namespace Transmission {
 		// Checks if error occured during model load
 		if (this->loadModelFile(filePath, vP, iP, centerShift)) {
 			return createModel(*vP, *iP, tex, vertexShader, pixelShader);
+		}
+		else {
+			return nullptr;
+		}
+	}
+
+	/*
+	Creates a model from a file path that uses set shaders. Returns pointer to model or nullptr if model failed to load or incorrect filepath.
+	- filePath: path to 3D model file
+	- vP: pointer to VertexBuffer pointer
+	- iP: pointer to IndexBuffer pointer
+	- tex: pointer to texture
+	- bump: pointer to bumpMap texture
+	- vertexShader : pointer to vertex shader
+	- pixelShader : pointer to pixel shader
+	*/
+	Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, Texture* bump, bool centerShift, Shader* vertexShader, Shader* pixelShader) {
+		// Checks if error occured during model load
+		if (this->loadModelFile(filePath, vP, iP, centerShift)) {
+			return createModel(*vP, *iP, tex, bump, vertexShader, pixelShader);
 		}
 		else {
 			return nullptr;

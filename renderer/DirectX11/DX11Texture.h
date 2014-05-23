@@ -21,6 +21,6 @@ namespace Transmission {
 		DX11Texture(const char*, ID3D11Device*, ID3D11DeviceContext*);
 		~DX11Texture();
 
-		virtual void set();
+		virtual void set(int slot);
 	};
 }
