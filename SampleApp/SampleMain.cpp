@@ -241,7 +241,7 @@ float ui(Transmission::Vertex (&vertices)[4], int playerIndex) {
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	Transmission::Window* window = Transmission::Window::createWindow(hInstance);
-	Transmission::Renderer* renderer = Transmission::Renderer::createRenderer(window);
+	Transmission::Renderer* renderer = Transmission::Renderer::createRenderer(window, "defaultVertex.cso", "defaultPixel.cso");
 
 	Transmission::VertexBuffer* ecoliVbuf;
 	Transmission::IndexBuffer* ecoliIbuf;

@@ -46,7 +46,7 @@ namespace Transmission {
 		int renderDimension;
 
 	public:
-		DX11Renderer(Window*);
+		DX11Renderer( Window* window, char* vertex, char* pixel );
 		~DX11Renderer();
 
 	protected:
@@ -54,12 +54,11 @@ namespace Transmission {
 		virtual void setupBackBuffer();
 		virtual void setupViewportAndCamera(Window*);
 		virtual void setupAlphaBlending();
-		virtual void setupShaders();
+		virtual void setupShaders( char* vertex, char* pixel );
 		virtual void setupConstantBuffer();
 		virtual void useWorldCoords();
 
 	public:
-
 		virtual void clearFrame();
 		virtual void prep2D();
 		virtual void end2D();
@@ -84,6 +83,8 @@ namespace Transmission {
 
 		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture);
 		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, Shader* vs, Shader* ps);
+		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, bool isTransparent);
+		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, Shader* vs, Shader* ps, bool isTransparent);
 
 		virtual Texture* createTextureFromFile(char* f);
 

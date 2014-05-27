@@ -17,7 +17,7 @@ namespace Transmission {
 	class FRAMEWORKDLL Renderer
 	{
 	public:
-		static Renderer* createRenderer(Window*);
+		static Renderer* createRenderer( Window* window, char* vertex, char* pixel );
 
 		/* ----- */
 		enum Dimension { TWO, THREE };
@@ -46,6 +46,8 @@ namespace Transmission {
 
 		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture) = 0;
 		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, Shader* vs, Shader* ps) = 0;
+		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, bool isTransparent) = 0;
+		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, Shader* vs, Shader* ps, bool isTransparent) = 0;
 
 		virtual bool loadModelFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, bool centerShift);
 		virtual Model* createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, bool centerShift);

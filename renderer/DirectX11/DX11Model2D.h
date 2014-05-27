@@ -17,11 +17,15 @@ namespace Transmission {
 	{
 	private:
 		bool buffersMade;
+		bool isTransparent;
+
 	public:
 		DX11Model2D(VertexBuffer* v, IndexBuffer* i, ID3D11DeviceContext* context, Texture* texture, Renderer* renderer);
 		DX11Model2D(VertexBuffer* v, IndexBuffer* i, ID3D11DeviceContext* context, Texture* texture, Renderer* renderer, Shader* vs, Shader* ps);
 		DX11Model2D(Vertex* v, int numVertices, Index* i, int numIndices, ID3D11DeviceContext* context, Texture* texture, Renderer* renderer);
 		DX11Model2D(Vertex* v, int numVertices, Index* i, int numIndices, ID3D11DeviceContext* context, Texture* texture, Renderer* renderer, Shader* vs, Shader* ps);
+		DX11Model2D(Vertex* v, int numVertices, Index* i, int numIndices, ID3D11DeviceContext* context, Texture* texture, Renderer* renderer, bool isTransparent);
+		DX11Model2D(Vertex* v, int numVertices, Index* i, int numIndices, ID3D11DeviceContext* context, Texture* texture, Renderer* renderer, Shader* vs, Shader* ps, bool isTransparent);
 		~DX11Model2D();
 
 		virtual void setShaders(Shader*, Shader*);
