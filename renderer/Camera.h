@@ -37,6 +37,8 @@ namespace Transmission {
 		void setUp(const Vector4&);
 		void set(const Vector4& position, const Vector4& lookAt, const Vector4& up);
 
+		void resize(float newAspect);
+
 		Matrix4 getCameraInverse();
 		Matrix4 getPerspective();
 		Vector4 getPosition();
