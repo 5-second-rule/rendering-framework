@@ -1,10 +1,11 @@
 #pragma once
 #include "ITransformable.h"
+#include "common/IMoveable.h"
 
 
 namespace Transmission {
 
-	class FRAMEWORKDLL Transformer : public ITransformable
+	class FRAMEWORKDLL Transformer : public ITransformable, public IMoveable
 	{
 	private:
 		Vector4 position;
@@ -32,6 +33,8 @@ namespace Transmission {
 
 		/* Getters */
 		Matrix4 getTransform();
-		const Vector4& getPosition();
+		const Vector4& getPosition() const;
+		const Matrix4& getRotation() const;
+		const float getScale() const;
 	};
 }

@@ -35,16 +35,16 @@ namespace Transmission {
 			depression = this->controllerState.Gamepad.bRightTrigger;
 			break;
 		default:
-			return 0.0;
+			return 0.0f;
 		}
 
 		depression -= TRIGGER_DEADZONE;
 
 		if (depression <= 0) {
-			return 0.0;
+			return 0.0f;
 		}
 
-		return depression / (255.0 - TRIGGER_DEADZONE);
+		return depression / (255.0f - TRIGGER_DEADZONE);
 	}
 
 	std::pair<Common::Vector4, float> Win32Input::getAnalogStickPosition(Input::Key key) const {
@@ -62,7 +62,7 @@ namespace Transmission {
 			deadzone = RIGHT_STICK_DEADZONE;
 			break;
 		default:
-			return std::pair<Common::Vector4, float>(Common::Vector4(), 0.0);
+			return std::pair<Common::Vector4, float>(Common::Vector4(), 0.0f);
 		}
 
 		// Deadzone calculations given by Microsoft DirectX SDK, "Getting Started With XInput"

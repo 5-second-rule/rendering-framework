@@ -49,19 +49,9 @@ namespace Transmission {
 		}
 	}
 
-	void Transformer::setRotation(float x, float y, float z) {
-		this->rotation = Matrix4::identity();
-		this->rotate(x, y, z);
-	}
 
 	void Transformer::setScale(float scale) {
 		this->scale = scale;
-	}
-
-	Matrix4 Transformer::getTransform() {
-		Matrix4 mScale = Matrix4::scale(this->scale);
-		Matrix4 mTrans = Matrix4::translate(this->position);
-		return mTrans * this->rotation * mScale;
 	}
 
 	void Transformer::setPosition(float x, float y, float z) {
@@ -73,7 +63,26 @@ namespace Transmission {
 		this->position = pos;
 	}
 
-	const Vector4& Transformer::getPosition(){
+	void Transformer::setRotation(float x, float y, float z) {
+		this->rotation = Matrix4::identity();
+		this->rotate(x, y, z);
+	}
+
+	Matrix4 Transformer::getTransform() {
+		Matrix4 mScale = Matrix4::scale(this->scale);
+		Matrix4 mTrans = Matrix4::translate(this->position);
+		return mTrans * mScale * this->rotation;
+	}
+
+	const Vector4& Transformer::getPosition() const {
 		return this->position;
+	}
+
+	const Matrix4& Transformer::getRotation() const {
+		return this->rotation;
+	}
+
+	const float Transformer::getScale() const {
+		return this->scale;
 	}
 }

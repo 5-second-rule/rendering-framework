@@ -28,7 +28,6 @@
     <ClCompile Include="FBXLoader.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="ITransformable.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="Renderer.cpp" />

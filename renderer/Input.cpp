@@ -31,7 +31,7 @@ namespace Transmission {
 	}
 
 	std::pair<Common::Vector4, float> Input::getAnalogStickPosition(Input::Key k) const {
-		return std::pair<Common::Vector4, float>(Common::Vector4(), 0.0);
+		return std::pair<Common::Vector4, float>(Common::Vector4(), 0.0f);
 	}
 
 	bool Input::isControllerConnected() const {

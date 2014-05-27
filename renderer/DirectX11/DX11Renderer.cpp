@@ -6,7 +6,6 @@
 #include <fstream>
 #include <stdexcept>
 
-#define _EXPORT_COMMON
 #include "common/Matrix4.h"
 #include "common/Vector4.h"
 using namespace Common;
