@@ -1,8 +1,9 @@
 #pragma once
 #include "render-framework.h"
 
-#include "Vector4.h"
-#include "Matrix4.h"
+#include "common/Vector4.h"
+#include "common/Matrix4.h"
+using namespace Common;
 
 namespace Transmission {
 
@@ -31,8 +32,10 @@ namespace Transmission {
 
 		~Camera();
 
-		void move(Vector4&);
-		void lookAt(Vector4&);
+		void move(const Vector4&);
+		void lookAt(const Vector4&);
+		void setUp(const Vector4&);
+		void set(const Vector4& position, const Vector4& lookAt, const Vector4& up);
 
 		void resize(float newAspect);
 

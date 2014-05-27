@@ -1,36 +1,58 @@
 #include "Input.h"
 
 namespace Transmission {
-
-	const int Input::keyMap [] = {
-		0x57, 0x41, 0x53, 0x44, 0x51, 0x45,
-		0x5A, 0x58, 0x43, 0x56,
-		0x31, 0x32, 0x33, 0x34, 0x35,
-		VK_SPACE, VK_CONTROL, VK_SHIFT,
-		VK_LBUTTON, VK_RBUTTON
-	};
-
 	Input::Input() {
-	}
-
-	Input::~Input() {
-	}
-
-	Input::Key Input::findKey(int winKey) {
-		for (int i = 0; i < NUM_KEYS; i++) {
-			if (keyMap[i] == winKey)
-				return (Key) i;
+		for (int i = 0; i < COUNT; ++i) {
+			this->keys[i] = Input::KeyState::STATE_UP;
 		}
 
-		return NOT_FOUND;
+		this->keys[Input::Key::GAMEPAD_LEFT_TRIGGER]  = Input::KeyState::ANALOG;
+		this->keys[Input::Key::GAMEPAD_RIGHT_TRIGGER] = Input::KeyState::ANALOG;
+		this->keys[Input::Key::GAMEPAD_LEFT_STICK]    = Input::KeyState::ANALOG;
+		this->keys[Input::Key::GAMEPAD_RIGHT_STICK]   = Input::KeyState::ANALOG;
+
+		this->inputQueue = KeyStateQueue();
 	}
 
-	void Input::keyDown(Key k) {
-		keys[k] = STATE_DOWN;
+	Input::~Input() {;
 	}
 
-	void Input::keyUp(Key k) {
-		keys[k] = STATE_UP;
+	Input::KeyState Input::getKeyState(Input::Key k) const {
+		//this->keys[W] = STATE_DOWN;
+		if (0 <= k && k < COUNT) {
+			return this->keys[k];
+		}
+
+		return KeyState::STATE_UP;
 	}
 
+	float Input::getAnalogTriggerValue(Input::Key k) const {
+		return 0.0;
+	}
+
+	std::pair<Common::Vector4, float> Input::getAnalogStickPosition(Input::Key k) const {
+		return std::pair<Common::Vector4, float>(Common::Vector4(), 0.0f);
+	}
+
+	bool Input::isControllerConnected() const {
+		return controllerConnected;
+	}
+
+	Input::KeyStateQueue Input::getInputQueue() {
+		// Save the list, prepare to pass to engine
+		Input::KeyStateQueue q = this->inputQueue;
+		
+		// Purge current queue
+		this->inputQueue = KeyStateQueue();
+
+		return q;
+	}
+
+	int Input::getCursorXPosition() {
+		return this->cursor_xPos;
+	}
+
+	int Input::getCursorYPosition() {
+		return this->cursor_yPos;
+	}
 }

@@ -6,6 +6,7 @@
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
 #include "Texture.h"
+#include "Shader.h"
 
 namespace Transmission {
 
@@ -16,11 +17,17 @@ namespace Transmission {
 		VertexBuffer* vertexBuffer;
 		IndexBuffer* indexBuffer;
 		Texture* texture;
+		Texture* bumpMap;
+		Shader* vertexShader;
+		Shader* pixelShader;
 
 	public:
 		Model(VertexBuffer*, IndexBuffer*);
 		~Model();
 
+		virtual void setShaders(Shader*, Shader*) = 0;
+		virtual void setVertexShader(Shader*) = 0;
+		virtual void setPixelShader(Shader*) = 0;
 		virtual void draw() = 0;
 	};
 }

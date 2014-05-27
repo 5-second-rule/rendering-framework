@@ -30,9 +30,9 @@ namespace Transmission {
 	{
 	}
 
-	void DX11Texture::set()
+	void DX11Texture::set(int slot)
 	{
-		context->PSSetShaderResources(0, 1, &textureResource);
+		context->PSSetShaderResources(slot, 1, &textureResource);
 		context->PSSetSamplers(0, 1, &samplerState);
 	}
 }
