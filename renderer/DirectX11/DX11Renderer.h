@@ -15,9 +15,13 @@ namespace Transmission {
 		public Renderer
 	{
 	protected:
-		IDXGISwapChain* swapchain;
+		D3D_FEATURE_LEVEL featureLevel;
+		UINT msaaQuality;
+
 		ID3D11Device* device;
 		ID3D11DeviceContext* context;
+		IDXGISwapChain* swapchain;
+
 
 		ID3D11RenderTargetView* backbuffer;
 		ID3D11DepthStencilView* depthStencil;
@@ -47,13 +51,14 @@ namespace Transmission {
 
 	protected:
 		virtual void setupDeviceAndSwapChain(Window*);
-		virtual void setupBackBuffer();
-		virtual void setupViewportAndCamera(Window*);
+		virtual void setupBackBuffer(unsigned int width, unsigned int height);
 		virtual void setupAlphaBlending();
 		virtual void setupShaders( char* vertex, char* pixel );
 		virtual void setupConstantBuffer();
 
 	public:
+
+		virtual void resize(unsigned int width, unsigned int height, bool);
 		virtual void clearFrame();
 		virtual void makeTransparent();
 		virtual void makeOpaque();

@@ -18,6 +18,8 @@ using namespace Common;
 #include "DX11PixelShader.h"
 #include "DX11Timer.h"
 
+#define USE_MSAA true
+
 namespace Transmission {
 
 
@@ -27,10 +29,12 @@ namespace Transmission {
 		this->setupDeviceAndSwapChain(window);
 
 		backbuffer = NULL;
-		this->setupBackBuffer();
+		this->setupBackBuffer(window->getWidth(), window->getHeight());
 
-		camera = NULL;
-		this->setupViewportAndCamera(window);
+		// Camera and Perspective Matrices
+		this->camera = new Camera(Point(0, 0, -10), Point(0, 0, 0), Vector(0, 1, 0),
+			(float)M_PI / 4.0f, (float)window->getWidth() / (float)window->getHeight(), 1, 10000);
+
 		/* ---------- */
 
 		this->setupAlphaBlending();
@@ -82,59 +86,91 @@ namespace Transmission {
 			throw std::runtime_error("You can only setup the device and swap chain once");
 		}
 
-		// Create a descriptor for our swap chain
-		DXGI_SWAP_CHAIN_DESC desc;
 
-		ZeroMemory(&desc, sizeof(DXGI_SWAP_CHAIN_DESC));
+		UINT createDeviceFlags = 0;
 
-		desc.BufferCount = 1;
-		desc.BufferDesc.Width = Window::screenWidth;
-		desc.BufferDesc.Height = Window::screenHeight;
-		desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		desc.BufferDesc.RefreshRate.Numerator = 60;
-		desc.BufferDesc.RefreshRate.Denominator = 1;
-		desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		desc.OutputWindow = (HWND) (window->getHandle());
-		desc.SampleDesc.Count = 1;
-		desc.SampleDesc.Quality = 0;
-		desc.Windowed = this->windowed; //we should have a variable in config, for now its in header
-		desc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-		desc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-		desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-		desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+		#if defined(DEBUG) || defined(_DEBUG)
+		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+		#endif
 
-		D3D_FEATURE_LEVEL featureLevels[] = {
+
+		D3D_FEATURE_LEVEL featureLevels [] = {
 			D3D_FEATURE_LEVEL_11_0,
 			D3D_FEATURE_LEVEL_10_1,
 			D3D_FEATURE_LEVEL_10_0,
 			D3D_FEATURE_LEVEL_9_3
 		};
 
-		UINT createDeviceFlags = 0;
-
-#if defined(DEBUG) || defined(_DEBUG)
-		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-#endif
-
-		// Create the device, device context, and swap chain
-		HR(D3D11CreateDeviceAndSwapChain(
-			NULL,
+		HR(D3D11CreateDevice(
+			NULL, //default adapter
 			D3D_DRIVER_TYPE_HARDWARE,
-			NULL,
+			0, //no software device
 			createDeviceFlags,
-			featureLevels,
-			4,
+			featureLevels, 4,
 			D3D11_SDK_VERSION,
-			&desc,
-			&this->swapchain,
 			&this->device,
-			NULL,
+			&this->featureLevel,
 			&this->context
 		));
 
+		if (featureLevel != D3D_FEATURE_LEVEL_11_0) {
+			MessageBoxA(0, "Direct3D Feature Level 11 unsupported.", 0, 0);
+		}
+
+		HR(device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &this->msaaQuality));
+		
+		if (!(this->msaaQuality > 0)) {
+			MessageBoxA(0, "4x MSAA unsupported", 0, 0);
+		}
+
+
+		// Create a descriptor for our swap chain
+		DXGI_SWAP_CHAIN_DESC desc;
+
+		ZeroMemory(&desc, sizeof(DXGI_SWAP_CHAIN_DESC));
+
+		desc.BufferCount = 1;
+		desc.BufferDesc.Width = window->getWidth();
+		desc.BufferDesc.Height = window->getHeight();
+		desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		desc.BufferDesc.RefreshRate.Numerator = 60;
+		desc.BufferDesc.RefreshRate.Denominator = 1;
+		desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		desc.OutputWindow = (HWND) (window->getHandle());
+		if (USE_MSAA && this->msaaQuality > 0) {
+			desc.SampleDesc.Count = 4;
+			desc.SampleDesc.Quality = this->msaaQuality - 1;
+		} else {
+			desc.SampleDesc.Count = 1;
+			desc.SampleDesc.Quality = 0;
+		}
+		desc.Windowed = this->windowed; //we should have a variable in config, for now its in header
+		desc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+		desc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+		desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+		desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+
+
+		IDXGIDevice* dxgiDevice = NULL;
+		HR(device->QueryInterface(__uuidof(IDXGIDevice), (void**) &dxgiDevice));
+
+		IDXGIAdapter* dxgiAdapter = NULL;
+		HR(dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**) &dxgiAdapter));
+
+		IDXGIFactory* dxgiFactory = NULL;
+		HR(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**) &dxgiFactory));
+
+		HR(dxgiFactory->CreateSwapChain(this->device, &desc, &this->swapchain));
+		
+		HR(dxgiFactory->MakeWindowAssociation((HWND)window->getHandle(), DXGI_MWA_NO_WINDOW_CHANGES));
+
+		dxgiDevice->Release();
+		dxgiAdapter->Release();
+		dxgiFactory->Release();
+
 	}
 
-	void DX11Renderer::setupBackBuffer() {
+	void DX11Renderer::setupBackBuffer(unsigned int width, unsigned int height) {
 
 		if (this->backbuffer != NULL) {
 			throw std::runtime_error("You can only setup the BackBuffer once");
@@ -157,14 +193,19 @@ namespace Transmission {
 		D3D11_TEXTURE2D_DESC depthStencilDesc;
 		ZeroMemory(&depthStencilDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
-		depthStencilDesc.Width = Window::screenWidth;
-		depthStencilDesc.Height = Window::screenHeight;
+		depthStencilDesc.Width = width;
+		depthStencilDesc.Height = height;
 		depthStencilDesc.MipLevels = 1;
 		depthStencilDesc.ArraySize = 1;
 		depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
-		depthStencilDesc.SampleDesc.Count = 1;
-		depthStencilDesc.SampleDesc.Quality = 0;
+		if (USE_MSAA && this->msaaQuality > 0) {
+			depthStencilDesc.SampleDesc.Count = 4;
+			depthStencilDesc.SampleDesc.Quality = this->msaaQuality - 1;
+		} else {
+			depthStencilDesc.SampleDesc.Count = 1;
+			depthStencilDesc.SampleDesc.Quality = 0;
+		}
 
 		depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
 		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
@@ -234,13 +275,6 @@ namespace Transmission {
 
 		pDepthStencil->Release();
 		pDepthStencil = NULL;
-	}
-
-	void DX11Renderer::setupViewportAndCamera(Window* window) {
-
-		if (this->camera != NULL) {
-			throw std::runtime_error("You can only setup the camera and viewport once");
-		}
 
 		// describe the viewport
 		D3D11_VIEWPORT viewport;
@@ -250,15 +284,10 @@ namespace Transmission {
 		viewport.TopLeftY = 0.0f;
 		viewport.MinDepth = 0.0f;
 		viewport.MaxDepth = 1.0f;
-		viewport.Width = (float) Window::screenWidth;
-		viewport.Height = (float) Window::screenHeight;
+		viewport.Width = (float)width;
+		viewport.Height = (float)height;
 
 		context->RSSetViewports(1, &viewport);
-
-		// Camera and Perspective Matrices
-		this->camera = new Camera(Point(0, 0, -10), Point(0, 0, 0), Vector(0, 1, 0),
-			(float) M_PI / 4.0f, (float)Window::screenWidth / (float)Window::screenHeight, 1, 10000);
-
 	}
 
 	void DX11Renderer::setupConstantBuffer() {
@@ -335,6 +364,25 @@ namespace Transmission {
 	//=============================================//
 	//                   Methods                   //
 	//=============================================//
+
+	void DX11Renderer::resize(unsigned int width, unsigned int height, bool fullscreen) {
+		
+		HR(swapchain->SetFullscreenState(fullscreen, NULL));
+
+		context->OMSetRenderTargets(0, 0, 0);
+
+		backbuffer->Release();
+		backbuffer = NULL;
+
+		// automagically get the width and high from the stored HWND
+		HR(swapchain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0));
+
+		this->setupBackBuffer(width, height);
+
+		camera->resize((float)width / (float)height);
+		
+
+	}
 
 	void DX11Renderer::clearFrame() {
 		float color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };

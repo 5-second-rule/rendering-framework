@@ -151,7 +151,7 @@ void __cdecl odprintf(const char *format, ...)
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-	Transmission::Window* window = Transmission::Window::createWindow(hInstance);
+	Transmission::Window* window = Transmission::Window::createWindow(hInstance, L"5 Second Rule", 800, 600);
 	Transmission::Renderer* renderer = Transmission::Renderer::createRenderer(window, "defaultVertex.cso", "defaultPixel.cso");
 
 	Transmission::VertexBuffer* ecoliVbuf;
