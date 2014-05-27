@@ -1,27 +1,40 @@
 #pragma once
 #include "ITransformable.h"
+#include "common/IMoveable.h"
 
 
 namespace Transmission {
 
-	class FRAMEWORKDLL Transformer : public ITransformable
+	class FRAMEWORKDLL Transformer : public ITransformable, public IMoveable
 	{
 	private:
 		Vector4 position;
-		Vector4 rotation;
-		Vector4 scale;
+		Matrix4 rotation;
+		float scale;
 
 	public:
 		Transformer();
 		~Transformer();
 
-		virtual void move(const Vector4&);
-		virtual void rotate(const Vector4&);
-		virtual void setScale(const Vector4&);
-		virtual void setPosition(const Vector4&);
-		virtual void setRotation(const Vector4&);
+		/* Relative */
+		void move(float dx, float dy, float dz);
+		void move(const Vector4& delta);
 
-		virtual Matrix4 getTransform();
-		virtual const Vector4& getPosition();
+		void rotate(float x, float y, float z);
+		void rotate(const Vector4& vector, float degrees);
+
+		/* Absolute */
+		void setScale(float scale);
+		
+		void setPosition(float x, float y, float z);
+		void setPosition(const Vector4& pos);
+
+		void setRotation(float x, float y, float z);
+
+		/* Getters */
+		Matrix4 getTransform();
+		const Vector4& getPosition() const;
+		const Matrix4& getRotation() const;
+		const float getScale() const;
 	};
 }
