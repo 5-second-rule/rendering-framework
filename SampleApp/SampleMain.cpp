@@ -193,6 +193,7 @@ void selectionBG(Transmission::Vertex (&vertices)[4]) {
 	vertices[3] = { { -1.0f, -1.0f, 0.0f }, { 0, 1 }, { 0, 0, -1 }, {} };
 }
 
+
 float player(Transmission::Vertex (&vertices)[4], int playerIndex, float margin) {
 	float numMargins[] = { -1.5, -0.5, 0.5, 1.5 };
 	float pos[] = { -2, -1, 0, 1 };
@@ -204,6 +205,29 @@ float player(Transmission::Vertex (&vertices)[4], int playerIndex, float margin)
 
 	float edgeL = pos[playerIndex] * width + numMargins[playerIndex] * margin;
 	float edgeR = edgeL + width;
+
+	vertices[0] = { { edgeL, edgeT, 0.0f }, { 0, 0 }, { 0, 0, -1 }, {} };
+	vertices[1] = { { edgeR, edgeT, 0.0f }, { 1, 0 }, { 0, 0, -1 }, {} };
+	vertices[2] = { { edgeR, edgeB, 0.0f }, { 1, 1 }, { 0, 0, -1 }, {} };
+	vertices[3] = { { edgeL, edgeB, 0.0f }, { 0, 1 }, { 0, 0, -1 }, {} };
+
+	return edgeL + width / 2;
+}
+
+float ui(Transmission::Vertex (&vertices)[4], int playerIndex) {
+	float numMargins[] = { 1.5, 0.5, -0.5, -1.5 };
+	float pos[] = { 1, 0, -1, -2 };
+
+	float margin = 0.08;
+	float edgeMargin = 0.4;
+	
+	float width = 0.15;
+
+	float edgeL = -1.0 + 0.1;
+	float edgeR = edgeL + width;
+	
+	float edgeB = pos[playerIndex] * width + numMargins[playerIndex] * margin;
+	float edgeT = edgeB + width;
 
 	vertices[0] = { { edgeL, edgeT, 0.0f }, { 0, 0 }, { 0, 0, -1 }, {} };
 	vertices[1] = { { edgeR, edgeT, 0.0f }, { 1, 0 }, { 0, 0, -1 }, {} };
@@ -256,6 +280,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	char* titleTexture = "../SampleApp/select-title.dds";
 	char* windowBgTexture = "../SampleApp/select-background.dds";
 	char* playerBgTexture = "../SampleApp/select-rectangle.dds";
+	char* uiTexture = "../SampleApp/pink.dds";
 
 	Transmission::Shader* defaultVertexShad = renderer->createVertexShader("defaultVertex.cso");
 	Transmission::Shader* vertRipple = renderer->createVertexShader("vertexRipple.cso");
@@ -280,6 +305,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Transmission::Texture* titleTex = renderer->createTextureFromFile(titleTexture);
 	Transmission::Texture* windowBgTex = renderer->createTextureFromFile(windowBgTexture);
 	Transmission::Texture* playerBgTex = renderer->createTextureFromFile(playerBgTexture);
+	Transmission::Texture* uiTex = renderer->createTextureFromFile(uiTexture);
 
 	Transmission::Model* ecoliModel = renderer->createModelFromFile(ecoliFbxFilePath, &ecoliVbuf, &ecoliIbuf, ecoliTex, true, vertTent, pixShader);
 	Transmission::Model* herpesModel = renderer->createModelFromFile(herpesFbxFilePath, &herpesVbuf, &herpesIbuf, herpesTex, true, vertRipple, pixShader);
@@ -310,10 +336,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Transmission::Texture* playerTex[4];
 	Transmission::Model* playerModels[4];
 	Transmission::Model* playerBgModel[4];
+	Transmission::Model* uiModels[4];
 
 	for (int i = 0; i < 4; ++i) {
 		centers[i] = player(vertices, i, margin) * 5.5;
 		playerBgModel[i] = renderer->create2DModelFromVertices(vertices, 4, indices, 6, playerBgTex);
+
+		ui(vertices, i);
+		uiModels[i] = renderer->create2DModelFromVertices(vertices, 4, indices, 6, uiTex);
 	}
 
 
@@ -375,7 +405,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		if (renderSelection) {
 			renderer->getCamera()->set(Common::Vector4(0, 0, -10, 1), Common::Vector4(0, 0, 0, 1));
 			windowBgModel->draw();
+			renderer->makeTransparent();
 			titleModel->draw();
+			renderer->makeOpaque();
 
 			playerBgModel[0]->draw();
 			playerModels[currModel]->setPosition(Common::Vector4(centers[0], 0, 0, 1));
@@ -403,6 +435,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			for (int i = 1; i < 4; ++i) {
 				playerModels[i]->draw();
 			}
+
+			for (int i = 0; i < 4; ++i) {
+				uiModels[i]->draw();
+			}
+
 			newSelected = false;
 		}
 
@@ -425,6 +462,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	for (int i = 0; i < 4; ++i) {
 		delete playerModels[i];
 		delete playerBgModel[i];
+		delete uiModels[i];
 	}
 
 	delete defaultVertexShad;
@@ -460,6 +498,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	delete titleTex;
 	delete windowBgTex;
 	delete playerBgTex;
+	delete uiTex;
 
 	delete renderer;
 	delete window;
