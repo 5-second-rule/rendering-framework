@@ -51,6 +51,11 @@ namespace Transmission {
 		this->perspective = Matrix4(a);
 	}
 
+	void Camera::resize(float newAspect) {
+		this->aspect = newAspect;
+		this->updatePerspective();
+	}
+
 	void Camera::move(const Vector4& delta) {
 		assert(delta.w() == 0.0f);
 
@@ -59,12 +64,14 @@ namespace Transmission {
 		this->updateCamera();
 	}
 
-	void Camera::set(const Vector4& position, const Vector4& lookAt) {
+	void Camera::set(const Vector4& position, const Vector4& lookAt, const Vector4& up) {
 		assert(position.w() == 1.0f);
 		assert(lookAt.w() == 1.0f);
+		assert(up.w() == 0.0f);
 
 		this->position = position;
 		this->target = lookAt;
+		this->up = up;
 		this->updateCamera();
 	}
 
@@ -72,6 +79,13 @@ namespace Transmission {
 		assert(point.w() == 1.0f);
 
 		this->target = point;
+		this->updateCamera();
+	}
+
+	void Camera::setUp(const Vector4& up) {
+		assert(up.w() == 0.0f);
+
+		this->up = up;
 		this->updateCamera();
 	}
 

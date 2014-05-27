@@ -69,25 +69,25 @@ void moveBlob(Transmission::Window* w, Transmission::Model* m, Transmission::Cam
 
 		//Rotate Up
 		if (input->getKeyState(Transmission::Input::Key::UP_ARROW) == Transmission::Input::STATE_DOWN) {
-			m->rotate(Common::Vector4(moveAmt, 0, 0));
+			m->rotate(moveAmt, 0, 0);
 			cam->lookAt(m->getPosition());
 		}
 
 		//Rotate Down
 		if (input->getKeyState(Transmission::Input::Key::DOWN_ARROW) == Transmission::Input::STATE_DOWN) {
-			m->rotate(Common::Vector4(-moveAmt, 0, 0));
+			m->rotate(-moveAmt, 0, 0);
 			cam->lookAt(m->getPosition());
 		}
 
 		//Rotate Left
 		if (input->getKeyState(Transmission::Input::Key::LEFT_ARROW) == Transmission::Input::STATE_DOWN) {
-			m->rotate(Common::Vector4(0, moveAmt, 0));
+			m->rotate(0, moveAmt, 0);
 			cam->lookAt(m->getPosition());
 		}
 
 		//Rotate Right
 		if (input->getKeyState(Transmission::Input::Key::RIGHT_ARROW) == Transmission::Input::STATE_DOWN) {
-			m->rotate(Common::Vector4(0, -moveAmt, 0));
+			m->rotate(0, -moveAmt, 0);
 			cam->lookAt(m->getPosition());
 		}
 
@@ -110,12 +110,12 @@ void moveBlob(Transmission::Window* w, Transmission::Model* m, Transmission::Cam
 		}
 		// THESE ROTATIONS ARE BROKEN, JUST DID SOMETHING TO TURN THE CAMERA A LITTLE
 		if (input->getKeyState(Transmission::Input::Key::Q) == Transmission::Input::STATE_DOWN) {
-			m->rotate(Common::Vector(0.00f, moveAmt, 0.0f));
+			m->rotate(0.00f, moveAmt, 0.0f);
 			cam->lookAt(m->getPosition());
 			cam->move(Common::Vector4(moveAmt, 0, moveAmt));
 		}
 		if (input->getKeyState(Transmission::Input::Key::E) == Transmission::Input::STATE_DOWN) {
-			m->rotate(Common::Vector(0.00f, -moveAmt, 0.0f));
+			m->rotate(0.00f, -moveAmt, 0.0f);
 			cam->lookAt(m->getPosition());
 			cam->move(Common::Vector4(-moveAmt, 0, -moveAmt));
 		}
@@ -193,7 +193,6 @@ void selectionBG(Transmission::Vertex (&vertices)[4]) {
 	vertices[3] = { { -1.0f, -1.0f, 0.0f }, { 0, 1 }, { 0, 0, -1 }, {} };
 }
 
-
 float player(Transmission::Vertex (&vertices)[4], int playerIndex, float margin) {
 	float numMargins[] = { -1.5, -0.5, 0.5, 1.5 };
 	float pos[] = { -2, -1, 0, 1 };
@@ -237,10 +236,8 @@ float ui(Transmission::Vertex (&vertices)[4], int playerIndex) {
 	return edgeL + width / 2;
 }
 
-
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-	Transmission::Window* window = Transmission::Window::createWindow(hInstance);
+	Transmission::Window* window = Transmission::Window::createWindow(hInstance, L"5 Second Rule", 800, 600);
 	Transmission::Renderer* renderer = Transmission::Renderer::createRenderer(window, "defaultVertex.cso", "defaultPixel.cso");
 
 	Transmission::VertexBuffer* ecoliVbuf;
@@ -345,7 +342,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ui(vertices, i);
 		uiModels[i] = renderer->create2DModelFromVertices(vertices, 4, indices, 6, uiTex);
 	}
-
 
 
 	if (ecoliModel == NULL) exit(-1);

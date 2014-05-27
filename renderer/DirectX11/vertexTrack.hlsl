@@ -28,14 +28,13 @@ VOut vs_main(float4 position : POSITION, float2 texCoord : TEXCOORD, float4 norm
 	float4 norm = float4(normal.xyz, 0.0);
 	float4 tang = float4(tangent.xyz, 0.0);
 
-	float3 bitang = cross(tang, norm);
-	bitang = float4(bitang.xyz, 0.0); //not sure if necessary
+	float3 bitang = cross(tang.xyz, norm.xyz);
 
 	output.position = mul(mul(Pos,World),ViewProjection);
 	output.texCoord = texCoord;
 	output.normal = mul(norm, World).xyz; // this is fine as long as we only do uniform scale
 	output.tangent = mul(tang, World).xyz;
-	output.bitangent = mul(bitang, World).xyz;
+	output.bitangent = mul(float4(bitang,0.0), World).xyz;
 	output.view = (float4(cameraPosition, 1.0) - mul(Pos, World)).xyz;
 
 	//color will be replaced with texture values to be passed to pixel shader

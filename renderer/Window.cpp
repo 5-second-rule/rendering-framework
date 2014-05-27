@@ -9,16 +9,34 @@
 
 namespace Transmission {
 
-	Window* Window::createWindow(void* handle) {
+	Window::Window(const wchar_t* name, unsigned int width, unsigned int height)
+		: name(name)
+		, width(width)
+		, height(height)
+	{}
+
+	Window* Window::createWindow(void* handle, const wchar_t* name, unsigned int width, unsigned int height) {
 
 #ifdef _WIN32
-		return new Win32Window((HINSTANCE)handle);
+		return new Win32Window((HINSTANCE)handle, name, width, height);
 #elif __APPLE__
 		return new OSXWindow((NSWindow*) handle);
 #else
 #error "Unsupported Platform"
 #endif
 
+	}
+
+	const wchar_t* Window::getName() {
+		return this->name;
+	}
+
+	unsigned int Window::getWidth() {
+		return this->width;
+	}
+
+	unsigned int Window::getHeight() {
+		return this->height;
 	}
 
 }

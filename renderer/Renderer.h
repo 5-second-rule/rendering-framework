@@ -19,6 +19,8 @@ namespace Transmission {
 	public:
 		static Renderer* createRenderer( Window* window, char* vertex, char* pixel );
 
+		virtual void resize(unsigned int width, unsigned int height, bool fullscreen) = 0;
+
 		/* ----- */
 		enum Dimension { TWO, THREE };
 

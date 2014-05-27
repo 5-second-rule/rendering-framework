@@ -1,9 +1,10 @@
 #include "Win32Window.h"
 
+#include "Renderer.h"
 namespace Transmission {
 
-	Win32Window::Win32Window(HINSTANCE hInstance)
-		: Window()
+	Win32Window::Win32Window(HINSTANCE hInstance, const wchar_t* name, unsigned int width, unsigned int height)
+		: Window(name, width, height)
 		, hInstance(hInstance)
 	{
 		WNDCLASSEX wc;
@@ -15,25 +16,26 @@ namespace Transmission {
 		wc.lpfnWndProc = DefWindowProc;
 		wc.hInstance = hInstance;
 		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-		wc.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1);
+		wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 		wc.lpszClassName = L"WindowClass1";
 		wc.cbWndExtra = sizeof(Win32Window*);
 
 		RegisterClassEx(&wc);
 
-		RECT wr = { 0, 0, screenWidth, screenHeight };
+		RECT wr = { 0, 0, width, height };
 		AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
 
 		// this is all on one line becuse VC++ freaks out otherwise
-		this->hWnd = CreateWindowEx(NULL, L"WindowClass1", L"Window Name", WS_OVERLAPPEDWINDOW, 300, 300, wr.right - wr.left, wr.bottom - wr.top, NULL, NULL, hInstance, NULL);
+		this->hWnd = CreateWindowEx(NULL, L"WindowClass1", name, WS_OVERLAPPEDWINDOW, 300, 300, wr.right - wr.left, wr.bottom - wr.top, NULL, NULL, hInstance, NULL);
 
 		ShowWindow(this->hWnd, SW_SHOWNORMAL);
 
-		this->oldWndproc = (WNDPROC) SetWindowLongPtr(this->hWnd, GWLP_WNDPROC, (LONG_PTR) SubclassWndProc);
+		
+		this->oldWndproc = (WNDPROC)SetWindowLongPtr(this->hWnd, GWLP_WNDPROC, (LONG_PTR)SubclassWndProc);
 
 		// store pointer back to c++ class
 		SetWindowLongPtr(this->hWnd, 0, reinterpret_cast<LONG_PTR>(this));
-
+		
 		this->input = Win32Input(); 
 	}
 
@@ -44,10 +46,6 @@ namespace Transmission {
 		Win32Input* input = (Win32Input*) cppWnd->getInput();
 
 		switch (wm) {
-		case WM_DESTROY:
-			PostQuitMessage(EXIT_SUCCESS);
-			return 0;
-
 		case WM_KEYDOWN:
 			if (input != NULL)
 				input->keyDown(wParam);
@@ -75,6 +73,21 @@ namespace Transmission {
 			if (input != NULL)
 				input->setMousePosition(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 			break;
+
+
+		case WM_DESTROY:
+			PostQuitMessage(EXIT_SUCCESS);
+			return 0;
+
+		case WM_SIZE:
+			if (!(wParam == SIZE_MAXIMIZED)) break;
+		case WM_EXITSIZEMOVE:
+				if (cppWnd->renderer != NULL) {
+					RECT r;
+					GetWindowRect(hwnd, &r);
+					cppWnd->renderer->resize(r.right - r.left, r.bottom - r.top, false);
+				}
+				break;
 
 		default:
 			return CallWindowProc(cppWnd->oldWndproc, hwnd, wm, wParam, lParam);

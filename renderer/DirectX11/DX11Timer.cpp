@@ -65,7 +65,7 @@ namespace Transmission {
 		frameTimeOld = currentTime.QuadPart;
 
 		if (tickCount < 0.0f)
-			tickCount = 0.0f;
+			tickCount = 0;
 
 		return float(tickCount) / countsPerSecond;
 	}
@@ -80,7 +80,7 @@ namespace Transmission {
 		frameTimeOld = currentTime.QuadPart;
 
 		if (tickCount < 0.0f)
-			tickCount = 0.0f;
+			tickCount = 0;
 
 		*elapsedTime = float(currentTime.QuadPart - CounterStart) / countsPerSecond;
 		timeSinceLastFrame = float(tickCount) / countsPerSecond;
