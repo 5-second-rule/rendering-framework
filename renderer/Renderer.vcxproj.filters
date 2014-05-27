@@ -111,16 +111,22 @@
     <ClCompile Include="DirectX11\DX11Timer.cpp">
       <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
-	<ClCompile Include="TRKLoader.cpp">
+    <ClCompile Include="TRKLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-	<ClCompile Include="Sound.cpp">
+    <ClCompile Include="DX11Sounder.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Sounder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DX11Sound.cpp">
       <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
-</ItemGroup>
+  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
       <Filter>Header Files</Filter>
@@ -215,16 +221,22 @@
     <ClInclude Include="DirectX11\DX11Timer.h">
       <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
-<ClInclude Include="TRKLoader.h">
+    <ClInclude Include="TRKLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-<ClInclude Include="Sound.h">
+    <ClInclude Include="DX11Sounder.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Sounder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DX11Sound.h">
       <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
-</ItemGroup>
+  </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectX11\defaultPixel.hlsl">
       <Filter>Source Files\DirectX11</Filter>
