@@ -52,7 +52,6 @@ namespace Transmission {
 	protected:
 		virtual void setupDeviceAndSwapChain(Window*);
 		virtual void setupBackBuffer(unsigned int width, unsigned int height);
-		virtual void setupViewportAndCamera(Window*);
 		virtual void setupAlphaBlending();
 		virtual void setupShaders( char* vertex, char* pixel );
 		virtual void setupConstantBuffer();

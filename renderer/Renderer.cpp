@@ -17,7 +17,7 @@ namespace Transmission {
 #if RENDERER == RENDERER_DX
 		r = new DX11Renderer(window, vertex, pixel);
 #elif RENDERER == RENDERER_GL
-		r = new GLRenderer(window);
+		r = new GLRenderer(window, vertex, pixel);
 #else
 #error "Unsupported Renderer"
 #endif

@@ -33,7 +33,7 @@ namespace Transmission {
 
 		// Camera and Perspective Matrices
 		this->camera = new Camera(Point(0, 0, -10), Point(0, 0, 0), Vector(0, 1, 0),
-			(float)M_PI / 4.0f, (float)window->getWidth() / (float)window->getHeight(), 1, 1000);
+			(float)M_PI / 4.0f, (float)window->getWidth() / (float)window->getHeight(), 1, 10000);
 
 		/* ---------- */
 
