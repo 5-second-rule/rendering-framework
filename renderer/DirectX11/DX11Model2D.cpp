@@ -121,7 +121,6 @@ namespace Transmission {
 	}
 
 	void DX11Model2D::draw() {
-		this->isTransparent = false;
 		this->renderer->prep2D();
 		if (this->isTransparent) {
 			this->renderer->makeTransparent();

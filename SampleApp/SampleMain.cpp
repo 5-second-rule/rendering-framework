@@ -237,6 +237,7 @@ float ui(Transmission::Vertex (&vertices)[4], int playerIndex) {
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+
 	Transmission::Window* window = Transmission::Window::createWindow(hInstance, L"5 Second Rule", 800, 600);
 	Transmission::Renderer* renderer = Transmission::Renderer::createRenderer(window, "defaultVertex.cso", "defaultPixel.cso");
 
@@ -320,7 +321,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Transmission::Index indices[] = { 0, 1, 2, 3, 0, 2 };
 	Transmission::Vertex vertices[4];
 
-	title(vertices, window->screenHeight, window->screenWidth);
+	title(vertices, window->getHeight(), window->getWidth());
 	Transmission::Model* titleModel = renderer->create2DModelFromVertices(vertices, 4, indices, 6, titleTex);
 
 	selectionBG(vertices);
@@ -363,16 +364,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	float scale = width / 2;
 
-	herpesSelect->setScale(Common::Vector4(scale, scale, scale, 0.0));
-	herpesModel->setScale(Common::Vector4(scale, scale, scale, 0.0));
-	malariaSelect->setScale(Common::Vector4(scale, scale, scale, 0.0));
-	malariaModel->setScale(Common::Vector4(scale, scale, scale, 0.0));
+	herpesSelect->setScale(scale);
+	herpesModel->setScale(scale);
+	malariaSelect->setScale(scale);
+	malariaModel->setScale(scale);
 	scale *= 1.2;
-	ecoliSelect->setScale(Common::Vector4(scale, scale, scale, 0.0));
-	ecoliModel->setScale(Common::Vector4(scale, scale, scale, 0.0));
+	ecoliSelect->setScale(scale);
+	ecoliModel->setScale(scale);
 	scale = 0.8;
-	poxSelect->setScale(Common::Vector4(scale, scale, scale, 0.0));
-	poxModel->setScale(Common::Vector4(scale, scale, scale, 0.0));
+	poxSelect->setScale(scale);
+	poxModel->setScale(scale);
 
 	playerModels[0] = ecoliSelect;
 	playerModels[1] = herpesSelect;
@@ -399,7 +400,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 
 		if (renderSelection) {
-			renderer->getCamera()->set(Common::Vector4(0, 0, -10, 1), Common::Vector4(0, 0, 0, 1));
+			renderer->getCamera()->set(Common::Vector4(0, 0, -10, 1), Common::Vector4(0, 0, 0, 1), Common::Vector4(0, 1, 0, 0));
 			windowBgModel->draw();
 			renderer->makeTransparent();
 			titleModel->draw();
@@ -416,7 +417,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 			newSelected = true;
 		} else {
-			poxModel->rotate(Common::Vector(0.00f, 200.0f*renderer->getTimer()->GetCalculatedTimeSinceLastFrame(), 0.0f));
+			poxModel->rotate(0.00f, 200.0f*renderer->getTimer()->GetCalculatedTimeSinceLastFrame(), 0.0f);
 
 			tubeModel->draw();
 
@@ -424,9 +425,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				moreModels[currModel]->setPosition(Common::Vector4(0, 0, 0, 1));
 			moreModels[currModel]->draw();
 
-			playerModels[1]->setPosition(Common::Vector4(7.5, 0, 35));
-			playerModels[2]->setPosition(Common::Vector4(-20, 0, 35));
-			playerModels[3]->setPosition(Common::Vector4(20, 0, 35));
+			playerModels[1]->setPosition(7.5, 0, 35);
+			playerModels[2]->setPosition(-20, 0, 35);
+			playerModels[3]->setPosition(20, 0, 35);
 
 			for (int i = 1; i < 4; ++i) {
 				playerModels[i]->draw();
@@ -498,4 +499,58 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	delete renderer;
 	delete window;
+
+	//////////////////////////
+
+	ecoliModel = nullptr;
+	herpesModel = nullptr;
+	malariaModel = nullptr;
+	poxModel = nullptr;
+	tubeModel = nullptr;
+	titleModel = nullptr;
+	windowBgModel = nullptr;
+
+	for (int i = 0; i < 4; ++i) {
+		playerModels[i] = nullptr;
+		playerBgModel[i] = nullptr;
+		uiModels[i] = nullptr;
+	}
+
+	defaultVertexShad = nullptr;
+	vertRipple = nullptr;
+	vertSpring = nullptr;
+	vertTent = nullptr;
+	vertTrack = nullptr;
+	vertWiggle = nullptr;
+
+	defaultPixShad = nullptr;
+	pixShader = nullptr;
+	pixBump = nullptr;
+	pixShaderNoSpec = nullptr;
+	pixCelShader = nullptr;
+
+	ecoliVbuf = nullptr;
+	ecoliIbuf = nullptr;
+	herpesVbuf = nullptr;
+	herpesIbuf = nullptr;
+	malariaVbuf = nullptr;
+	malariaIbuf = nullptr;
+	poxVbuf = nullptr;
+	poxIbuf = nullptr;
+	tubeVbuf = nullptr;
+	tubeIbuf = nullptr;
+
+	ecoliTex = nullptr;
+	herpesTex = nullptr;
+	malariaTex = nullptr;
+	poxTex = nullptr;
+	pipeTex = nullptr;
+	pipeBumpTex = nullptr;
+	titleTex = nullptr;
+	windowBgTex = nullptr;
+	playerBgTex = nullptr;
+	uiTex = nullptr;
+
+	renderer = nullptr;
+	window = nullptr;
 }
