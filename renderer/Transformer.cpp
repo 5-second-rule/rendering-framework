@@ -59,7 +59,7 @@ namespace Transmission {
 	}
 
 	void Transformer::setPosition(const Vector4& pos) {
-		//assert(pos.w() == 1);
+		assert(pos.w() == 1);
 		this->position = pos;
 	}
 
