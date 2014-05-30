@@ -1,3 +1,5 @@
+#define NUM_LIGHTS 10
+
 cbuffer PerFrame : register(b0)
 {
 	matrix ViewProjection;
@@ -18,10 +20,10 @@ cbuffer Time : register(b2)
 struct VOut
 {
 	float4 position : SV_POSITION;
+	float4 worldPos : WORLDPOSITION;
 	float2 texCoord : TEXCOORD0;
 	float3 normal : TEXCOORD1;
 	float3 view : TEXCOORD2;
-	float4 color : COLOR;
 };
 
 #define M_PI 3.1415926535897932384626433832795
@@ -42,13 +44,10 @@ VOut vs_main(float4 position : POSITION, float2 texCoord : TEXCOORD, float4 norm
 	Pos = float4(Pos.xyz, 1.0);
 
 	output.position = mul(mul(Pos,World),ViewProjection);
+	output.worldPos = mul(Pos, World);
 	output.texCoord = texCoord;
-	output.normal = mul(float4(normal.xyz,0.0), World).xyz; // this is fine as long as we only do uniform scale
+	output.normal = mul(float4(normal.xyz, 0.0), World).xyz; // this is fine as long as we only do uniform scale
 	output.view = (float4(cameraPosition, 1.0) - mul(Pos, World)).xyz;
-
-	//color will be replaced with texture values to be passed to pixel shader
-
-	output.color = float4(1.0,0.0,0.0,1.0);
 
 	return output;
 }

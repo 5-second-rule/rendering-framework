@@ -40,7 +40,7 @@ namespace Transmission {
 		this->setupAlphaBlending();
 
 		renderTimer = NULL;
-		perFrameBuffer = NULL; perVertexBuffer = NULL; timeBuffer = NULL;
+		perFrameBuffer = NULL; perVertexBuffer = NULL; timeBuffer = NULL; lightDataBuffer = NULL;
 		this->setupConstantBuffer();
 
 		defaultVertexShader = NULL; defaultPixelShader = NULL; layout = NULL;
@@ -73,6 +73,7 @@ namespace Transmission {
 		perFrameBuffer->Release();
 		perVertexBuffer->Release();
 		timeBuffer->Release();
+		lightDataBuffer->Release();
 		device->Release();
 		context->Release();
 	}
@@ -291,7 +292,7 @@ namespace Transmission {
 	}
 
 	void DX11Renderer::setupConstantBuffer() {
-		if (perFrameBuffer != NULL || perVertexBuffer != NULL || timeBuffer != NULL) {
+		if (perFrameBuffer != NULL || perVertexBuffer != NULL || timeBuffer != NULL || lightDataBuffer != NULL) {
 			throw std::runtime_error("You can only setup the constant buffers once");
 		}
 
@@ -315,6 +316,12 @@ namespace Transmission {
 		cb.ByteWidth = sizeof(float[4]);
 
 		HR(device->CreateBuffer(&cb, NULL, &this->timeBuffer));
+
+		cb.Usage = D3D11_USAGE_DYNAMIC;
+		cb.ByteWidth = sizeof(LightDataBufferType);
+		cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+		HR(device->CreateBuffer(&cb, NULL, &this->lightDataBuffer));
 	}
 
 	void DX11Renderer::setupAlphaBlending() {
@@ -415,6 +422,56 @@ namespace Transmission {
 		// set shaders without layout
 		defaultVertexShader->setWithNoLayout();
 		defaultPixelShader->setWithNoLayout(); //using this function for consistency
+	}
+
+	bool DX11Renderer::setLightBuffers(Common::Vector4* lightPositions, int numLights, Common::Vector4* lightColors, int numColors)
+	{
+
+		HRESULT result;
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		LightDataBufferType* dataPtr;
+
+		// Lock the light position constant buffer so it can be written to.
+		result = context->Map(lightDataBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		dataPtr = (LightDataBufferType*)mappedResource.pData;
+
+		for (int i = 0; i < NUM_LIGHTS; i++)
+		{
+			if (i < numLights)
+			{
+				Common::Vector4 updatePosition;
+
+				//Just needs world, why is world identity?
+				updatePosition = ((Matrix4::identity()*lightPositions[i]));
+
+				dataPtr->lightDataVals[i].position[0] = updatePosition.x();
+				dataPtr->lightDataVals[i].position[1] = updatePosition.y();
+				dataPtr->lightDataVals[i].position[2] = updatePosition.z();
+				dataPtr->lightDataVals[i].position[3] = updatePosition.w();
+
+				dataPtr->lightDataVals[i].color[0] = lightColors[i].x();
+				dataPtr->lightDataVals[i].color[1] = lightColors[i].y();
+				dataPtr->lightDataVals[i].color[2] = lightColors[i].z();
+				dataPtr->lightDataVals[i].color[3] = lightColors[i].w();
+			}
+			else
+			{
+				//assign w value to 0 to specify light isn't on
+				dataPtr->lightDataVals[i].position[3] = 0;
+			}
+		}
+		
+		// Unlock the constant buffer.
+		context->Unmap(lightDataBuffer, 0);
+
+		context->PSSetConstantBuffers(0, 1, &lightDataBuffer);
+
+		return true;
 	}
 
 	void DX11Renderer::makeTransparent() {

@@ -9,6 +9,13 @@
 #include "Renderer.h"
 #include "Window.h"
 
+#define NUM_LIGHTS 10
+
+struct LightDataBufferType
+{
+	lightData lightDataVals[NUM_LIGHTS];
+};
+
 namespace Transmission {
 
 	class DX11Renderer :
@@ -40,6 +47,7 @@ namespace Transmission {
 		ID3D11Buffer* perFrameBuffer;
 		ID3D11Buffer* perVertexBuffer;
 		ID3D11Buffer* timeBuffer;
+		ID3D11Buffer* lightDataBuffer;
 
 		Camera* camera;
 
@@ -60,6 +68,7 @@ namespace Transmission {
 
 		virtual void resize(unsigned int width, unsigned int height, bool);
 		virtual void clearFrame();
+		virtual bool setLightBuffers(Common::Vector4* lightPositions, int numPositions, Common::Vector4* lightColors, int numColors);
 		virtual void makeTransparent();
 		virtual void makeOpaque();
 		virtual void drawFrame();

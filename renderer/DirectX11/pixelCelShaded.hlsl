@@ -1,6 +1,8 @@
 /////////////
 // GLOBALS //
 /////////////
+#define NUM_LIGHTS 10
+
 #define LIGHT_DIR float3(5.0, 5.5, -10.0)
 #define LIGHT_COLOR float3(0.9, 0.9, 0.9)
 
@@ -12,7 +14,18 @@ SamplerState SampleType;
 
 #define SPECULARPOWER 100.0
 
-float4 ps_main(float4 position : SV_POSITION, float2 texCoord : TEXCOORD0, float3 normal : TEXCOORD1, float3 view : TEXCOORD2, float4 color : COLOR) : SV_TARGET
+struct LightData
+{
+	float4 lightPosition;
+	float4 lightColor;
+};
+
+cbuffer LightDataBuffer : register(b0)
+{
+	LightData lightDataArray[NUM_LIGHTS];
+};
+
+float4 ps_main(float4 position : SV_POSITION, float4 worldPos : WORLDPOSITION, float2 texCoord : TEXCOORD0, float3 normal : TEXCOORD1, float3 view : TEXCOORD2) : SV_TARGET
 {
 	float3 L = normalize(LIGHT_DIR);
 	float3 V = normalize(view);
