@@ -4,7 +4,7 @@
 #include <Windows.h>
 
 #include <queue>
-#include "../../common/common/Vector4.h"
+#include "common/Vector4.h"
 
 namespace Transmission {
 	class FRAMEWORKDLL Input

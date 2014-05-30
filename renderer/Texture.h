@@ -7,7 +7,7 @@ namespace Transmission {
 
 	public:
 		Texture(const char*);
-		~Texture();
+		virtual ~Texture();
 
 		virtual void set(int slot) = 0;
 	};

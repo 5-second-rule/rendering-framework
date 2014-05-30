@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 namespace Transmission {
 
 	struct Vertex {

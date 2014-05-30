@@ -9,6 +9,7 @@
 #include "Renderer.h"
 #include "Window.h"
 
+
 namespace Transmission {
 
 	class DX11Renderer :
