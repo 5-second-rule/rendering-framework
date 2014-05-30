@@ -4,7 +4,9 @@ namespace Transmission {
 
 	DX11Sound::DX11Sound( IDirectSoundBuffer8* buffer ) : secondaryBuffer( buffer ) {}
 
-	DX11Sound::~DX11Sound() {}
+	DX11Sound::~DX11Sound() {
+		this->secondaryBuffer->Release();
+	}
 
 	bool DX11Sound::play() {
 		HRESULT result;

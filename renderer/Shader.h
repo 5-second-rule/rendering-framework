@@ -7,7 +7,7 @@ namespace Transmission {
 
 	public:
 		Shader(const char*);
-		~Shader();
+		virtual ~Shader();
 
 		virtual void set() = 0;
 		virtual void setWithNoLayout() = 0;

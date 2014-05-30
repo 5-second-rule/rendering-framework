@@ -3,6 +3,13 @@
 #include <iostream>
 #include <fstream>
 
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+#endif  // _DEBUG
+
 namespace Transmission {
 
 	DX11Shader::DX11Shader(char* filename) : Shader(filename) {
@@ -28,6 +35,7 @@ namespace Transmission {
 
 	DX11Shader::~DX11Shader() {
 		this->shader->Release();
+		delete this->bytecode;
 	}
 
 	ID3D11DeviceChild* DX11Shader::getShader() {

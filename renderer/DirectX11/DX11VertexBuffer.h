@@ -7,7 +7,6 @@
 
 #include "util.h"
 
-
 namespace Transmission {
 
 	class DX11VertexBuffer :

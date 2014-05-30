@@ -1,6 +1,10 @@
 #pragma once
 #include "DX11Shader.h"
 
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
 namespace Transmission {
 
 	class DX11VertexShader :
@@ -8,7 +12,6 @@ namespace Transmission {
 	{
 	public:
 		DX11VertexShader(char*, DX11Renderer*, ID3D11Device*, ID3D11DeviceContext*);
-		~DX11VertexShader();
 
 		ID3D11VertexShader* getVertexShader();
 		

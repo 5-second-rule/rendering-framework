@@ -23,7 +23,7 @@ namespace Transmission {
 
 	public:
 		Model(VertexBuffer*, IndexBuffer*);
-		~Model();
+		virtual ~Model();
 
 		virtual void setShaders(Shader*, Shader*) = 0;
 		virtual void setVertexShader(Shader*) = 0;

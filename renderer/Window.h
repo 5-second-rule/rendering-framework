@@ -3,7 +3,6 @@
 
 #include "Input.h"
 
-
 namespace Transmission {
 
 	class Renderer;

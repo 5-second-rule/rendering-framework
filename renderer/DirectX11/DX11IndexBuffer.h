@@ -17,7 +17,7 @@ namespace Transmission {
 
 	public:
 		DX11IndexBuffer(unsigned int [], size_t, ID3D11Device*, ID3D11DeviceContext*);
-		~DX11IndexBuffer();
+		virtual ~DX11IndexBuffer();
 
 		virtual void set();
 	};

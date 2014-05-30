@@ -22,12 +22,12 @@ namespace Transmission {
 		sampDesc.MinLOD = 0;
 		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-		HR(device->CreateSamplerState(&sampDesc, &samplerState));
+		HR(device->CreateSamplerState(&sampDesc, &this->samplerState));
 	}
 
 
-	DX11Texture::~DX11Texture()
-	{
+	DX11Texture::~DX11Texture(){
+		this->samplerState->Release();
 	}
 
 	void DX11Texture::set(int slot)

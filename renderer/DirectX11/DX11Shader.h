@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "DX11Renderer.h"
 
+
 namespace Transmission {
 
 	class DX11Shader :
@@ -24,7 +25,7 @@ namespace Transmission {
 
 	public:
 		DX11Shader(char*);
-		~DX11Shader();
+		virtual ~DX11Shader();
 
 		ID3D11DeviceChild* getShader();
 
