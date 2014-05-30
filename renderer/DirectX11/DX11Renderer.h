@@ -68,7 +68,7 @@ namespace Transmission {
 
 		virtual void resize(unsigned int width, unsigned int height, bool);
 		virtual void clearFrame();
-		virtual bool setLightBuffers(Common::Vector4* lightPositions, int numPositions, Common::Vector4* lightColors, int numColors);
+		virtual bool setLightBuffers(Common::Vector4* lightPositions, Common::Vector4* lightColors, int numLightsProvided);
 		virtual void makeTransparent();
 		virtual void makeOpaque();
 		virtual void drawFrame();

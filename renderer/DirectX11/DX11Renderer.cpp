@@ -424,7 +424,7 @@ namespace Transmission {
 		defaultPixelShader->setWithNoLayout(); //using this function for consistency
 	}
 
-	bool DX11Renderer::setLightBuffers(Common::Vector4* lightPositions, int numLights, Common::Vector4* lightColors, int numColors)
+	bool DX11Renderer::setLightBuffers(Common::Vector4* lightPositions, Common::Vector4* lightColors, int numLightsProvided)
 	{
 
 		HRESULT result;
@@ -442,22 +442,16 @@ namespace Transmission {
 
 		for (int i = 0; i < NUM_LIGHTS; i++)
 		{
-			if (i < numLights)
+			if (i < numLightsProvided)
 			{
 				Common::Vector4 updatePosition;
 
 				//Just needs world, why is world identity?
 				updatePosition = ((Matrix4::identity()*lightPositions[i]));
 
-				dataPtr->lightDataVals[i].position[0] = updatePosition.x();
-				dataPtr->lightDataVals[i].position[1] = updatePosition.y();
-				dataPtr->lightDataVals[i].position[2] = updatePosition.z();
-				dataPtr->lightDataVals[i].position[3] = updatePosition.w();
+				memcpy(dataPtr->lightDataVals[i].position, updatePosition.getPointer(), 4*sizeof(float));
 
-				dataPtr->lightDataVals[i].color[0] = lightColors[i].x();
-				dataPtr->lightDataVals[i].color[1] = lightColors[i].y();
-				dataPtr->lightDataVals[i].color[2] = lightColors[i].z();
-				dataPtr->lightDataVals[i].color[3] = lightColors[i].w();
+				memcpy(dataPtr->lightDataVals[i].color, lightColors[i].getPointer(), 4 * sizeof(float));
 			}
 			else
 			{

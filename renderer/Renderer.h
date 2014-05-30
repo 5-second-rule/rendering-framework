@@ -30,7 +30,7 @@ namespace Transmission {
 		/* ----- */
 
 		virtual void clearFrame() = 0;
-		virtual bool setLightBuffers(Common::Vector4* lightPositions, int numPositions, Common::Vector4* lightColors, int numColors) = 0;
+		virtual bool setLightBuffers(Common::Vector4* lightPositions, Common::Vector4* lightColors, int numLightsProvided) = 0;
 		virtual void makeTransparent() = 0;
 		virtual void makeOpaque() = 0;
 		virtual void drawFrame() = 0;

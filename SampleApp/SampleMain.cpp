@@ -243,13 +243,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		lightPositions[3] = poxModel->getPosition();
 
 		//TODO: set color based on color saved for model or something of the like
+		//the w value of the vector4 for the color specifies the light range
 		
 		lightColors[0].set(0.13, 0.94, 0.94, 50.0);
 		lightColors[1].set(0.9, 0.9, 0.9, 50.0);
 		lightColors[2].set(0.93, 0.13, 0.13, 50.0);
 		lightColors[3].set(0.94, 0.13, 0.63, 50.0);
 
-		renderer->setLightBuffers(lightPositions, sizeof(lightPositions) / sizeof(*lightPositions), lightColors, sizeof(lightColors) / sizeof(*lightColors));
+		renderer->setLightBuffers(lightPositions, lightColors, 4);
 
 		frameCount++;
 		if (renderer->getTimer()->GetFPSTime() > 1.0f)
