@@ -12,6 +12,7 @@
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "winmm.lib")
 
+
 namespace Transmission {
 	class DX11Sounder :
 		public Sounder {

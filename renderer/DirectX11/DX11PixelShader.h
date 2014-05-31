@@ -9,7 +9,6 @@ namespace Transmission {
 	{
 	public:
 		DX11PixelShader(char*, DX11Renderer*, ID3D11Device*, ID3D11DeviceContext*);
-		~DX11PixelShader();
 
 		ID3D11PixelShader* getPixelShader();
 

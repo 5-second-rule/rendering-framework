@@ -7,7 +7,6 @@
 #include "util.h"
 #include "DirectX11/DDSTextureLoader.h"
 
-
 namespace Transmission {
 	class DX11Texture :
 		public Texture
@@ -19,7 +18,7 @@ namespace Transmission {
 
 	public:
 		DX11Texture(const char*, ID3D11Device*, ID3D11DeviceContext*);
-		~DX11Texture();
+		virtual ~DX11Texture();
 
 		virtual void set(int slot);
 	};

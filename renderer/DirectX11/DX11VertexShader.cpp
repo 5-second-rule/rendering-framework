@@ -11,8 +11,6 @@ namespace Transmission {
 		HR(device->CreateVertexShader(this->bytecode, this->length, NULL, (ID3D11VertexShader**)&this->shader));
 	}
 
-	DX11VertexShader::~DX11VertexShader() {}
-
 	ID3D11VertexShader* DX11VertexShader::getVertexShader() {
 		return (ID3D11VertexShader*)this->shader;
 	}

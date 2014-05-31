@@ -10,6 +10,7 @@
 
 #include "Win32Input.h"
 
+
 namespace Transmission {
 	class Win32Window :
 		public Window

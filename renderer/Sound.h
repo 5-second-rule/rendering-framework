@@ -6,7 +6,7 @@ namespace Transmission {
 	class FRAMEWORKDLL Sound {
 	public:
 		Sound();
-		~Sound();
+		virtual ~Sound();
 
 		virtual bool play() = 0;
 		virtual bool playLooped() = 0;

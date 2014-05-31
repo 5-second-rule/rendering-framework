@@ -19,6 +19,13 @@ using namespace Common;
 #include "DX11PixelShader.h"
 #include "DX11Timer.h"
 
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+#endif  // _DEBUG
+
 #define USE_MSAA true
 
 namespace Transmission {
@@ -68,7 +75,9 @@ namespace Transmission {
 
 		swapchain->Release();
 		backbuffer->Release();
+		layout->Release();
 		transparency->Release();
+		depthStencil->Release();
 		depthStencilState->Release();
 		depthStencilStateDepthOff->Release();
 		perFrameBuffer->Release();
