@@ -36,6 +36,8 @@ namespace Transmission {
 		ID3D11InputLayout *layout;
 		D3D11_INPUT_ELEMENT_DESC* ied;
 
+		wchar_t *fontString;
+
 		Timer* renderTimer;
 
 		ID3D11Buffer* perFrameBuffer;
@@ -45,6 +47,8 @@ namespace Transmission {
 		Camera* camera;
 
 		bool windowed = true;
+		
+		int renderDimension;
 
 	public:
 		DX11Renderer( Window* window, char* vertex, char* pixel );
@@ -56,13 +60,19 @@ namespace Transmission {
 		virtual void setupAlphaBlending();
 		virtual void setupShaders( char* vertex, char* pixel );
 		virtual void setupConstantBuffer();
+		virtual void useWorldCoords();
 
 	public:
 
 		virtual void resize(unsigned int width, unsigned int height, bool);
 		virtual void clearFrame();
+		virtual void prep2D();
+		virtual void end2D();
 		virtual void makeTransparent();
 		virtual void makeOpaque();
+		virtual void turnDepthOff();
+		virtual void turnDepthOn();
+		virtual void useScreenCoords();
 		virtual void drawFrame();
 
 		virtual void turnDepthTestOff();
@@ -71,9 +81,17 @@ namespace Transmission {
 		virtual VertexBuffer* createVertexBuffer(Vertex [], size_t);
 		virtual IndexBuffer* createIndexBuffer(unsigned int [], size_t);
 		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture);
+		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, bool is2D);
 		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump);
 		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Shader* vs, Shader* ps);
+		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Shader* vs, Shader* ps, bool is2D);
 		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump, Shader* vs, Shader* ps);
+
+		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture);
+		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, Shader* vs, Shader* ps);
+		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, bool isTransparent);
+		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, Shader* vs, Shader* ps, bool isTransparent);
+
 		virtual Texture* createTextureFromFile(char* f);
 
 		virtual Shader* createVertexShader(char*);

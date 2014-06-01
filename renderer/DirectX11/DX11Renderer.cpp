@@ -13,6 +13,7 @@ using namespace Common;
 #include "DX11VertexBuffer.h"
 #include "DX11IndexBuffer.h"
 #include "DX11Model.h"
+#include "DX11Model2D.h"
 #include "DX11Texture.h"
 #include "DX11VertexShader.h"
 #include "DX11PixelShader.h"
@@ -398,6 +399,67 @@ namespace Transmission {
 		context->ClearRenderTargetView(backbuffer, color);
 		context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
+		this->useWorldCoords();
+	}
+
+	void DX11Renderer::prep2D() {
+		if (this->renderDimension != Dimension::TWO) {
+			this->useScreenCoords();
+			this->turnDepthOff();
+			this->renderDimension = Dimension::TWO;
+		}
+	}
+
+	void DX11Renderer::end2D() {
+		if (this->renderDimension == Dimension::TWO) {
+			this->turnDepthOn();
+			this->useWorldCoords();
+			this->renderDimension = Dimension::THREE;
+		}
+	}
+
+	void DX11Renderer::makeTransparent() {
+		context->OMSetDepthStencilState(depthStencilStateDepthOff, 1);
+
+		float blendFactor[] = { 0.00f, 0.00f, 0.00f, 1.0f };
+
+		context->OMSetBlendState(transparency, blendFactor, 0xffffffff);
+	}
+
+	void DX11Renderer::makeOpaque() {
+		context->OMSetDepthStencilState(depthStencilState, 1);
+
+		context->OMSetBlendState(0, 0, 0xffffffff);
+	}
+
+	void DX11Renderer::turnDepthOff() {
+		context->OMSetDepthStencilState(depthStencilStateDepthOff, 1);
+	}
+
+	void DX11Renderer::turnDepthOn() {
+		context->OMSetDepthStencilState(depthStencilState, 1);
+	}
+
+	void DX11Renderer::useScreenCoords() {
+		// set default stuff
+		float world[4][4];
+		float viewProjection[5][4];
+		float time[1][2];
+
+		memcpy(world, Matrix4::identity().getPointer(), sizeof(float[4][4]));
+		memcpy(viewProjection, Matrix4::identity().getPointer(), sizeof(float[4][4]));
+
+		Vector4 cameraPos = this->camera->getPosition();
+		viewProjection[4][0] = cameraPos.x();
+		viewProjection[4][1] = cameraPos.y();
+		viewProjection[4][2] = cameraPos.z();
+		viewProjection[4][3] = 1.0f;
+
+		context->UpdateSubresource(perFrameBuffer, 0, NULL, &viewProjection, 0, 0);
+		context->UpdateSubresource(perVertexBuffer, 0, NULL, &world, 0, 0);
+	}
+
+	void DX11Renderer::useWorldCoords() {
 		// set default stuff
 		float world[4][4];
 		float viewProjection[5][4];
@@ -405,7 +467,7 @@ namespace Transmission {
 
 		memcpy(world, Matrix4::identity().getPointer(), sizeof(float[4][4]));
 		memcpy(viewProjection, (this->camera->getCameraInverse() * this->camera->getPerspective()).getPointer(), sizeof(float[4][4]));
-		
+
 		Vector4 cameraPos = this->camera->getPosition();
 		viewProjection[4][0] = cameraPos.x();
 		viewProjection[4][1] = cameraPos.y();
@@ -426,22 +488,8 @@ namespace Transmission {
 		defaultPixelShader->setWithNoLayout(); //using this function for consistency
 	}
 
-	void DX11Renderer::makeTransparent() {
-		context->OMSetDepthStencilState(depthStencilStateDepthOff, 1);
-
-		float blendFactor[] = { 0.00f, 0.00f, 0.00f, 1.0f };
-
-		context->OMSetBlendState(transparency, blendFactor, 0xffffffff);
-	}
-
-	void DX11Renderer::makeOpaque() {
-		context->OMSetDepthStencilState(depthStencilState, 1);
-
-		context->OMSetBlendState(0, 0, 0xffffffff);
-	}
 
 	void DX11Renderer::drawFrame() {
-
 		swapchain->Present(0, 0);
 	}
 
@@ -470,6 +518,13 @@ namespace Transmission {
 		return new DX11Model(v, i, context, texture, this);
 	}
 
+	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, bool is2D) {
+		if (is2D)
+			return new DX11Model2D(v, i, context, texture, this);
+		
+		return new DX11Model(v, i, context, texture, this);
+	}
+
 	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump) {
 		return new DX11Model(v, i, context, texture, bump, this);
 	}
@@ -478,8 +533,31 @@ namespace Transmission {
 		return new DX11Model(v, i, context, texture, this, vs, ps);
 	}
 
+	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Shader* vs, Shader* ps, bool is2D) {
+		if (is2D)
+			return new DX11Model2D(v, i, context, texture, this, vs, ps);
+
+		return new DX11Model(v, i, context, texture, this, vs, ps);
+	}
+
 	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump, Shader* vs, Shader* ps) {
 		return new DX11Model(v, i, context, texture, bump, this, vs, ps);
+	}
+
+	Model* DX11Renderer::create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture) {
+		return new DX11Model2D(v, numVertices, i, numIndices, this->context, texture, this);
+	}
+
+	Model* DX11Renderer::create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, Shader* vs, Shader* ps) {
+		return new DX11Model2D(v, numVertices, i, numIndices, this->context, texture, this, vs, ps);
+	}
+
+	Model* DX11Renderer::create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, bool isTransparent) {
+		return new DX11Model2D(v, numVertices, i, numIndices, this->context, texture, this, isTransparent);
+	}
+
+	Model* DX11Renderer::create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, Shader* vs, Shader* ps, bool isTransparent) {
+		return new DX11Model2D(v, numVertices, i, numIndices, this->context, texture, this, vs, ps, isTransparent);
 	}
 
 	Texture* DX11Renderer::createTextureFromFile(char* f) {

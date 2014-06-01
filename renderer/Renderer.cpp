@@ -92,6 +92,23 @@ namespace Transmission {
 	- vP: pointer to VertexBuffer pointer
 	- iP: pointer to IndexBuffer pointer
 	- tex: pointer to texture
+	*/
+	Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, bool centerShift, bool is2D) {
+		// Checks if error occured during model load
+		if (this->loadModelFile(filePath, vP, iP, centerShift)) {
+			return createModel(*vP, *iP, tex, is2D);
+		}
+		else {
+			return nullptr;
+		}
+	}
+
+	/*
+	Creates a model from a file path. Returns pointer to model or nullptr if model failed to load or incorrect filepath.
+	- filePath: path to 3D model file
+	- vP: pointer to VertexBuffer pointer
+	- iP: pointer to IndexBuffer pointer
+	- tex: pointer to texture
 	- bump: pointer to bumpMap texture
 	*/
 	Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, Texture* bump, bool centerShift) {
@@ -117,6 +134,25 @@ namespace Transmission {
 		// Checks if error occured during model load
 		if (this->loadModelFile(filePath, vP, iP, centerShift)) {
 			return createModel(*vP, *iP, tex, vertexShader, pixelShader);
+		}
+		else {
+			return nullptr;
+		}
+	}
+
+	/*
+	Creates a model from a file path that uses set shaders. Returns pointer to model or nullptr if model failed to load or incorrect filepath.
+	- filePath: path to 3D model file
+	- vP: pointer to VertexBuffer pointer
+	- iP: pointer to IndexBuffer pointer
+	- tex: pointer to texture
+	- vertexShader : pointer to vertex shader
+	- pixelShader : pointer to pixel shader
+	*/
+	Model* Renderer::createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, bool centerShift, Shader* vertexShader, Shader* pixelShader, bool is2D) {
+		// Checks if error occured during model load
+		if (this->loadModelFile(filePath, vP, iP, centerShift)) {
+			return createModel(*vP, *iP, tex, vertexShader, pixelShader, is2D);
 		}
 		else {
 			return nullptr;
