@@ -11,6 +11,8 @@ namespace Transmission {
 		virtual bool play() = 0;
 		virtual bool playLooped() = 0;
 		virtual bool stop() = 0;
+
+		virtual bool setVolume( int attenuation ) = 0;
 	};
 }
 

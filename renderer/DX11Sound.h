@@ -17,5 +17,7 @@ namespace Transmission {
 		bool play();
 		bool playLooped();
 		bool stop();
+
+		virtual bool setVolume( int attenuation );
 	};
 }
