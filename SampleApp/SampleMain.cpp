@@ -23,7 +23,7 @@ bool messagePump(Transmission::Window* window) {
 }
 
 void moveBlob(Transmission::Window* w, Transmission::Model* m, Transmission::Camera* cam) {
-	float moveAmt = 10.0f / 1000.0f;
+	float moveAmt = 10000.0f / 1000.0f;
 	Transmission::Input* input = (Transmission::Input*) w->getInput();
 
 	if (input->getKeyState(Transmission::Input::Key::KEY_1) == Transmission::Input::STATE_DOWN) {

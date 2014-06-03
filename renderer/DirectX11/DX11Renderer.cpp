@@ -539,20 +539,6 @@ namespace Transmission {
 		return true;
 	}
 
-	void DX11Renderer::makeTransparent() {
-		context->OMSetDepthStencilState(depthStencilStateDepthOff, 1);
-
-		float blendFactor[] = { 0.00f, 0.00f, 0.00f, 1.0f };
-
-		context->OMSetBlendState(transparency, blendFactor, 0xffffffff);
-	}
-
-	void DX11Renderer::makeOpaque() {
-		context->OMSetDepthStencilState(depthStencilState, 1);
-
-		context->OMSetBlendState(0, 0, 0xffffffff);
-	}
-
 	void DX11Renderer::drawFrame() {
 		swapchain->Present(0, 0);
 	}
