@@ -66,11 +66,11 @@ namespace Transmission {
 
 	bool DX11Sound::setVolume(int attenuation) {
 		// max attentuation of 100 dB allowed, basically silent
-		if( attenuation > 10000 ) attenuation = 10000;
+		if( attenuation >= 10000 ) attenuation = 10000;
 		// no amplification allowed, force to 0 (DSBVOLUME_MAX)
 		if( attenuation < 0 ) attenuation = 0;
 
-		HRESULT result = this->secondaryBuffer->SetVolume( attenuation );
+		HRESULT result = this->secondaryBuffer->SetVolume( -attenuation );
 		if( FAILED( result ) ) {
 			return false;
 		}
