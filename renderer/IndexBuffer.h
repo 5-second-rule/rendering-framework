@@ -8,7 +8,7 @@ namespace Transmission {
 	{
 	public:
 		IndexBuffer(size_t);
-		~IndexBuffer();
+		virtual ~IndexBuffer();
 
 		virtual void set() = 0;
 	};

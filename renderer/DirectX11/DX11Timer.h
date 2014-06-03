@@ -10,7 +10,7 @@ namespace Transmission {
 	{
 	public:
 		DX11Timer();
-		~DX11Timer();
+		virtual ~DX11Timer();
 
 		void StartTimer();
 		void ResetFPSTimer();

@@ -123,6 +123,9 @@
     <ClCompile Include="DX11Sound.cpp">
       <Filter>Source Files\DirectX11</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX11\DX11Model2D.cpp">
+      <Filter>Source Files\DirectX11</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -231,6 +234,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DX11Sound.h">
+      <Filter>Header Files\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX11\DX11Model2D.h">
       <Filter>Header Files\DirectX11</Filter>
     </ClInclude>
   </ItemGroup>

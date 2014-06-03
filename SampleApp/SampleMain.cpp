@@ -7,6 +7,10 @@
 
 #include "renderer/Input.h"
 
+static bool renderSelection = false;
+static int currModel = 0;
+static int frameCount;
+
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 bool messagePump(Transmission::Window* window) {
@@ -19,93 +23,108 @@ bool messagePump(Transmission::Window* window) {
 }
 
 void moveBlob(Transmission::Window* w, Transmission::Model* m, Transmission::Camera* cam) {
-	float moveAmt = 1000.0f / 1000.0f;
+	float moveAmt = 10.0f / 1000.0f;
 	Transmission::Input* input = (Transmission::Input*) w->getInput();
 
-	if (input->getKeyState(Transmission::Input::Key::W) == Transmission::Input::STATE_DOWN) {
-		m->move(Common::Vector4(0, moveAmt, 0));
-		cam->move(Common::Vector4(0, moveAmt, 0));
-		cam->lookAt(m->getPosition());
-	}
-	if (input->getKeyState(Transmission::Input::Key::A) == Transmission::Input::STATE_DOWN) {
-		m->move(Common::Vector4(-moveAmt, 0, 0));
-		cam->move(Common::Vector4(-moveAmt, 0, 0));
-		cam->lookAt(m->getPosition());
-	}
-	if (input->getKeyState(Transmission::Input::Key::S) == Transmission::Input::STATE_DOWN) {
-		m->move(Common::Vector4(0, -moveAmt, 0));
-		cam->move(Common::Vector4(0, -moveAmt, 0));
-		cam->lookAt(m->getPosition());
-	}
-	if (input->getKeyState(Transmission::Input::Key::D) == Transmission::Input::STATE_DOWN) {
-		m->move(Common::Vector4(moveAmt, 0, 0));
-		cam->move(Common::Vector4(moveAmt, 0, 0));
-		cam->lookAt(m->getPosition());
-	}
-	if (input->getKeyState(Transmission::Input::Key::I) == Transmission::Input::STATE_DOWN) {
-		m->move(Common::Vector4(0, 0, moveAmt));
-		cam->move(Common::Vector4(0, 0, moveAmt));
-		cam->lookAt(m->getPosition());
+	if (input->getKeyState(Transmission::Input::Key::KEY_1) == Transmission::Input::STATE_DOWN) {
+		renderSelection = true;
 	}
 
-	if (input->getKeyState(Transmission::Input::Key::O) == Transmission::Input::STATE_DOWN) {
-		m->move(Common::Vector4(0, 0, -moveAmt));
-		cam->move(Common::Vector4(0, 0, -moveAmt));
-		cam->lookAt(m->getPosition());
+	if (input->getKeyState(Transmission::Input::Key::KEY_2) == Transmission::Input::STATE_DOWN) {
+		renderSelection = false;
 	}
 
-	//Rotate Up
-	if (input->getKeyState(Transmission::Input::Key::UP_ARROW) == Transmission::Input::STATE_DOWN) {
-		m->rotate(moveAmt/20.0f, 0, 0);
-		cam->lookAt(m->getPosition());
-	}
+	if (!renderSelection) {
+		if (input->getKeyState(Transmission::Input::Key::W) == Transmission::Input::STATE_DOWN) {
+			m->move(Common::Vector4(0, moveAmt, 0));
+			cam->move(Common::Vector4(0, moveAmt, 0));
+			cam->lookAt(m->getPosition());
+		}
+		if (input->getKeyState(Transmission::Input::Key::A) == Transmission::Input::STATE_DOWN) {
+			m->move(Common::Vector4(-moveAmt, 0, 0));
+			cam->move(Common::Vector4(-moveAmt, 0, 0));
+			cam->lookAt(m->getPosition());
+		}
+		if (input->getKeyState(Transmission::Input::Key::S) == Transmission::Input::STATE_DOWN) {
+			m->move(Common::Vector4(0, -moveAmt, 0));
+			cam->move(Common::Vector4(0, -moveAmt, 0));
+			cam->lookAt(m->getPosition());
+		}
+		if (input->getKeyState(Transmission::Input::Key::D) == Transmission::Input::STATE_DOWN) {
+			m->move(Common::Vector4(moveAmt, 0, 0));
+			cam->move(Common::Vector4(moveAmt, 0, 0));
+			cam->lookAt(m->getPosition());
+		}
+		if (input->getKeyState(Transmission::Input::Key::I) == Transmission::Input::STATE_DOWN) {
+			m->move(Common::Vector4(0, 0, moveAmt));
+			cam->move(Common::Vector4(0, 0, moveAmt));
+			cam->lookAt(m->getPosition());
+		}
 
-	//Rotate Down
-	if (input->getKeyState(Transmission::Input::Key::DOWN_ARROW) == Transmission::Input::STATE_DOWN) {
-		m->rotate(-moveAmt / 20.0f, 0, 0);
-		cam->lookAt(m->getPosition());
-	}
+		if (input->getKeyState(Transmission::Input::Key::O) == Transmission::Input::STATE_DOWN) {
+			m->move(Common::Vector4(0, 0, -moveAmt));
+			cam->move(Common::Vector4(0, 0, -moveAmt));
+			cam->lookAt(m->getPosition());
+		}
 
-	//Rotate Left
-	if (input->getKeyState(Transmission::Input::Key::LEFT_ARROW) == Transmission::Input::STATE_DOWN) {
-		m->rotate(0, moveAmt / 20.0f, 0);
-		cam->lookAt(m->getPosition());
-	}
+		//Rotate Up
+		if (input->getKeyState(Transmission::Input::Key::UP_ARROW) == Transmission::Input::STATE_DOWN) {
+			m->rotate(moveAmt / 20.0f, 0, 0);
+			cam->lookAt(m->getPosition());
+		}
 
-	//Rotate Right
-	if (input->getKeyState(Transmission::Input::Key::RIGHT_ARROW) == Transmission::Input::STATE_DOWN) {
-		m->rotate(0, -moveAmt / 20.0f, 0);
-		cam->lookAt(m->getPosition());
-	}
+		//Rotate Down
+		if (input->getKeyState(Transmission::Input::Key::DOWN_ARROW) == Transmission::Input::STATE_DOWN) {
+			m->rotate(-moveAmt / 20.0f, 0, 0);
+			cam->lookAt(m->getPosition());
+		}
 
-	//Zoom in
-	if (input->getKeyState(Transmission::Input::Key::Z) == Transmission::Input::STATE_DOWN) {
-		Common::Vector4 direction;
-		direction = (m->getPosition() - cam->getPosition());
-		direction.normalize();
-		cam->move(direction*moveAmt);
-		cam->lookAt(m->getPosition());
-	}
+		//Rotate Left
+		if (input->getKeyState(Transmission::Input::Key::LEFT_ARROW) == Transmission::Input::STATE_DOWN) {
+			m->rotate(0, moveAmt / 20.0f, 0);
+			cam->lookAt(m->getPosition());
+		}
 
-	//Zoom out
-	if (input->getKeyState(Transmission::Input::Key::X) == Transmission::Input::STATE_DOWN) {
-		Common::Vector4 direction;
-		direction = (cam->getPosition() - m->getPosition());
-		direction.normalize();
-		cam->move(direction*moveAmt);
-		cam->lookAt(m->getPosition());
-	}
+		//Rotate Right
+		if (input->getKeyState(Transmission::Input::Key::RIGHT_ARROW) == Transmission::Input::STATE_DOWN) {
+			m->rotate(0, -moveAmt / 20.0f, 0);
+			cam->lookAt(m->getPosition());
+		}
 
-	// THESE ROTATIONS ARE BROKEN, JUST DID SOMETHING TO TURN THE CAMERA A LITTLE
-	if (input->getKeyState(Transmission::Input::Key::Q) == Transmission::Input::STATE_DOWN) {
-		cam->lookAt(m->getPosition());
-		cam->move(Common::Vector4(moveAmt, 0, moveAmt));
-	}
-	if (input->getKeyState(Transmission::Input::Key::E) == Transmission::Input::STATE_DOWN) {
-		cam->lookAt(m->getPosition());
-		cam->move(Common::Vector4(-moveAmt, 0, -moveAmt));
-	}
+		//Zoom in
+		if (input->getKeyState(Transmission::Input::Key::Z) == Transmission::Input::STATE_DOWN) {
+			Common::Vector4 direction;
+			direction = (m->getPosition() - cam->getPosition());
+			direction.normalize();
+			cam->move(direction*moveAmt);
+			cam->lookAt(m->getPosition());
+		}
 
+		//Zoom out
+		if (input->getKeyState(Transmission::Input::Key::X) == Transmission::Input::STATE_DOWN) {
+			Common::Vector4 direction;
+			direction = (cam->getPosition() - m->getPosition());
+			direction.normalize();
+			cam->move(direction*moveAmt);
+			cam->lookAt(m->getPosition());
+		}
+		// THESE ROTATIONS ARE BROKEN, JUST DID SOMETHING TO TURN THE CAMERA A LITTLE
+		if (input->getKeyState(Transmission::Input::Key::Q) == Transmission::Input::STATE_DOWN) {
+			cam->lookAt(m->getPosition());
+			cam->move(Common::Vector4(moveAmt, 0, moveAmt));
+		}
+		if (input->getKeyState(Transmission::Input::Key::E) == Transmission::Input::STATE_DOWN) {
+			cam->lookAt(m->getPosition());
+			cam->move(Common::Vector4(-moveAmt, 0, -moveAmt));
+		}
+	} else if (frameCount % 100 == 0) {
+		if (input->getKeyState(Transmission::Input::Key::LEFT_ARROW) == Transmission::Input::STATE_DOWN) {
+			currModel = (currModel + 3) % 4;
+		}
+		if (input->getKeyState(Transmission::Input::Key::RIGHT_ARROW) == Transmission::Input::STATE_DOWN) {
+			currModel = (currModel + 1) % 4;
+		}
+	}
 }
 
 void changeShader(Transmission::Window* w, Transmission::Model* m, Transmission::Shader* defaultPixel, Transmission::Shader* otherPixel) {
@@ -147,8 +166,76 @@ void __cdecl odprintf(const char *format, ...)
 	OutputDebugString(ptr);
 }
 
+void title(Transmission::Vertex(&vertices)[4], float winHeight, float winWidth) {
+	float scale;
+	if (winHeight < winWidth)
+		scale = winHeight / winWidth / 2;
+	else 
+		scale = winWidth / winHeight / 2;
+
+	float l = -2.0 * scale,
+		r = 2.0 * scale,
+		t = 1.0,
+		b = 1.0 - scale;
+
+	vertices[0] = { { l, t, 0.0f }, { 0, 0 }, { 0, 0, -1 }, {} };
+	vertices[1] = { { r, t, 0.0f }, { 1, 0 }, { 0, 0, -1 }, {} };
+	vertices[2] = { { r, b, 0.0f }, { 1, 1 }, { 0, 0, -1 }, {} };
+	vertices[3] = { { l, b, 0.0f }, { 0, 1 }, { 0, 0, -1 }, {} };
+}
+
+void selectionBG(Transmission::Vertex (&vertices)[4]) {
+	vertices[0] = { { -1.0f,  1.0f, 0.0f }, { 0, 0 }, { 0, 0, -1 }, {} };
+	vertices[1] = { {  1.0f,  1.0f, 0.0f }, { 1, 0 }, { 0, 0, -1 }, {} };
+	vertices[2] = { {  1.0f, -1.0f, 0.0f }, { 1, 1 }, { 0, 0, -1 }, {} };
+	vertices[3] = { { -1.0f, -1.0f, 0.0f }, { 0, 1 }, { 0, 0, -1 }, {} };
+}
+
+float player(Transmission::Vertex (&vertices)[4], int playerIndex, float margin) {
+	float numMargins[] = { -1.5, -0.5, 0.5, 1.5 };
+	float pos[] = { -2, -1, 0, 1 };
+
+	float edgeT = 0.5;
+	float edgeB = -0.7;
+
+	float width = (2.0 - 5 * margin) / 4;
+
+	float edgeL = pos[playerIndex] * width + numMargins[playerIndex] * margin;
+	float edgeR = edgeL + width;
+
+	vertices[0] = { { edgeL, edgeT, 0.0f }, { 0, 0 }, { 0, 0, -1 }, {} };
+	vertices[1] = { { edgeR, edgeT, 0.0f }, { 1, 0 }, { 0, 0, -1 }, {} };
+	vertices[2] = { { edgeR, edgeB, 0.0f }, { 1, 1 }, { 0, 0, -1 }, {} };
+	vertices[3] = { { edgeL, edgeB, 0.0f }, { 0, 1 }, { 0, 0, -1 }, {} };
+
+	return edgeL + width / 2;
+}
+
+float ui(Transmission::Vertex (&vertices)[4], int playerIndex) {
+	float numMargins[] = { 1.5, 0.5, -0.5, -1.5 };
+	float pos[] = { 1, 0, -1, -2 };
+
+	float margin = 0.08;
+	float edgeMargin = 0.4;
+	
+	float width = 0.15;
+
+	float edgeL = -1.0 + 0.1;
+	float edgeR = edgeL + width;
+	
+	float edgeB = pos[playerIndex] * width + numMargins[playerIndex] * margin;
+	float edgeT = edgeB + width;
+
+	vertices[0] = { { edgeL, edgeT, 0.0f }, { 0, 0 }, { 0, 0, -1 }, {} };
+	vertices[1] = { { edgeR, edgeT, 0.0f }, { 1, 0 }, { 0, 0, -1 }, {} };
+	vertices[2] = { { edgeR, edgeB, 0.0f }, { 1, 1 }, { 0, 0, -1 }, {} };
+	vertices[3] = { { edgeL, edgeB, 0.0f }, { 0, 1 }, { 0, 0, -1 }, {} };
+
+	return edgeL + width / 2;
+}
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+
 	Transmission::Window* window = Transmission::Window::createWindow(hInstance, L"5 Second Rule", 800, 600);
 	Transmission::Renderer* renderer = Transmission::Renderer::createRenderer(window, "defaultVertex.cso", "defaultPixel.cso");
 
@@ -186,6 +273,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	char* pipeBump = "../SampleApp/bloodCellBump.dds";
 
+	char* titleTexture = "../SampleApp/select-title.dds";
+	char* windowBgTexture = "../SampleApp/select-background.dds";
+	char* playerBgTexture = "../SampleApp/select-rectangle.dds";
+	char* uiTexture = "../SampleApp/pink.dds";
+
 	Transmission::Shader* defaultVertexShad = renderer->createVertexShader("defaultVertex.cso");
 	Transmission::Shader* vertRipple = renderer->createVertexShader("vertexRipple.cso");
 	Transmission::Shader* vertSpring = renderer->createVertexShader("vertexSpring.cso");
@@ -206,24 +298,62 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Transmission::Texture* pipeTex = renderer->createTextureFromFile(pipeTexture);
 	Transmission::Texture* pipeBumpTex = renderer->createTextureFromFile(pipeBump);
 
+	Transmission::Texture* titleTex = renderer->createTextureFromFile(titleTexture);
+	Transmission::Texture* windowBgTex = renderer->createTextureFromFile(windowBgTexture);
+	Transmission::Texture* playerBgTex = renderer->createTextureFromFile(playerBgTexture);
+	Transmission::Texture* uiTex = renderer->createTextureFromFile(uiTexture);
+
 	Transmission::Model* ecoliModel = renderer->createModelFromFile(ecoliFbxFilePath, &ecoliVbuf, &ecoliIbuf, ecoliTex, true, vertTent, pixShader);
 	Transmission::Model* herpesModel = renderer->createModelFromFile(herpesFbxFilePath, &herpesVbuf, &herpesIbuf, herpesTex, true, vertRipple, pixShader);
 	Transmission::Model* malariaModel = renderer->createModelFromFile(malariaFbxFilePath, &malariaVbuf, &malariaIbuf, malariaTex, true, vertWiggle, pixShader);
 	Transmission::Model* poxModel = renderer->createModelFromFile(poxFbxFilePath, &poxVbuf, &poxIbuf, poxTex, true, vertSpring, pixShader);
 
+	Transmission::Model* ecoliSelect = renderer->createModelFromFile(ecoliFbxFilePath, &ecoliVbuf, &ecoliIbuf, ecoliTex, true, vertTent, pixShader);
+	Transmission::Model* herpesSelect = renderer->createModelFromFile(herpesFbxFilePath, &herpesVbuf, &herpesIbuf, herpesTex, true, vertRipple, pixShader);
+	Transmission::Model* malariaSelect = renderer->createModelFromFile(malariaFbxFilePath, &malariaVbuf, &malariaIbuf, malariaTex, true, vertWiggle, pixShader);
+	Transmission::Model* poxSelect = renderer->createModelFromFile(poxFbxFilePath, &poxVbuf, &poxIbuf, poxTex, true, vertSpring, pixShader);
+
 	Transmission::Model* tubeModel = renderer->createModelFromFile(trackFilePath, &tubeVbuf, &tubeIbuf, pipeTex, pipeBumpTex, false, vertTrack, pixBump);
+
+
+	Transmission::Index indices[] = { 0, 1, 2, 3, 0, 2 };
+	Transmission::Vertex vertices[4];
+
+	title(vertices, window->getHeight(), window->getWidth());
+	Transmission::Model* titleModel = renderer->create2DModelFromVertices(vertices, 4, indices, 6, titleTex);
+
+	selectionBG(vertices);
+	Transmission::Model* windowBgModel = renderer->create2DModelFromVertices(vertices, 4, indices, 6, windowBgTex);
+
+	float margin = 0.05;
+	float width = (2.0 - 5 * margin) / 4;
+	float centers[4];
+
+	Transmission::Texture* playerTex[4];
+	Transmission::Model* playerModels[4];
+	Transmission::Model* playerBgModel[4];
+	Transmission::Model* uiModels[4];
+
+	for (int i = 0; i < 4; ++i) {
+		centers[i] = player(vertices, i, margin) * 5.5;
+		playerBgModel[i] = renderer->create2DModelFromVertices(vertices, 4, indices, 6, playerBgTex);
+
+		ui(vertices, i);
+		uiModels[i] = renderer->create2DModelFromVertices(vertices, 4, indices, 6, uiTex);
+	}
+
 
 	if (ecoliModel == NULL) exit(-1);
 	if (herpesModel == NULL) exit(-1);
 	if (malariaModel == NULL) exit(-1);
 	if (poxModel == NULL) exit(-1);
 	if (tubeModel == NULL) exit(-1);
-
-	ecoliModel->move(Common::Vector4(-7.5, 0, 35));
-	herpesModel->move(Common::Vector4(7.5, 0, 35));
-	malariaModel->move(Common::Vector4(-20, 0, 35));
-	poxModel->move(Common::Vector4(20, 0, 35));
-	poxModel->setScale(3.0);
+	if (titleModel == NULL) exit(-1);
+	if (windowBgModel == NULL) exit(-1);
+	for (int i = 0; i < 4; ++i) {
+		if (playerModels[i] == NULL) exit(-1);
+		if (playerBgModel[i] == NULL) exit(-1);
+	}
 
 	renderer->getTimer()->StartTimer();
 
@@ -231,8 +361,36 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Common::Vector4 lightPositions[4];
 	Common::Vector4 lightColors[4];
 
-	int frameCount = 0;
+	frameCount = 0;
+
 	int fps = 0;
+
+	float scale = width / 2;
+
+	herpesSelect->setScale(scale);
+	herpesModel->setScale(scale);
+	malariaSelect->setScale(scale);
+	malariaModel->setScale(scale);
+	scale *= 1.2;
+	ecoliSelect->setScale(scale);
+	ecoliModel->setScale(scale);
+	scale = 0.8;
+	poxSelect->setScale(scale);
+	poxModel->setScale(scale);
+
+	playerModels[0] = ecoliSelect;
+	playerModels[1] = herpesSelect;
+	playerModels[2] = malariaSelect;
+	playerModels[3] = poxSelect;
+
+	Transmission::Model* moreModels[4];
+	moreModels[0] = ecoliModel;
+	moreModels[1] = herpesModel;
+	moreModels[2] = malariaModel;
+	moreModels[3] = poxModel;
+
+	bool newSelected = false;
+	playerModels[currModel]->setPosition(Common::Vector4(0, 0, 0, 1));
 
 	while (messagePump(window)) {
 		renderer->clearFrame();
@@ -260,24 +418,54 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			renderer->getTimer()->ResetFPSTimer();
 		}
 
-		poxModel->rotate(0.00f, 10.0f*renderer->getTimer()->GetCalculatedTimeSinceLastFrame(), 0.0f);
+		if (renderSelection) {
+			renderer->getCamera()->set(Common::Vector4(0, 0, -10, 1), Common::Vector4(0, 0, 0, 1), Common::Vector4(0, 1, 0, 0));
+			windowBgModel->draw();
+			renderer->makeTransparent();
+			titleModel->draw();
+			renderer->makeOpaque();
 
-		tubeModel->draw();
+			playerBgModel[0]->draw();
+			playerModels[currModel]->setPosition(Common::Vector4(centers[0], 0, 0, 1));
+			playerModels[currModel]->draw();
 
-		ecoliModel->draw();
-		herpesModel->draw();
-		malariaModel->draw();
-		poxModel->draw();
+			for (int i = 1; i < 4; ++i) {
+				playerBgModel[i]->draw();
+				playerModels[i]->setPosition(Common::Vector4(centers[i], 0, 0, 1));
+				playerModels[i]->draw();
+			}
+			newSelected = true;
+		} else {
+			poxModel->rotate(0.00f, 200.0f*renderer->getTimer()->GetCalculatedTimeSinceLastFrame(), 0.0f);
+
+			tubeModel->draw();
+
+			if (newSelected)
+			{
+				moreModels[currModel]->setPosition(Common::Vector4(0, 0, 0, 1));
+			}
+			moreModels[currModel]->draw();
+
+			playerModels[1]->setPosition(7.5, 0, 35);
+			playerModels[2]->setPosition(-20, 0, 35);
+			playerModels[3]->setPosition(20, 0, 35);
+
+			for (int i = 1; i < 4; ++i) {
+				playerModels[i]->draw();
+			}
+
+			for (int i = 0; i < 4; ++i) {
+				uiModels[i]->draw();
+			}
+
+			newSelected = false;
+		}
 
 		renderer->drawFrame();
-
 		odprintf("FPS: %d", fps);
 		odprintf("Time: %f", renderer->getTimer()->GetTime());
 
-		moveBlob(window, ecoliModel, renderer->getCamera()); // temp input handler
-		//moveBlob(window, malariaModel); // temp input handler
-		//moveBlob(window, poxModel); // temp input handler
-		//moveBlob(window, tubeModel);
+		moveBlob(window, moreModels[currModel], renderer->getCamera()); // temp input handler
 		changeShader(window, tubeModel, defaultPixShad, pixShader);
 	}
 
@@ -286,6 +474,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	delete malariaModel;
 	delete poxModel;
 	delete tubeModel;
+	delete titleModel;
+	delete windowBgModel;
+
+	for (int i = 0; i < 4; ++i) {
+		delete playerModels[i];
+		delete playerBgModel[i];
+		delete uiModels[i];
+	}
 
 	delete defaultVertexShad;
 	delete vertRipple;
@@ -317,7 +513,65 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	delete poxTex;
 	delete pipeTex;
 	delete pipeBumpTex;
+	delete titleTex;
+	delete windowBgTex;
+	delete playerBgTex;
+	delete uiTex;
 
 	delete renderer;
 	delete window;
+
+	//////////////////////////
+
+	ecoliModel = nullptr;
+	herpesModel = nullptr;
+	malariaModel = nullptr;
+	poxModel = nullptr;
+	tubeModel = nullptr;
+	titleModel = nullptr;
+	windowBgModel = nullptr;
+
+	for (int i = 0; i < 4; ++i) {
+		playerModels[i] = nullptr;
+		playerBgModel[i] = nullptr;
+		uiModels[i] = nullptr;
+	}
+
+	defaultVertexShad = nullptr;
+	vertRipple = nullptr;
+	vertSpring = nullptr;
+	vertTent = nullptr;
+	vertTrack = nullptr;
+	vertWiggle = nullptr;
+
+	defaultPixShad = nullptr;
+	pixShader = nullptr;
+	pixBump = nullptr;
+	pixShaderNoSpec = nullptr;
+	pixCelShader = nullptr;
+
+	ecoliVbuf = nullptr;
+	ecoliIbuf = nullptr;
+	herpesVbuf = nullptr;
+	herpesIbuf = nullptr;
+	malariaVbuf = nullptr;
+	malariaIbuf = nullptr;
+	poxVbuf = nullptr;
+	poxIbuf = nullptr;
+	tubeVbuf = nullptr;
+	tubeIbuf = nullptr;
+
+	ecoliTex = nullptr;
+	herpesTex = nullptr;
+	malariaTex = nullptr;
+	poxTex = nullptr;
+	pipeTex = nullptr;
+	pipeBumpTex = nullptr;
+	titleTex = nullptr;
+	windowBgTex = nullptr;
+	playerBgTex = nullptr;
+	uiTex = nullptr;
+
+	renderer = nullptr;
+	window = nullptr;
 }

@@ -3,6 +3,7 @@
 
 #include "common/Vector4.h"
 #include "common/Matrix4.h"
+
 using namespace Common;
 
 namespace Transmission {

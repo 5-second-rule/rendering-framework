@@ -15,7 +15,7 @@ namespace Transmission {
 
 	class DX11Model : public Model
 	{
-	private:
+	protected:
 		ID3D11DeviceContext* context;
 		Renderer* renderer;
 
@@ -24,7 +24,7 @@ namespace Transmission {
 		DX11Model(VertexBuffer* v, IndexBuffer* i, ID3D11DeviceContext* context, Texture* texture, Texture* bump, Renderer* renderer);
 		DX11Model(VertexBuffer* v, IndexBuffer* i, ID3D11DeviceContext* context, Texture* texture, Renderer* renderer, Shader* vs, Shader* ps);
 		DX11Model(VertexBuffer* v, IndexBuffer* i, ID3D11DeviceContext* context, Texture* texture, Texture* bumpMap, Renderer*, Shader* vs, Shader* ps);
-		~DX11Model();
+		virtual ~DX11Model();
 
 		virtual void setShaders(Shader*, Shader*);
 		virtual void setVertexShader(Shader*);

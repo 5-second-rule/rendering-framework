@@ -10,7 +10,7 @@ namespace Transmission {
 
 	public:
 		Timer();
-		~Timer();
+		virtual ~Timer();
 
 		virtual void StartTimer() = 0;
 		virtual void ResetFPSTimer() = 0;

@@ -4,6 +4,7 @@
 
 #include <dsound.h>
 
+
 namespace Transmission {
 
 	class DX11Sound : public Sound {
@@ -11,10 +12,12 @@ namespace Transmission {
 		IDirectSoundBuffer8* secondaryBuffer;
 	public:
 		DX11Sound( IDirectSoundBuffer8* buffer );
-		~DX11Sound();
+		virtual ~DX11Sound();
 
 		bool play();
 		bool playLooped();
 		bool stop();
+
+		virtual bool setVolume( int attenuation );
 	};
 }

@@ -4,9 +4,5 @@ namespace Transmission {
 
 	Shader::Shader(const char* textureFile) {}
 
-
-	Shader::~Shader()
-	{
-	}
-
+	Shader::~Shader() {}
 }
