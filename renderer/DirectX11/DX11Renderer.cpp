@@ -45,10 +45,13 @@ namespace Transmission {
 
 		/* ---------- */
 
+		this->saturation = 0;
+		this->lightness = 0;
+
 		this->setupAlphaBlending();
 
 		renderTimer = NULL;
-		perFrameBuffer = NULL; perVertexBuffer = NULL; timeBuffer = NULL; lightDataBuffer = NULL;
+		perFrameBuffer = NULL; perVertexBuffer = NULL; timeBuffer = NULL; lightDataBuffer = NULL; saturationLightnessBuffer = NULL;
 		this->setupConstantBuffer();
 
 		defaultVertexShader = NULL; defaultPixelShader = NULL; layout = NULL;
@@ -84,6 +87,7 @@ namespace Transmission {
 		perVertexBuffer->Release();
 		timeBuffer->Release();
 		lightDataBuffer->Release();
+		saturationLightnessBuffer->Release();
 		device->Release();
 		context->Release();
 	}
@@ -302,7 +306,7 @@ namespace Transmission {
 	}
 
 	void DX11Renderer::setupConstantBuffer() {
-		if (perFrameBuffer != NULL || perVertexBuffer != NULL || timeBuffer != NULL || lightDataBuffer != NULL) {
+		if (perFrameBuffer != NULL || perVertexBuffer != NULL || timeBuffer != NULL || lightDataBuffer != NULL || saturationLightnessBuffer != NULL) {
 			throw std::runtime_error("You can only setup the constant buffers once");
 		}
 
@@ -332,6 +336,12 @@ namespace Transmission {
 		cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 		HR(device->CreateBuffer(&cb, NULL, &this->lightDataBuffer));
+
+		cb.Usage = D3D11_USAGE_DEFAULT;
+		cb.ByteWidth = sizeof(float[4]);
+		cb.CPUAccessFlags = 0;
+
+		HR(device->CreateBuffer(&cb, NULL, &this->saturationLightnessBuffer));
 	}
 
 	void DX11Renderer::setupAlphaBlending() {
@@ -489,6 +499,14 @@ namespace Transmission {
 
 		ID3D11Buffer* cBuffers[] = { perFrameBuffer, perVertexBuffer, timeBuffer };
 		context->VSSetConstantBuffers(0, 3, cBuffers);
+
+		float saturationLightness[2];
+		saturationLightness[0] = this->saturation;
+		saturationLightness[1] = this->lightness;
+
+		context->UpdateSubresource(saturationLightnessBuffer, 0, NULL, &saturationLightness, 0, 0);
+
+		context->PSSetConstantBuffers(1, 1, &saturationLightnessBuffer);
 
 		// set shaders without layout
 		defaultVertexShader->setWithNoLayout();

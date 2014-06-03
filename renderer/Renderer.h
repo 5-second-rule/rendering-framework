@@ -44,6 +44,14 @@ namespace Transmission {
 		virtual void useScreenCoords() = 0;
 		virtual void drawFrame() = 0;
 
+		float saturation;
+		float lightness;
+
+		// void changeSaturation(float ds) { this->renderer->saturation += ds; }
+
+		//if (key is down) {
+		//engine->changeSatura
+
 		virtual void turnDepthTestOff() = 0;
 		virtual void turnDepthTestOn() = 0;
 

@@ -50,6 +50,7 @@ namespace Transmission {
 		ID3D11Buffer* perVertexBuffer;
 		ID3D11Buffer* timeBuffer;
 		ID3D11Buffer* lightDataBuffer;
+		ID3D11Buffer* saturationLightnessBuffer;
 
 		Camera* camera;
 
