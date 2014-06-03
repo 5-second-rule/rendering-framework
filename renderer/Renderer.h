@@ -11,6 +11,12 @@
 #include "Shader.h"
 #include "Timer.h"
 
+struct lightData
+{
+	float position[4];
+	float color[4];
+};
+
 namespace Transmission {
 
 
@@ -27,14 +33,24 @@ namespace Transmission {
 		enum Dimension { TWO, THREE };
 
 		virtual void clearFrame() = 0;
+		virtual bool setLightBuffers(Common::Vector4* lightPositions, Common::Vector4* lightColors, int numLightsProvided) = 0;
 		virtual void prep2D() = 0;
 		virtual void end2D() = 0;
+
 		virtual void makeTransparent() = 0;
 		virtual void makeOpaque() = 0;
 		virtual void turnDepthOff() = 0;
 		virtual void turnDepthOn() = 0;
 		virtual void useScreenCoords() = 0;
 		virtual void drawFrame() = 0;
+
+		float saturation;
+		float lightness;
+
+		// void changeSaturation(float ds) { this->renderer->saturation += ds; }
+
+		//if (key is down) {
+		//engine->changeSatura
 
 		virtual void turnDepthTestOff() = 0;
 		virtual void turnDepthTestOn() = 0;

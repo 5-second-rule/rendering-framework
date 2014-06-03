@@ -23,7 +23,7 @@ bool messagePump(Transmission::Window* window) {
 }
 
 void moveBlob(Transmission::Window* w, Transmission::Model* m, Transmission::Camera* cam) {
-	float moveAmt = 10.0f / 1000.0f;
+	float moveAmt = 10000.0f / 1000.0f;
 	Transmission::Input* input = (Transmission::Input*) w->getInput();
 
 	if (input->getKeyState(Transmission::Input::Key::KEY_1) == Transmission::Input::STATE_DOWN) {
@@ -69,25 +69,25 @@ void moveBlob(Transmission::Window* w, Transmission::Model* m, Transmission::Cam
 
 		//Rotate Up
 		if (input->getKeyState(Transmission::Input::Key::UP_ARROW) == Transmission::Input::STATE_DOWN) {
-			m->rotate(moveAmt, 0, 0);
+			m->rotate(moveAmt / 20.0f, 0, 0);
 			cam->lookAt(m->getPosition());
 		}
 
 		//Rotate Down
 		if (input->getKeyState(Transmission::Input::Key::DOWN_ARROW) == Transmission::Input::STATE_DOWN) {
-			m->rotate(-moveAmt, 0, 0);
+			m->rotate(-moveAmt / 20.0f, 0, 0);
 			cam->lookAt(m->getPosition());
 		}
 
 		//Rotate Left
 		if (input->getKeyState(Transmission::Input::Key::LEFT_ARROW) == Transmission::Input::STATE_DOWN) {
-			m->rotate(0, moveAmt, 0);
+			m->rotate(0, moveAmt / 20.0f, 0);
 			cam->lookAt(m->getPosition());
 		}
 
 		//Rotate Right
 		if (input->getKeyState(Transmission::Input::Key::RIGHT_ARROW) == Transmission::Input::STATE_DOWN) {
-			m->rotate(0, -moveAmt, 0);
+			m->rotate(0, -moveAmt / 20.0f, 0);
 			cam->lookAt(m->getPosition());
 		}
 
@@ -110,12 +110,10 @@ void moveBlob(Transmission::Window* w, Transmission::Model* m, Transmission::Cam
 		}
 		// THESE ROTATIONS ARE BROKEN, JUST DID SOMETHING TO TURN THE CAMERA A LITTLE
 		if (input->getKeyState(Transmission::Input::Key::Q) == Transmission::Input::STATE_DOWN) {
-			m->rotate(0.00f, moveAmt, 0.0f);
 			cam->lookAt(m->getPosition());
 			cam->move(Common::Vector4(moveAmt, 0, moveAmt));
 		}
 		if (input->getKeyState(Transmission::Input::Key::E) == Transmission::Input::STATE_DOWN) {
-			m->rotate(0.00f, -moveAmt, 0.0f);
 			cam->lookAt(m->getPosition());
 			cam->move(Common::Vector4(-moveAmt, 0, -moveAmt));
 		}
@@ -359,7 +357,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	renderer->getTimer()->StartTimer();
 
+	//TODO handle size
+	Common::Vector4 lightPositions[4];
+	Common::Vector4 lightColors[4];
+
 	frameCount = 0;
+
 	int fps = 0;
 
 	float scale = width / 2;
@@ -391,6 +394,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	while (messagePump(window)) {
 		renderer->clearFrame();
+
+		lightPositions[0] = ecoliModel->getPosition();
+		lightPositions[1] = herpesModel->getPosition();
+		lightPositions[2] = malariaModel->getPosition();
+		lightPositions[3] = poxModel->getPosition();
+
+		//TODO: set color based on color saved for model or something of the like
+		//the w value of the vector4 for the color specifies the light range
+		
+		lightColors[0].set(0.13, 0.94, 0.94, 100.0);
+		lightColors[1].set(0.9, 0.9, 0.9, 100.0);
+		lightColors[2].set(0.93, 0.13, 0.13, 100.0);
+		lightColors[3].set(0.94, 0.13, 0.63, 100.0);
+
+		renderer->setLightBuffers(lightPositions, lightColors, 4);
+
 		frameCount++;
 		if (renderer->getTimer()->GetFPSTime() > 1.0f)
 		{
@@ -422,7 +441,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			tubeModel->draw();
 
 			if (newSelected)
+			{
 				moreModels[currModel]->setPosition(Common::Vector4(0, 0, 0, 1));
+			}
 			moreModels[currModel]->draw();
 
 			playerModels[1]->setPosition(7.5, 0, 35);
