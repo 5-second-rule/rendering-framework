@@ -10,7 +10,7 @@
 Texture2D shaderTexture[2];
 SamplerState SampleType;
 
-#define AMBIENT float3(0.10, 0.10, 0.10)
+#define AMBIENT float3(0.20, 0.20, 0.20)
 #define SPECULAR float3(1.0, 1.0, 1.0)
 
 #define SPECULARPOWER 100.0
