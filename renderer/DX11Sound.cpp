@@ -35,12 +35,6 @@ namespace Transmission {
 			return false;
 		}
 
-		// Set volume of the buffer to 100%.
-		result = this->secondaryBuffer->SetVolume( DSBVOLUME_MAX );
-		if( FAILED( result ) ) {
-			return false;
-		}
-
 		// Play the contents of the secondary sound buffer.
 		result = this->secondaryBuffer->Play( 0, 0, DSBPLAY_LOOPING );
 		if( FAILED( result ) ) {
