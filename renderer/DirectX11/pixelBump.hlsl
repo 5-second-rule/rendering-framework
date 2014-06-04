@@ -10,7 +10,7 @@
 Texture2D shaderTexture[2];
 SamplerState SampleType;
 
-#define AMBIENT float3(0.30, 0.30, 0.30)
+#define AMBIENT float3(0.40, 0.40, 0.40)
 #define SPECULAR float3(1.0, 1.0, 1.0)
 
 #define SPECULARPOWER 100.0
@@ -75,8 +75,7 @@ float4 ps_main(float4 position : SV_POSITION, float4 worldPos : WORLDPOSITION, f
 	//first light is the camera
 	float lightIntensity;
 	float attenuation;
-	attenuation = saturate(1 - dot(view / CAMERA_RANGE, view / CAMERA_RANGE));
-	attenuation = pow(attenuation, 2);
+	attenuation = 1.0;
 
 	float3 L = normalize(view);
 	float3 V = normalize(view);
@@ -149,7 +148,7 @@ float4 ps_main(float4 position : SV_POSITION, float4 worldPos : WORLDPOSITION, f
 	//Lightness CHange
 	HSLColor.z = HSLColor.z + conLightness;
 
-	outColor = HSLtoRGB(HSLColor);
+	outColor = saturate(HSLtoRGB(HSLColor));
 
 	return float4(outColor,1.0f);
 }
