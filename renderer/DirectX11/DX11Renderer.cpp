@@ -461,7 +461,6 @@ namespace Transmission {
 		// set default stuff
 		float world[4][4];
 		float viewProjection[5][4];
-		float time[1][2];
 
 		memcpy(world, Matrix4::identity().getPointer(), sizeof(float[4][4]));
 		memcpy(viewProjection, Matrix4::identity().getPointer(), sizeof(float[4][4]));

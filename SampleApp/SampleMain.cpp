@@ -173,10 +173,10 @@ void title(Transmission::Vertex(&vertices)[4], float winHeight, float winWidth) 
 	else 
 		scale = winWidth / winHeight / 2;
 
-	float l = -2.0 * scale,
-		r = 2.0 * scale,
-		t = 1.0,
-		b = 1.0 - scale;
+	float l = -2.0f * scale,
+		r = 2.0f * scale,
+		t = 1.0f,
+		b = 1.0f - scale;
 
 	vertices[0] = { { l, t, 0.0f }, { 0, 0 }, { 0, 0, -1 }, {} };
 	vertices[1] = { { r, t, 0.0f }, { 1, 0 }, { 0, 0, -1 }, {} };
@@ -195,10 +195,10 @@ float player(Transmission::Vertex (&vertices)[4], int playerIndex, float margin)
 	float numMargins[] = { -1.5, -0.5, 0.5, 1.5 };
 	float pos[] = { -2, -1, 0, 1 };
 
-	float edgeT = 0.5;
-	float edgeB = -0.7;
+	float edgeT = 0.5f;
+	float edgeB = -0.7f;
 
-	float width = (2.0 - 5 * margin) / 4;
+	float width = (2.0f - 5.f * margin) / 4.f;
 
 	float edgeL = pos[playerIndex] * width + numMargins[playerIndex] * margin;
 	float edgeR = edgeL + width;
@@ -215,12 +215,12 @@ float ui(Transmission::Vertex (&vertices)[4], int playerIndex) {
 	float numMargins[] = { 1.5, 0.5, -0.5, -1.5 };
 	float pos[] = { 1, 0, -1, -2 };
 
-	float margin = 0.08;
-	float edgeMargin = 0.4;
+	float margin = 0.08f;
+	float edgeMargin = 0.4f;
 	
-	float width = 0.15;
+	float width = 0.15f;
 
-	float edgeL = -1.0 + 0.1;
+	float edgeL = -1.0f + 0.1f;
 	float edgeR = edgeL + width;
 	
 	float edgeB = pos[playerIndex] * width + numMargins[playerIndex] * margin;
@@ -319,23 +319,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Transmission::Index indices[] = { 0, 1, 2, 3, 0, 2 };
 	Transmission::Vertex vertices[4];
 
-	title(vertices, window->getHeight(), window->getWidth());
+	title(vertices, (float)window->getHeight(), (float)window->getWidth());
 	Transmission::Model* titleModel = renderer->create2DModelFromVertices(vertices, 4, indices, 6, titleTex);
 
 	selectionBG(vertices);
 	Transmission::Model* windowBgModel = renderer->create2DModelFromVertices(vertices, 4, indices, 6, windowBgTex);
 
-	float margin = 0.05;
-	float width = (2.0 - 5 * margin) / 4;
+	float margin = 0.05f;
+	float width = (2.0f - 5.f * margin) / 4.f;
 	float centers[4];
 
-	Transmission::Texture* playerTex[4];
 	Transmission::Model* playerModels[4];
 	Transmission::Model* playerBgModel[4];
 	Transmission::Model* uiModels[4];
 
 	for (int i = 0; i < 4; ++i) {
-		centers[i] = player(vertices, i, margin) * 5.5;
+		centers[i] = player(vertices, i, margin) * 5.5f;
 		playerBgModel[i] = renderer->create2DModelFromVertices(vertices, 4, indices, 6, playerBgTex);
 
 		ui(vertices, i);
@@ -371,10 +370,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	herpesModel->setScale(scale);
 	malariaSelect->setScale(scale);
 	malariaModel->setScale(scale);
-	scale *= 1.2;
+	scale *= 1.2f;
 	ecoliSelect->setScale(scale);
 	ecoliModel->setScale(scale);
-	scale = 0.8;
+	scale = 0.8f;
 	poxSelect->setScale(scale);
 	poxModel->setScale(scale);
 
@@ -403,10 +402,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		//TODO: set color based on color saved for model or something of the like
 		//the w value of the vector4 for the color specifies the light range
 		
-		lightColors[0].set(0.13, 0.94, 0.94, 100.0);
-		lightColors[1].set(0.9, 0.9, 0.9, 100.0);
-		lightColors[2].set(0.93, 0.13, 0.13, 100.0);
-		lightColors[3].set(0.94, 0.13, 0.63, 100.0);
+		lightColors[0].set(0.13f, 0.94f, 0.94f, 100.0f);
+		lightColors[1].set(0.9f, 0.9f, 0.9f, 100.0f);
+		lightColors[2].set(0.93f, 0.13f, 0.13f, 100.0f);
+		lightColors[3].set(0.94f, 0.13f, 0.63f, 100.0f);
 
 		renderer->setLightBuffers(lightPositions, lightColors, 4);
 
