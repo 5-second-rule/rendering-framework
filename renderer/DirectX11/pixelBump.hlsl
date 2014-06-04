@@ -2,10 +2,10 @@
 // GLOBALS //
 /////////////
 #define NUM_LIGHTS 10
-#define CAMERA_RANGE 300
+#define CAMERA_RANGE 1000.0f
 
 #define LIGHT_DIR float3(5.0, 5.5, -10.0)
-#define LIGHT_COLOR float3(0.9, 0.9, 0.9)
+#define LIGHT_COLOR float3(0.7, 0.7, 0.7)
 
 Texture2D shaderTexture[2];
 SamplerState SampleType;
