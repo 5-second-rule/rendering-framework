@@ -5,6 +5,7 @@
 #pragma warning( disable : 4200 )
 #pragma warning( disable : 4251 )
 #pragma warning( disable : 4996 )
+#pragma warning( disable : 4067 )
 #ifdef _IS_RENDER_FRAMEWORK
 #define FRAMEWORKDLL __declspec(dllexport)
 #else
