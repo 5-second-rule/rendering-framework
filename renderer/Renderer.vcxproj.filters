@@ -274,5 +274,8 @@
     <FxCompile Include="DirectX11\vertexTentacle.hlsl">
       <Filter>Source Files\DirectX11</Filter>
     </FxCompile>
+    <FxCompile Include="DirectX11\vertexAdvance.hlsl">
+      <Filter>Source Files\DirectX11</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
