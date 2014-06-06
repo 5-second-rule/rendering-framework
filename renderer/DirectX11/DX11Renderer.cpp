@@ -57,6 +57,7 @@ namespace Transmission {
 		defaultVertexShader = NULL; defaultPixelShader = NULL; layout = NULL;
 		ied = NULL;
 		this->setupShaders(vertex, pixel);
+		this->window = window;
 	}
 
 
@@ -407,8 +408,8 @@ namespace Transmission {
 		this->setupBackBuffer(width, height);
 
 		camera->resize((float)width / (float)height);
-		
-
+		this->window->setHeight(height);
+		this->window->setWidth(width);
 	}
 
 	void DX11Renderer::clearFrame() {

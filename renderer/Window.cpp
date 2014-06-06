@@ -46,4 +46,12 @@ namespace Transmission {
 		return this->height;
 	}
 
+	void Window::setWidth(unsigned int width) {
+		this->width = width;
+	}
+
+	void Window::setHeight(unsigned int height) {
+		this->height = height;
+	}
+
 }

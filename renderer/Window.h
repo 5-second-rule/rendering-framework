@@ -34,6 +34,8 @@ namespace Transmission {
 		const wchar_t* getName();
 		unsigned int getWidth();
 		unsigned int getHeight();
+		void setWidth(unsigned int width);
+		void setHeight(unsigned int height);
 	};
 
 }

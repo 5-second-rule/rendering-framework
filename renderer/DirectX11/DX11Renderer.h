@@ -57,6 +57,7 @@ namespace Transmission {
 		bool windowed = true;
 		
 		int renderDimension;
+		Window * window;
 
 	public:
 		DX11Renderer( Window* window, char* vertex, char* pixel );
