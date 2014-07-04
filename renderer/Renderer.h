@@ -9,7 +9,6 @@
 #include "Camera.h"
 #include "Texture.h"
 #include "Shader.h"
-#include "Timer.h"
 
 struct lightData
 {
@@ -85,8 +84,6 @@ namespace Transmission {
 		virtual Shader* getDefaultPixelShader() = 0;
 
 		virtual Camera* getCamera() = 0;
-
-		virtual Timer* getTimer() = 0;
 
 		virtual void setObjectMatrix(Matrix4) = 0;
 	};

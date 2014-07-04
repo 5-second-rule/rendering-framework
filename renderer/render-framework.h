@@ -22,3 +22,9 @@
 #ifndef RENDERER
 	#define RENDERER RENDERER_NONE
 #endif
+
+#ifdef _DEBUG
+	#define PROFILE(name) Common::Timer::Task(Common::Timer::global(), (name))
+#else
+	#define PROFILE(name)
+#endif

@@ -354,7 +354,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		if (playerBgModel[i] == NULL) exit(-1);
 	}
 
-	renderer->getTimer()->StartTimer();
+	//renderer->getTimer()->StartTimer();
 
 	//TODO handle size
 	Common::Vector4 lightPositions[4];
@@ -410,12 +410,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		renderer->setLightBuffers(lightPositions, lightColors, 4);
 
 		frameCount++;
+		/*
 		if (renderer->getTimer()->GetFPSTime() > 1.0f)
 		{
 			fps = frameCount;
 			frameCount = 0;
 			renderer->getTimer()->ResetFPSTimer();
 		}
+		*/
 
 		if (renderSelection) {
 			renderer->getCamera()->set(Common::Vector4(0, 0, -10, 1), Common::Vector4(0, 0, 0, 1), Common::Vector4(0, 1, 0, 0));
@@ -435,7 +437,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 			newSelected = true;
 		} else {
-			poxModel->rotate(0.00f, 200.0f*renderer->getTimer()->GetCalculatedTimeSinceLastFrame(), 0.0f);
+			poxModel->rotate(0.00f, 200.0f, 0.0f);
 
 			tubeModel->draw();
 
@@ -461,8 +463,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 
 		renderer->drawFrame();
-		odprintf("FPS: %d", fps);
-		odprintf("Time: %f", renderer->getTimer()->GetTime());
+		//odprintf("FPS: %d", fps);
+		//odprintf("Time: %f", renderer->getTimer()->GetTime());
 
 		moveBlob(window, moreModels[currModel], renderer->getCamera()); // temp input handler
 		changeShader(window, tubeModel, defaultPixShad, pixShader);

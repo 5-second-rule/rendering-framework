@@ -17,7 +17,6 @@ using namespace Common;
 #include "DX11Texture.h"
 #include "DX11VertexShader.h"
 #include "DX11PixelShader.h"
-#include "DX11Timer.h"
 
 #ifdef _DEBUG
 #ifndef DBG_NEW
@@ -50,7 +49,6 @@ namespace Transmission {
 
 		this->setupAlphaBlending();
 
-		renderTimer = NULL;
 		perFrameBuffer = NULL; perVertexBuffer = NULL; timeBuffer = NULL; lightDataBuffer = NULL; saturationLightnessBuffer = NULL;
 		this->setupConstantBuffer();
 
@@ -70,12 +68,10 @@ namespace Transmission {
 		delete defaultVertexShader;
 		delete defaultPixelShader;
 		delete[] ied;
-		delete renderTimer;
 
 		defaultVertexShader = NULL;
 		defaultPixelShader = NULL;
 		ied = NULL;
-		renderTimer = NULL;
 
 		swapchain->Release();
 		backbuffer->Release();
@@ -86,7 +82,7 @@ namespace Transmission {
 		depthStencilStateDepthOff->Release();
 		perFrameBuffer->Release();
 		perVertexBuffer->Release();
-		timeBuffer->Release();
+		//timeBuffer->Release();
 		lightDataBuffer->Release();
 		saturationLightnessBuffer->Release();
 		device->Release();
@@ -326,11 +322,8 @@ namespace Transmission {
 
 		HR(device->CreateBuffer(&cb, NULL, &this->perVertexBuffer));
 
-		renderTimer = new DX11Timer();
-
-		cb.ByteWidth = sizeof(float[4]);
-
-		HR(device->CreateBuffer(&cb, NULL, &this->timeBuffer));
+		//cb.ByteWidth = sizeof(float[4]);
+		//HR(device->CreateBuffer(&cb, NULL, &this->timeBuffer));
 
 		cb.Usage = D3D11_USAGE_DYNAMIC;
 		cb.ByteWidth = sizeof(LightDataBufferType);
@@ -480,7 +473,7 @@ namespace Transmission {
 		// set default stuff
 		float world[4][4];
 		float viewProjection[5][4];
-		float time[1][2];
+		//float time[1][2];
 
 		memcpy(world, Matrix4::identity().getPointer(), sizeof(float[4][4]));
 		memcpy(viewProjection, (this->camera->getCameraInverse() * this->camera->getPerspective()).getPointer(), sizeof(float[4][4]));
@@ -491,14 +484,14 @@ namespace Transmission {
 		viewProjection[4][2] = cameraPos.z();
 		viewProjection[4][3] = 1.0f;
 
-		renderTimer->GetElapsedTimeAndTimeSinceLastFrame(&time[0][0], &time[0][1]);
+		//renderTimer->GetElapsedTimeAndTimeSinceLastFrame(&time[0][0], &time[0][1]);
 
 		context->UpdateSubresource(perFrameBuffer, 0, NULL, &viewProjection, 0, 0);
 		context->UpdateSubresource(perVertexBuffer, 0, NULL, &world, 0, 0);
-		context->UpdateSubresource(timeBuffer, 0, NULL, &time, 0, 0);
+		//context->UpdateSubresource(timeBuffer, 0, NULL, &time, 0, 0);
 
-		ID3D11Buffer* cBuffers[] = { perFrameBuffer, perVertexBuffer, timeBuffer };
-		context->VSSetConstantBuffers(0, 3, cBuffers);
+		ID3D11Buffer* cBuffers [] = { perFrameBuffer, perVertexBuffer };// , timeBuffer };
+		context->VSSetConstantBuffers(0, 2, cBuffers);
 
 		float saturationLightness[2];
 		saturationLightness[0] = this->saturation;
@@ -662,10 +655,6 @@ namespace Transmission {
 
 	Camera* DX11Renderer::getCamera() {
 		return this->camera;
-	}
-
-	Timer* DX11Renderer::getTimer() {
-		return this->renderTimer;
 	}
 
 	void DX11Renderer::setObjectMatrix(Matrix4 t) {

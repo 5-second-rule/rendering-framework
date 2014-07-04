@@ -16,7 +16,6 @@
     <ClCompile Include="DirectX11\DDSTextureLoader.cpp" />
     <ClCompile Include="DirectX11\DX11Model2D.cpp" />
     <ClCompile Include="DirectX11\DX11Renderer.cpp" />
-    <ClCompile Include="DirectX11\DX11Timer.cpp" />
     <ClCompile Include="DirectX11\dxerr.cpp" />
     <ClCompile Include="DirectX11\DX11IndexBuffer.cpp" />
     <ClCompile Include="DirectX11\DX11Model.cpp" />
@@ -37,7 +36,6 @@
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Sounder.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transformer.cpp" />
     <ClCompile Include="TRKLoader.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
@@ -51,7 +49,6 @@
     <ClInclude Include="DirectX11\DDSTextureLoader.h" />
     <ClInclude Include="DirectX11\DX11Model2D.h" />
     <ClInclude Include="DirectX11\DX11Renderer.h" />
-    <ClInclude Include="DirectX11\DX11Timer.h" />
     <ClInclude Include="DirectX11\dxerr.h" />
     <ClInclude Include="DirectX11\DX11IndexBuffer.h" />
     <ClInclude Include="DirectX11\DX11Model.h" />
@@ -70,12 +67,10 @@
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="render-framework.h" />
     <ClInclude Include="Renderer.h" />
-    <ClInclude Include="renderers.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Sounder.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="Timer.h" />
     <ClInclude Include="Transformer.h" />
     <ClInclude Include="TRKLoader.h" />
     <ClInclude Include="util.h" />

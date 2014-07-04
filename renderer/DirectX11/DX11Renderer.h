@@ -44,8 +44,6 @@ namespace Transmission {
 
 		wchar_t *fontString;
 
-		Timer* renderTimer;
-
 		ID3D11Buffer* perFrameBuffer;
 		ID3D11Buffer* perVertexBuffer;
 		ID3D11Buffer* timeBuffer;
@@ -116,7 +114,6 @@ namespace Transmission {
 		D3D11_INPUT_ELEMENT_DESC* getInputElementDesc();
 
 		virtual Camera* getCamera();
-		virtual Timer* getTimer();
 		virtual void setObjectMatrix(Matrix4);
 	};
 }
