@@ -1,10 +1,12 @@
 #include "DX11VertexBuffer.h"
 
+#include "DX11Renderer.h"
+
 #include "dxerr.h"
 
 namespace Transmission {
 
-	DX11VertexBuffer::DX11VertexBuffer(Vertex vertices [], size_t num, ID3D11Device* device, ID3D11DeviceContext* context) : VertexBuffer(num), context(context) {
+	DX11VertexBuffer::DX11VertexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, Vertex vertices[], size_t num) : VertexBuffer(num), context(context) {
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
 
@@ -21,7 +23,6 @@ namespace Transmission {
 		HR(device->CreateBuffer(&bd, &initData, &this->buffer));
 
 	}
-
 
 	DX11VertexBuffer::~DX11VertexBuffer()
 	{

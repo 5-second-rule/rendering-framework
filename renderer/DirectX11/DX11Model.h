@@ -7,9 +7,11 @@
 
 #include "Model.h"
 
-#include "DX11VertexBuffer.h"
-#include "DX11IndexBuffer.h"
 #include "Renderer.h"
+#include "DX11Renderer.h"
+
+class VertexBuffer;
+class IndexBuffer;
 
 namespace Transmission {
 
@@ -31,4 +33,6 @@ namespace Transmission {
 		virtual void setPixelShader(Shader*);
 		virtual void draw();
 	};
+
+	DX11Factory(Model);
 }

@@ -7,8 +7,11 @@
 
 #include "util.h"
 
-namespace Transmission {
+#include "Renderer.h"
+#include "DX11Renderer.h"
 
+namespace Transmission {
+	
 	class DX11VertexBuffer :
 		public VertexBuffer
 	{
@@ -17,9 +20,12 @@ namespace Transmission {
 		ID3D11DeviceContext* context;
 
 	public:
-		DX11VertexBuffer(Vertex [], size_t, ID3D11Device*, ID3D11DeviceContext*);
+		DX11VertexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, Vertex vertices [], size_t size);
 		~DX11VertexBuffer();
 
 		virtual void set();
 	};
+
+	DX11Factory(VertexBuffer);
+
 }

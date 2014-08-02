@@ -7,6 +7,9 @@
 
 #include "util.h"
 
+#include "Renderer.h"
+#include "DX11Renderer.h"
+
 namespace Transmission {
 	class DX11IndexBuffer :
 		public IndexBuffer
@@ -16,9 +19,11 @@ namespace Transmission {
 		ID3D11DeviceContext* context;
 
 	public:
-		DX11IndexBuffer(unsigned int [], size_t, ID3D11Device*, ID3D11DeviceContext*);
+		DX11IndexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, unsigned int indices[], size_t size);
 		virtual ~DX11IndexBuffer();
 
 		virtual void set();
 	};
+
+	DX11Factory(IndexBuffer);
 }

@@ -11,6 +11,16 @@
 
 #define NUM_LIGHTS 10
 
+#define DX11Factory(T) \
+	template<> \
+	class Renderer::Factory<T> { \
+		template<typename... Args> \
+		T* create(Args... args) { \
+			DX11Renderer* renderer = static_cast<DX11Renderer*>(this); \
+			return new DX11##T(renderer->device, renderer->context, args); \
+		} \
+	};
+
 struct LightDataBufferType
 {
 	lightData lightDataVals[NUM_LIGHTS];
@@ -21,6 +31,7 @@ namespace Transmission {
 	class DX11Renderer :
 		public Renderer
 	{
+	friend Renderer;
 	protected:
 		D3D_FEATURE_LEVEL featureLevel;
 		UINT msaaQuality;

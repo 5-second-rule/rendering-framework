@@ -21,12 +21,26 @@ namespace Transmission {
 
 	class FRAMEWORKDLL Renderer
 	{
+
 	public:
 		static Renderer* createRenderer( Window* window, char* vertex, char* pixel );
 
 		virtual ~Renderer();
 
 		virtual void resize(unsigned int width, unsigned int height, bool fullscreen) = 0;
+
+	private:
+		template<typename T>
+		class Factory {
+			template<typename... Args>
+			static T* create(Args... args);
+		};
+
+	public:
+		template<typename T, typename...Args>
+		T* create(Args... args) {
+			return Factory<T>::create(args);
+		}
 
 		/* ----- */
 		enum Dimension { TWO, THREE };
@@ -53,15 +67,6 @@ namespace Transmission {
 
 		virtual void turnDepthTestOff() = 0;
 		virtual void turnDepthTestOn() = 0;
-
-		virtual VertexBuffer* createVertexBuffer(Vertex [], size_t) = 0;
-		virtual IndexBuffer* createIndexBuffer(unsigned int [], size_t) = 0;
-		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture) = 0;
-		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, bool is2D) = 0;
-		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump) = 0;
-		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Shader* vs, Shader* ps) = 0;
-		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Shader* vs, Shader* ps, bool is2D) = 0;
-		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump, Shader* vs, Shader* ps) = 0;
 
 		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture) = 0;
 		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, Shader* vs, Shader* ps) = 0;
