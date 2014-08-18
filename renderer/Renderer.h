@@ -32,14 +32,16 @@ namespace Transmission {
 	private:
 		template<typename T>
 		class Factory {
+		public:
 			template<typename... Args>
-			static T* create(Args... args);
+			static T* create(Renderer* renderer, Args... args);
 		};
 
 	public:
-		template<typename T, typename...Args>
+		
+		template<typename T, typename... Args>
 		T* create(Args... args) {
-			return Factory<T>::create(args);
+			return Factory<T>::create(this, args...);
 		}
 
 		/* ----- */
@@ -56,34 +58,6 @@ namespace Transmission {
 		virtual void turnDepthOn() = 0;
 		virtual void useScreenCoords() = 0;
 		virtual void drawFrame() = 0;
-
-		float saturation;
-		float lightness;
-
-		// void changeSaturation(float ds) { this->renderer->saturation += ds; }
-
-		//if (key is down) {
-		//engine->changeSatura
-
-		virtual void turnDepthTestOff() = 0;
-		virtual void turnDepthTestOn() = 0;
-
-		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture) = 0;
-		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, Shader* vs, Shader* ps) = 0;
-		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, bool isTransparent) = 0;
-		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, Shader* vs, Shader* ps, bool isTransparent) = 0;
-
-		virtual bool loadModelFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, bool centerShift);
-		virtual Model* createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, bool centerShift);
-		virtual Model* createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, bool centerShift, bool is2D);
-		virtual Model* createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, Texture* bump, bool centerShift);
-		virtual Model* createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, bool centerShift, Shader* vs, Shader* ps);
-		virtual Model* createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, bool centerShift, Shader* vs, Shader* ps, bool is2D);
-		virtual Model* createModelFromFile(char* filePath, VertexBuffer** vP, IndexBuffer** iP, Texture* tex, Texture* bump, bool centerShift, Shader* vs, Shader* ps);
-				
-		virtual Texture* createTextureFromFile(char*) = 0;
-		virtual Shader* createVertexShader(char*) = 0;
-		virtual Shader* createPixelShader(char*) = 0;
 
 		virtual Shader* getDefaultVertexShader() = 0;
 		virtual Shader* getDefaultPixelShader() = 0;

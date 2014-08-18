@@ -13,7 +13,6 @@ using namespace Common;
 #include "DX11VertexBuffer.h"
 #include "DX11IndexBuffer.h"
 #include "DX11Model.h"
-#include "DX11Model2D.h"
 #include "DX11Texture.h"
 #include "DX11VertexShader.h"
 #include "DX11PixelShader.h"
@@ -531,7 +530,7 @@ namespace Transmission {
 				//Just needs world, why is world identity?
 				updatePosition = ((Matrix4::identity()*lightPositions[i]));
 
-				memcpy(dataPtr->lightDataVals[i].position, updatePosition.getPointer(), 4*sizeof(float));
+				memcpy(dataPtr->lightDataVals[i].position, updatePosition.getPointer(), 4 * sizeof(float));
 
 				memcpy(dataPtr->lightDataVals[i].color, lightColors[i].getPointer(), 4 * sizeof(float));
 			}
@@ -565,72 +564,6 @@ namespace Transmission {
 	*/
 	void DX11Renderer::turnDepthTestOn() {
 		context->OMSetDepthStencilState(depthStencilState, 1);
-	}
-
-	VertexBuffer* DX11Renderer::createVertexBuffer(Vertex vertices[], size_t num) {
-		return new DX11VertexBuffer(vertices, num, this->device, this->context);
-	}
-
-	IndexBuffer* DX11Renderer::createIndexBuffer(unsigned int indices[], size_t num) {
-		return new DX11IndexBuffer(indices, num, this->device, this->context);
-	}
-
-	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture) {
-		return new DX11Model(v, i, context, texture, this);
-	}
-
-	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, bool is2D) {
-		if (is2D)
-			return new DX11Model2D(v, i, context, texture, this);
-		
-		return new DX11Model(v, i, context, texture, this);
-	}
-
-	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump) {
-		return new DX11Model(v, i, context, texture, bump, this);
-	}
-
-	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Shader* vs, Shader* ps) {
-		return new DX11Model(v, i, context, texture, this, vs, ps);
-	}
-
-	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Shader* vs, Shader* ps, bool is2D) {
-		if (is2D)
-			return new DX11Model2D(v, i, context, texture, this, vs, ps);
-
-		return new DX11Model(v, i, context, texture, this, vs, ps);
-	}
-
-	Model* DX11Renderer::createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump, Shader* vs, Shader* ps) {
-		return new DX11Model(v, i, context, texture, bump, this, vs, ps);
-	}
-
-	Model* DX11Renderer::create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture) {
-		return new DX11Model2D(v, numVertices, i, numIndices, this->context, texture, this);
-	}
-
-	Model* DX11Renderer::create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, Shader* vs, Shader* ps) {
-		return new DX11Model2D(v, numVertices, i, numIndices, this->context, texture, this, vs, ps);
-	}
-
-	Model* DX11Renderer::create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, bool isTransparent) {
-		return new DX11Model2D(v, numVertices, i, numIndices, this->context, texture, this, isTransparent);
-	}
-
-	Model* DX11Renderer::create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, Shader* vs, Shader* ps, bool isTransparent) {
-		return new DX11Model2D(v, numVertices, i, numIndices, this->context, texture, this, vs, ps, isTransparent);
-	}
-
-	Texture* DX11Renderer::createTextureFromFile(char* f) {
-		return new DX11Texture(f, this->device, this->context);
-	}
-
-	Shader* DX11Renderer::createVertexShader(char* f) {
-		return new DX11VertexShader(f, this, this->device, this->context);
-	}
-
-	Shader* DX11Renderer::createPixelShader(char* f) {
-		return new DX11PixelShader(f, this, this->device, this->context);
 	}
 
 	Shader* DX11Renderer::getDefaultVertexShader() {

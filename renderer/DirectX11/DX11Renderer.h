@@ -15,11 +15,11 @@
 	template<> \
 	class Renderer::Factory<T> { \
 		template<typename... Args> \
-		T* create(Args... args) { \
-			DX11Renderer* renderer = static_cast<DX11Renderer*>(this); \
-			return new DX11##T(renderer->device, renderer->context, args); \
+		T* create(Renderer* renderer, Args... args) { \
+			DX11Renderer* dx = static_cast<DX11Renderer*>(renderer); \
+			return new DX11##T(dx->device, dx->context, args...); \
 		} \
-	};
+	}
 
 struct LightDataBufferType
 {

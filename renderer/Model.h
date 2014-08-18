@@ -1,10 +1,12 @@
 #pragma once
 #include "util.h"
 
+#include <vector>
+
 #include "Transformer.h"
 
-#include "IndexBuffer.h"
 #include "VertexBuffer.h"
+#include "IndexBuffer.h"
 #include "Texture.h"
 #include "Shader.h"
 
@@ -16,18 +18,14 @@ namespace Transmission {
 	protected:
 		VertexBuffer* vertexBuffer;
 		IndexBuffer* indexBuffer;
-		Texture* texture;
-		Texture* bumpMap;
-		Shader* vertexShader;
-		Shader* pixelShader;
+
+		std::vector<Texture*> textures;
 
 	public:
-		Model(VertexBuffer*, IndexBuffer*);
-		virtual ~Model();
+		Model(VertexBuffer* vertices, IndexBuffer* indices, std::initializer_list<Texture*> textures)
+			: vertexBuffer(vertices), indexBuffer(indices), textures(textures) {}
+		virtual ~Model() = default;
 
-		virtual void setShaders(Shader*, Shader*) = 0;
-		virtual void setVertexShader(Shader*) = 0;
-		virtual void setPixelShader(Shader*) = 0;
-		virtual void draw() = 0;
+		virtual void draw(Shader& vertexShader, Shader& pixelShader) = 0;
 	};
 }
