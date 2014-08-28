@@ -1,0 +1,5 @@
+The problem with the `renderer.create<Model>(args)` pattern is that we loose compile-time enforcement that GLModel and DXModel’s constructors are the same. Or rather, the compile-time enforcement is there, but there’s no standard central interface to know if a certain constructor exists, except by convention that the DXModel is just the normal model constructor with the extra args in front of it. That being said, I don’t know that any pattern can enforce this, as constructors and static functions can’t be virtual (i.e. they can’t expose an interface) so there’s not exactly a way around it.
+
+Except perhaps a pattern where there is a Model::create(renderer, args) method, and that method’s body is implemented inside of `GLModel.cpp` and `DXModel.cpp`, in addition to the platform specific methods.
+
+Needs more thought.

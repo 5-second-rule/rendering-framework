@@ -225,8 +225,8 @@ namespace Transmission {
 				}
 
 				// Generate vertex and index buffers from the vertex and index arrays
-				*vBuf = renderer->createVertexBuffer(vertexArray, vertexCount);
-				*iBuf = renderer->createIndexBuffer(indexArray, numIndices);
+				*vBuf = renderer->create<VertexBuffer>(vertexArray, vertexCount);
+				*iBuf = renderer->create<IndexBuffer>(indexArray, numIndices);
 
 				delete[] vertexArray;
 				delete[] indexArray;

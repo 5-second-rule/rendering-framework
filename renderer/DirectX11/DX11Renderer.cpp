@@ -43,9 +43,6 @@ namespace Transmission {
 
 		/* ---------- */
 
-		this->saturation = 0;
-		this->lightness = 0;
-
 		this->setupAlphaBlending();
 
 		perFrameBuffer = NULL; perVertexBuffer = NULL; timeBuffer = NULL; lightDataBuffer = NULL; saturationLightnessBuffer = NULL;
@@ -321,15 +318,6 @@ namespace Transmission {
 
 		HR(device->CreateBuffer(&cb, NULL, &this->perVertexBuffer));
 
-		//cb.ByteWidth = sizeof(float[4]);
-		//HR(device->CreateBuffer(&cb, NULL, &this->timeBuffer));
-
-		cb.Usage = D3D11_USAGE_DYNAMIC;
-		cb.ByteWidth = sizeof(LightDataBufferType);
-		cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-
-		HR(device->CreateBuffer(&cb, NULL, &this->lightDataBuffer));
-
 		cb.Usage = D3D11_USAGE_DEFAULT;
 		cb.ByteWidth = sizeof(float[4]);
 		cb.CPUAccessFlags = 0;
@@ -412,36 +400,6 @@ namespace Transmission {
 		this->useWorldCoords();
 	}
 
-	void DX11Renderer::prep2D() {
-		if (this->renderDimension != Dimension::TWO) {
-			this->useScreenCoords();
-			this->turnDepthOff();
-			this->renderDimension = Dimension::TWO;
-		}
-	}
-
-	void DX11Renderer::end2D() {
-		if (this->renderDimension == Dimension::TWO) {
-			this->turnDepthOn();
-			this->useWorldCoords();
-			this->renderDimension = Dimension::THREE;
-		}
-	}
-
-	void DX11Renderer::makeTransparent() {
-		context->OMSetDepthStencilState(depthStencilStateDepthOff, 1);
-
-		float blendFactor[] = { 0.00f, 0.00f, 0.00f, 1.0f };
-
-		context->OMSetBlendState(transparency, blendFactor, 0xffffffff);
-	}
-
-	void DX11Renderer::makeOpaque() {
-		context->OMSetDepthStencilState(depthStencilState, 1);
-
-		context->OMSetBlendState(0, 0, 0xffffffff);
-	}
-
 	void DX11Renderer::turnDepthOff() {
 		context->OMSetDepthStencilState(depthStencilStateDepthOff, 1);
 	}
@@ -492,61 +450,9 @@ namespace Transmission {
 		ID3D11Buffer* cBuffers [] = { perFrameBuffer, perVertexBuffer };// , timeBuffer };
 		context->VSSetConstantBuffers(0, 2, cBuffers);
 
-		float saturationLightness[2];
-		saturationLightness[0] = this->saturation;
-		saturationLightness[1] = this->lightness;
-
-		context->UpdateSubresource(saturationLightnessBuffer, 0, NULL, &saturationLightness, 0, 0);
-
-		context->PSSetConstantBuffers(1, 1, &saturationLightnessBuffer);
-
 		// set shaders without layout
 		defaultVertexShader->setWithNoLayout();
 		defaultPixelShader->setWithNoLayout(); //using this function for consistency
-	}
-
-	bool DX11Renderer::setLightBuffers(Common::Vector4* lightPositions, Common::Vector4* lightColors, int numLightsProvided)
-	{
-
-		HRESULT result;
-		D3D11_MAPPED_SUBRESOURCE mappedResource;
-		LightDataBufferType* dataPtr;
-
-		// Lock the light position constant buffer so it can be written to.
-		result = context->Map(lightDataBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-		if (FAILED(result))
-		{
-			return false;
-		}
-
-		dataPtr = (LightDataBufferType*)mappedResource.pData;
-
-		for (int i = 0; i < NUM_LIGHTS; i++)
-		{
-			if (i < numLightsProvided)
-			{
-				Common::Vector4 updatePosition;
-
-				//Just needs world, why is world identity?
-				updatePosition = ((Matrix4::identity()*lightPositions[i]));
-
-				memcpy(dataPtr->lightDataVals[i].position, updatePosition.getPointer(), 4 * sizeof(float));
-
-				memcpy(dataPtr->lightDataVals[i].color, lightColors[i].getPointer(), 4 * sizeof(float));
-			}
-			else
-			{
-				//assign w value to 0 to specify light isn't on
-				dataPtr->lightDataVals[i].position[3] = 0;
-			}
-		}
-		
-		// Unlock the constant buffer.
-		context->Unmap(lightDataBuffer, 0);
-
-		context->PSSetConstantBuffers(0, 1, &lightDataBuffer);
-
-		return true;
 	}
 
 	void DX11Renderer::drawFrame() {

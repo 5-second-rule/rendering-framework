@@ -15,8 +15,8 @@ namespace Transmission {
 		this->vertexBuffer->set();
 		this->indexBuffer->set();
 		
-		//vertexShader->setWithNoLayout();
-		//pixelShader->set();
+		vertexShader.setWithNoLayout();
+		pixelShader.set();
 		
 		for (unsigned int i = 0; i < this->textures.size(); ++i) {
 			this->textures[i]->set(i);

@@ -21,11 +21,6 @@
 		} \
 	}
 
-struct LightDataBufferType
-{
-	lightData lightDataVals[NUM_LIGHTS];
-};
-
 namespace Transmission {
 
 	class DX11Renderer :
@@ -85,11 +80,6 @@ namespace Transmission {
 		virtual void resize(unsigned int width, unsigned int height, bool);
 		virtual void clearFrame();
 
-		virtual bool setLightBuffers(Common::Vector4* lightPositions, Common::Vector4* lightColors, int numLightsProvided);
-		virtual void prep2D();
-		virtual void end2D();
-		virtual void makeTransparent();
-		virtual void makeOpaque();
 		virtual void turnDepthOff();
 		virtual void turnDepthOn();
 		virtual void useScreenCoords();
@@ -97,25 +87,6 @@ namespace Transmission {
 
 		virtual void turnDepthTestOff();
 		virtual void turnDepthTestOn();
-
-		virtual VertexBuffer* createVertexBuffer(Vertex [], size_t);
-		virtual IndexBuffer* createIndexBuffer(unsigned int [], size_t);
-		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture);
-		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, bool is2D);
-		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump);
-		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Shader* vs, Shader* ps);
-		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Shader* vs, Shader* ps, bool is2D);
-		virtual Model* createModel(VertexBuffer* v, IndexBuffer* i, Texture* texture, Texture* bump, Shader* vs, Shader* ps);
-
-		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture);
-		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, Shader* vs, Shader* ps);
-		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, bool isTransparent);
-		virtual Model* create2DModelFromVertices(Vertex* v, int numVertices, Index* i, int numIndices, Texture* texture, Shader* vs, Shader* ps, bool isTransparent);
-
-		virtual Texture* createTextureFromFile(char* f);
-
-		virtual Shader* createVertexShader(char*);
-		virtual Shader* createPixelShader(char*);
 
 		virtual Shader* getDefaultVertexShader();
 		virtual Shader* getDefaultPixelShader();

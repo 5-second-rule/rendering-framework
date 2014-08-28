@@ -386,8 +386,8 @@ namespace Transmission {
 		}
 
 		// Create the vertex and index buffers
-		*vBuf = renderer->createVertexBuffer(vertexBufferArray, numVertBuffer);
-		*iBuf = renderer->createIndexBuffer(indices, numIndices);
+		*vBuf = renderer->create<VertexBuffer>(vertexBufferArray, numVertBuffer);
+		*iBuf = renderer->create<IndexBuffer>(indices, numIndices);
 
 		delete[] vertexBufferArray;
 		delete[] indices;

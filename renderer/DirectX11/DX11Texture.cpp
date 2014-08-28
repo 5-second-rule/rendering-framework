@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 namespace Transmission {
-	DX11Texture::DX11Texture(const char* textureFile, ID3D11Device* device, ID3D11DeviceContext* context) : Texture(textureFile), context(context) {
+	DX11Texture::DX11Texture(const char* textureFile, ID3D11Device* device, ID3D11DeviceContext* context) : Texture(), context(context) {
 		wchar_t news[MAX_PATH];
 		mbstowcs(news, textureFile, strlen(textureFile) + 1);
 
