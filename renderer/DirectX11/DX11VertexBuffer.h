@@ -12,7 +12,7 @@
 
 namespace Transmission {
 	
-	class DX11VertexBuffer :
+	class FRAMEWORKDLL DX11VertexBuffer :
 		public VertexBuffer
 	{
 	private:
@@ -20,7 +20,7 @@ namespace Transmission {
 		ID3D11DeviceContext* context;
 
 	public:
-		DX11VertexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, Vertex vertices [], size_t size);
+		DX11VertexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, Vertex vertices[], size_t size);
 		~DX11VertexBuffer();
 
 		virtual void set();

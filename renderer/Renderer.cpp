@@ -21,15 +21,13 @@
 
 namespace Transmission {
 
-	Renderer::~Renderer() {}
-
-	Renderer* Renderer::createRenderer(Window* window, char* vertex, char* pixel) {
+	Renderer* Renderer::createRenderer(Window* window) {
 		PROFILE("Renderer::createRenderer");
 
 		Renderer* r;
 
 		#if RENDERER == RENDERER_DX
-			r = new DX11Renderer(window, vertex, pixel);
+			r = new DX11Renderer(window);
 		#elif RENDERER == RENDERER_GL
 			r = new GLRenderer(window, vertex, pixel);
 		#else

@@ -127,18 +127,6 @@ void moveBlob(Transmission::Window* w, Transmission::Model* m, Transmission::Cam
 	}
 }
 
-void changeShader(Transmission::Window* w, Transmission::Model* m, Transmission::Shader* defaultPixel, Transmission::Shader* otherPixel) {
-	Transmission::Input* input = (Transmission::Input*) w->getInput();
-
-	if (input->getKeyState(Transmission::Input::Key::K) == Transmission::Input::STATE_DOWN) {
-		m->setPixelShader(defaultPixel);
-	}
-
-	if (input->getKeyState(Transmission::Input::Key::L) == Transmission::Input::STATE_DOWN) {
-		m->setPixelShader(otherPixel);
-	}
-}
-
 // Temporary formatted output function for writing to the output window
 void __cdecl odprintf(const char *format, ...)
 {
@@ -237,7 +225,7 @@ float ui(Transmission::Vertex (&vertices)[4], int playerIndex) {
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
 	Transmission::Window* window = Transmission::Window::createWindow(hInstance, L"5 Second Rule", 800, 600);
-	Transmission::Renderer* renderer = Transmission::Renderer::createRenderer(window, "defaultVertex.cso", "defaultPixel.cso");
+	Transmission::Renderer* renderer = Transmission::Renderer::createRenderer(window);
 
 	Transmission::VertexBuffer* ecoliVbuf;
 	Transmission::IndexBuffer* ecoliIbuf;
@@ -278,52 +266,50 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	char* playerBgTexture = "../SampleApp/select-rectangle.dds";
 	char* uiTexture = "../SampleApp/pink.dds";
 
-	Transmission::Shader* defaultVertexShad = renderer->createVertexShader("defaultVertex.cso");
-	Transmission::Shader* vertRipple = renderer->createVertexShader("vertexRipple.cso");
-	Transmission::Shader* vertSpring = renderer->createVertexShader("vertexSpring.cso");
-	Transmission::Shader* vertTent = renderer->createVertexShader("vertexTentacle.cso");
-	Transmission::Shader* vertTrack = renderer->createVertexShader("vertexTrack.cso");
-	Transmission::Shader* vertWiggle = renderer->createVertexShader("vertexWiggle.cso");
+	Transmission::Shader* defaultVertexShad = renderer->create<Transmission::VertexShader>("defaultVertex.cso");
+	Transmission::Shader* vertRipple = renderer->create<Transmission::VertexShader>("vertexRipple.cso");
+	Transmission::Shader* vertSpring = renderer->create<Transmission::VertexShader>("vertexSpring.cso");
+	Transmission::Shader* vertTent = renderer->create<Transmission::VertexShader>("vertexTentacle.cso");
+	Transmission::Shader* vertTrack = renderer->create<Transmission::VertexShader>("vertexTrack.cso");
+	Transmission::Shader* vertWiggle = renderer->create<Transmission::VertexShader>("vertexWiggle.cso");
 
-	Transmission::Shader* defaultPixShad = renderer->createPixelShader("defaultPixel.cso");
-	Transmission::Shader* pixShader = renderer->createPixelShader("pixel.cso");
-	Transmission::Shader* pixBump = renderer->createPixelShader("pixelBump.cso");
-	Transmission::Shader* pixShaderNoSpec = renderer->createPixelShader("pixelNoSpec.cso");
-	Transmission::Shader* pixCelShader = renderer->createPixelShader("pixelCelShaded.cso");
+	Transmission::Shader* defaultPixShad = renderer->create<Transmission::PixelShader>("defaultPixel.cso");
+	Transmission::Shader* pixShader = renderer->create<Transmission::PixelShader>("pixel.cso");
+	Transmission::Shader* pixBump = renderer->create<Transmission::PixelShader>("pixelBump.cso");
+	Transmission::Shader* pixShaderNoSpec = renderer->create<Transmission::PixelShader>("pixelNoSpec.cso");
+	Transmission::Shader* pixCelShader = renderer->create<Transmission::PixelShader>("pixelCelShaded.cso");
 
-	Transmission::Texture* ecoliTex = renderer->createTextureFromFile(ecoliTexture);
-	Transmission::Texture* herpesTex = renderer->createTextureFromFile(herpesTexture);
-	Transmission::Texture* malariaTex = renderer->createTextureFromFile(malariaTexture);
-	Transmission::Texture* poxTex = renderer->createTextureFromFile(poxTexture);
-	Transmission::Texture* pipeTex = renderer->createTextureFromFile(pipeTexture);
-	Transmission::Texture* pipeBumpTex = renderer->createTextureFromFile(pipeBump);
+	Transmission::Texture* ecoliTex = renderer->create<Transmission::Texture>(ecoliTexture);
+	Transmission::Texture* herpesTex = renderer->create<Transmission::Texture>(herpesTexture);
+	Transmission::Texture* malariaTex = renderer->create<Transmission::Texture>(malariaTexture);
+	Transmission::Texture* poxTex = renderer->create<Transmission::Texture>(poxTexture);
+	Transmission::Texture* pipeTex = renderer->create<Transmission::Texture>(pipeTexture);
+	Transmission::Texture* pipeBumpTex = renderer->create<Transmission::Texture>(pipeBump);
 
-	Transmission::Texture* titleTex = renderer->createTextureFromFile(titleTexture);
-	Transmission::Texture* windowBgTex = renderer->createTextureFromFile(windowBgTexture);
-	Transmission::Texture* playerBgTex = renderer->createTextureFromFile(playerBgTexture);
-	Transmission::Texture* uiTex = renderer->createTextureFromFile(uiTexture);
+	Transmission::Texture* titleTex = renderer->create<Transmission::Texture>(titleTexture);
+	Transmission::Texture* windowBgTex = renderer->create<Transmission::Texture>(windowBgTexture);
+	Transmission::Texture* playerBgTex = renderer->create<Transmission::Texture>(playerBgTexture);
+	Transmission::Texture* uiTex = renderer->create<Transmission::Texture>(uiTexture);
 
-	Transmission::Model* ecoliModel = renderer->createModelFromFile(ecoliFbxFilePath, &ecoliVbuf, &ecoliIbuf, ecoliTex, true, vertTent, pixShader);
-	Transmission::Model* herpesModel = renderer->createModelFromFile(herpesFbxFilePath, &herpesVbuf, &herpesIbuf, herpesTex, true, vertRipple, pixShader);
-	Transmission::Model* malariaModel = renderer->createModelFromFile(malariaFbxFilePath, &malariaVbuf, &malariaIbuf, malariaTex, true, vertWiggle, pixShader);
-	Transmission::Model* poxModel = renderer->createModelFromFile(poxFbxFilePath, &poxVbuf, &poxIbuf, poxTex, true, vertSpring, pixShader);
+	Transmission::Model* ecoliModel = renderer->create<Transmission::Model>(ecoliFbxFilePath, &ecoliVbuf, &ecoliIbuf, ecoliTex, true, vertTent, pixShader);
+	Transmission::Model* herpesModel = renderer->create<Transmission::Model>(herpesFbxFilePath, &herpesVbuf, &herpesIbuf, herpesTex, true, vertRipple, pixShader);
+	Transmission::Model* malariaModel = renderer->create<Transmission::Model>(malariaFbxFilePath, &malariaVbuf, &malariaIbuf, malariaTex, true, vertWiggle, pixShader);
+	Transmission::Model* poxModel = renderer->create<Transmission::Model>(poxFbxFilePath, &poxVbuf, &poxIbuf, poxTex, true, vertSpring, pixShader);
 
-	Transmission::Model* ecoliSelect = renderer->createModelFromFile(ecoliFbxFilePath, &ecoliVbuf, &ecoliIbuf, ecoliTex, true, vertTent, pixShader);
-	Transmission::Model* herpesSelect = renderer->createModelFromFile(herpesFbxFilePath, &herpesVbuf, &herpesIbuf, herpesTex, true, vertRipple, pixShader);
-	Transmission::Model* malariaSelect = renderer->createModelFromFile(malariaFbxFilePath, &malariaVbuf, &malariaIbuf, malariaTex, true, vertWiggle, pixShader);
-	Transmission::Model* poxSelect = renderer->createModelFromFile(poxFbxFilePath, &poxVbuf, &poxIbuf, poxTex, true, vertSpring, pixShader);
+	Transmission::Model* ecoliSelect = renderer->create<Transmission::Model>(ecoliFbxFilePath, &ecoliVbuf, &ecoliIbuf, ecoliTex, true, vertTent, pixShader);
+	Transmission::Model* herpesSelect = renderer->create<Transmission::Model>(herpesFbxFilePath, &herpesVbuf, &herpesIbuf, herpesTex, true, vertRipple, pixShader);
+	Transmission::Model* malariaSelect = renderer->create<Transmission::Model>(malariaFbxFilePath, &malariaVbuf, &malariaIbuf, malariaTex, true, vertWiggle, pixShader);
+	Transmission::Model* poxSelect = renderer->create<Transmission::Model>(poxFbxFilePath, &poxVbuf, &poxIbuf, poxTex, true, vertSpring, pixShader);
 
-	Transmission::Model* tubeModel = renderer->createModelFromFile(trackFilePath, &tubeVbuf, &tubeIbuf, pipeTex, pipeBumpTex, false, vertTrack, pixBump);
+	Transmission::Model* tubeModel = renderer->create<Transmission::Model>(trackFilePath, &tubeVbuf, &tubeIbuf, pipeTex, pipeBumpTex, false, vertTrack, pixBump);
 
 
 	Transmission::Index indices[] = { 0, 1, 2, 3, 0, 2 };
 	Transmission::Vertex vertices[4];
 
 	title(vertices, (float)window->getHeight(), (float)window->getWidth());
-	Transmission::Model* titleModel = renderer->create2DModelFromVertices(vertices, 4, indices, 6, titleTex);
 
 	selectionBG(vertices);
-	Transmission::Model* windowBgModel = renderer->create2DModelFromVertices(vertices, 4, indices, 6, windowBgTex);
 
 	float margin = 0.05f;
 	float width = (2.0f - 5.f * margin) / 4.f;
@@ -333,22 +319,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Transmission::Model* playerBgModel[4];
 	Transmission::Model* uiModels[4];
 
-	for (int i = 0; i < 4; ++i) {
-		centers[i] = player(vertices, i, margin) * 5.5f;
-		playerBgModel[i] = renderer->create2DModelFromVertices(vertices, 4, indices, 6, playerBgTex);
-
-		ui(vertices, i);
-		uiModels[i] = renderer->create2DModelFromVertices(vertices, 4, indices, 6, uiTex);
-	}
-
 
 	if (ecoliModel == NULL) exit(-1);
 	if (herpesModel == NULL) exit(-1);
 	if (malariaModel == NULL) exit(-1);
 	if (poxModel == NULL) exit(-1);
 	if (tubeModel == NULL) exit(-1);
-	if (titleModel == NULL) exit(-1);
-	if (windowBgModel == NULL) exit(-1);
 	for (int i = 0; i < 4; ++i) {
 		if (playerModels[i] == NULL) exit(-1);
 		if (playerBgModel[i] == NULL) exit(-1);

@@ -52,7 +52,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WINVER=0x600;_WIN32_WINNT=0x600;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)..\common\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)..\common\;$(SolutionDir)renderer</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -79,9 +79,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="SampleMain.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\renderer\Renderer.vcxproj">
       <Project>{8eb07717-66b8-42fe-ae88-9df7a326b9cd}</Project>
     </ProjectReference>
@@ -105,6 +102,9 @@
     <Image Include="pox_TXTR.dds" />
     <Image Include="whitebloodcell_3_TXTR.tif" />
     <Image Include="Wood.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SampleApp.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

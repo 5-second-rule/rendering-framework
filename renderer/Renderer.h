@@ -17,11 +17,27 @@ namespace Transmission {
 	{
 
 	public:
-		static Renderer* createRenderer( Window* window, char* vertex, char* pixel );
+		static Renderer* createRenderer( Window* window );
+		virtual ~Renderer() = default;
 
-		virtual ~Renderer();
+		template<typename T, typename... Args>
+		T* create(Args... args) {
+			return Factory<T>::create(this, args...);
+		}
+
+		/* ----- */
 
 		virtual void resize(unsigned int width, unsigned int height, bool fullscreen) = 0;
+		virtual void clearFrame() = 0;
+
+		virtual void turnDepthOff() = 0;
+		virtual void turnDepthOn() = 0;
+
+		virtual void drawFrame() = 0;
+
+		virtual Camera* getCamera() = 0;
+
+		virtual void setObjectMatrix(Matrix4) = 0;
 
 	private:
 		template<typename T>
@@ -30,31 +46,5 @@ namespace Transmission {
 			template<typename... Args>
 			static T* create(Renderer* renderer, Args... args);
 		};
-
-	public:
-		
-		template<typename T, typename... Args>
-		T* create(Args... args) {
-			return Factory<T>::create(this, args...);
-		}
-
-		/* ----- */
-		enum Dimension { TWO, THREE };
-
-		virtual void clearFrame() = 0;
-
-		virtual void turnDepthOff() = 0;
-		virtual void turnDepthOn() = 0;
-
-		virtual void useScreenCoords() = 0;
-
-		virtual void drawFrame() = 0;
-
-		virtual Shader* getDefaultVertexShader() = 0;
-		virtual Shader* getDefaultPixelShader() = 0;
-
-		virtual Camera* getCamera() = 0;
-
-		virtual void setObjectMatrix(Matrix4) = 0;
 	};
 }

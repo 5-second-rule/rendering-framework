@@ -14,8 +14,9 @@
 #define DX11Factory(T) \
 	template<> \
 	class Renderer::Factory<T> { \
+	public: \
 		template<typename... Args> \
-		T* create(Renderer* renderer, Args... args) { \
+		static T* create(Renderer* renderer, Args... args) { \
 			DX11Renderer* dx = static_cast<DX11Renderer*>(renderer); \
 			return new DX11##T(dx->device, dx->context, args...); \
 		} \
@@ -23,11 +24,31 @@
 
 namespace Transmission {
 
-	class DX11Renderer :
-		public Renderer
+	class DX11Renderer : public Renderer
 	{
 	friend Renderer;
+
+	public:
+		DX11Renderer( Window* window );
+		~DX11Renderer();
+
+		virtual void resize(unsigned int width, unsigned int height, bool) override;
+		virtual void clearFrame() override;
+
+		virtual void turnDepthOff() override;
+		virtual void turnDepthOn() override;
+		virtual void drawFrame() override;
+
+		virtual Camera* getCamera() override;
+		virtual void setObjectMatrix(Matrix4) override;
+
 	protected:
+		
+		virtual void setupDeviceAndSwapChain(Window*);
+		virtual void setupBackBuffer(unsigned int width, unsigned int height);
+		virtual void setupAlphaBlending();
+		virtual void setupConstantBuffer();
+
 		D3D_FEATURE_LEVEL featureLevel;
 		UINT msaaQuality;
 
@@ -43,11 +64,6 @@ namespace Transmission {
 
 		ID3D11BlendState* transparency;
 
-		Shader* defaultVertexShader;
-		Shader* defaultPixelShader;
-		ID3D11InputLayout *layout;
-		D3D11_INPUT_ELEMENT_DESC* ied;
-
 		wchar_t *fontString;
 
 		ID3D11Buffer* perFrameBuffer;
@@ -59,43 +75,8 @@ namespace Transmission {
 		Camera* camera;
 
 		bool windowed = true;
-		
+
 		int renderDimension;
 		Window * window;
-
-	public:
-		DX11Renderer( Window* window, char* vertex, char* pixel );
-		~DX11Renderer();
-
-	protected:
-		virtual void setupDeviceAndSwapChain(Window*);
-		virtual void setupBackBuffer(unsigned int width, unsigned int height);
-		virtual void setupAlphaBlending();
-		virtual void setupShaders( char* vertex, char* pixel );
-		virtual void setupConstantBuffer();
-		virtual void useWorldCoords();
-
-	public:
-
-		virtual void resize(unsigned int width, unsigned int height, bool);
-		virtual void clearFrame();
-
-		virtual void turnDepthOff();
-		virtual void turnDepthOn();
-		virtual void useScreenCoords();
-		virtual void drawFrame();
-
-		virtual void turnDepthTestOff();
-		virtual void turnDepthTestOn();
-
-		virtual Shader* getDefaultVertexShader();
-		virtual Shader* getDefaultPixelShader();
-
-		ID3D11InputLayout * getLayout();
-		ID3D11InputLayout ** getLayoutAddress();
-		D3D11_INPUT_ELEMENT_DESC* getInputElementDesc();
-
-		virtual Camera* getCamera();
-		virtual void setObjectMatrix(Matrix4);
 	};
 }

@@ -5,9 +5,7 @@
 namespace Transmission {
 
 
-	DX11PixelShader::DX11PixelShader(char* filename, DX11Renderer* renderer, ID3D11Device* device, ID3D11DeviceContext* context) : DX11Shader(filename) {
-		this->renderer = renderer;
-		this->device = device;
+	DX11PixelShader::DX11PixelShader(ID3D11Device* device, ID3D11DeviceContext* context, char* filename) : DX11Shader(filename) {
 		this->context = context;
 		HR(device->CreatePixelShader(this->bytecode, this->length, NULL, (ID3D11PixelShader**)&this->shader));
 	}

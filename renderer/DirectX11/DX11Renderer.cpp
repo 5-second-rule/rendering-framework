@@ -29,7 +29,7 @@ using namespace Common;
 namespace Transmission {
 
 
-	DX11Renderer::DX11Renderer(Window* window, char* vertex, char* pixel) : Renderer()
+	DX11Renderer::DX11Renderer(Window* window) : Renderer()
 	{
 		swapchain = NULL; device = NULL; context = NULL;
 		this->setupDeviceAndSwapChain(window);
@@ -48,9 +48,6 @@ namespace Transmission {
 		perFrameBuffer = NULL; perVertexBuffer = NULL; timeBuffer = NULL; lightDataBuffer = NULL; saturationLightnessBuffer = NULL;
 		this->setupConstantBuffer();
 
-		defaultVertexShader = NULL; defaultPixelShader = NULL; layout = NULL;
-		ied = NULL;
-		this->setupShaders(vertex, pixel);
 		this->window = window;
 	}
 
@@ -61,17 +58,8 @@ namespace Transmission {
 
 		swapchain->SetFullscreenState(false, NULL);
 
-		delete defaultVertexShader;
-		delete defaultPixelShader;
-		delete[] ied;
-
-		defaultVertexShader = NULL;
-		defaultPixelShader = NULL;
-		ied = NULL;
-
 		swapchain->Release();
 		backbuffer->Release();
-		layout->Release();
 		transparency->Release();
 		depthStencil->Release();
 		depthStencilState->Release();
@@ -346,28 +334,6 @@ namespace Transmission {
 
 		HR(device->CreateBlendState(&blendDesc, &transparency));
 	}
-
-	void DX11Renderer::setupShaders(char* vertex, char* pixel) {
-		if (defaultPixelShader != NULL || defaultVertexShader != NULL || layout != NULL) {
-			throw std::runtime_error("You can only setup shaders once");
-		}
-
-		// default shaders
-		this->defaultVertexShader = new DX11VertexShader(vertex, this, this->device, this->context);
-		this->defaultPixelShader = new DX11PixelShader(pixel, this, this->device, this->context);
-
-		// Input Layout for vertex buffers
-		ied = new D3D11_INPUT_ELEMENT_DESC[4];
-		ied[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 };
-		ied[1] = { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 };
-		ied[2] = { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 };
-		ied[3] = { "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 };
-
-		//Kept the following in case something is using the default vs and ps without a model
-
-		defaultVertexShader->set();
-		defaultPixelShader->set();
-	}
 	
 	//=============================================//
 	//                   Methods                   //
@@ -396,8 +362,6 @@ namespace Transmission {
 		float color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
 		context->ClearRenderTargetView(backbuffer, color);
 		context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-		this->useWorldCoords();
 	}
 
 	void DX11Renderer::turnDepthOff() {
@@ -408,88 +372,8 @@ namespace Transmission {
 		context->OMSetDepthStencilState(depthStencilState, 1);
 	}
 
-	void DX11Renderer::useScreenCoords() {
-		// set default stuff
-		float world[4][4];
-		float viewProjection[5][4];
-
-		memcpy(world, Matrix4::identity().getPointer(), sizeof(float[4][4]));
-		memcpy(viewProjection, Matrix4::identity().getPointer(), sizeof(float[4][4]));
-
-		Vector4 cameraPos = this->camera->getPosition();
-		viewProjection[4][0] = cameraPos.x();
-		viewProjection[4][1] = cameraPos.y();
-		viewProjection[4][2] = cameraPos.z();
-		viewProjection[4][3] = 1.0f;
-
-		context->UpdateSubresource(perFrameBuffer, 0, NULL, &viewProjection, 0, 0);
-		context->UpdateSubresource(perVertexBuffer, 0, NULL, &world, 0, 0);
-	}
-
-	void DX11Renderer::useWorldCoords() {
-		// set default stuff
-		float world[4][4];
-		float viewProjection[5][4];
-		//float time[1][2];
-
-		memcpy(world, Matrix4::identity().getPointer(), sizeof(float[4][4]));
-		memcpy(viewProjection, (this->camera->getCameraInverse() * this->camera->getPerspective()).getPointer(), sizeof(float[4][4]));
-
-		Vector4 cameraPos = this->camera->getPosition();
-		viewProjection[4][0] = cameraPos.x();
-		viewProjection[4][1] = cameraPos.y();
-		viewProjection[4][2] = cameraPos.z();
-		viewProjection[4][3] = 1.0f;
-
-		//renderTimer->GetElapsedTimeAndTimeSinceLastFrame(&time[0][0], &time[0][1]);
-
-		context->UpdateSubresource(perFrameBuffer, 0, NULL, &viewProjection, 0, 0);
-		context->UpdateSubresource(perVertexBuffer, 0, NULL, &world, 0, 0);
-		//context->UpdateSubresource(timeBuffer, 0, NULL, &time, 0, 0);
-
-		ID3D11Buffer* cBuffers [] = { perFrameBuffer, perVertexBuffer };// , timeBuffer };
-		context->VSSetConstantBuffers(0, 2, cBuffers);
-
-		// set shaders without layout
-		defaultVertexShader->setWithNoLayout();
-		defaultPixelShader->setWithNoLayout(); //using this function for consistency
-	}
-
 	void DX11Renderer::drawFrame() {
 		swapchain->Present(0, 0);
-	}
-
-	/* Turns the depth testing off
-	 - Note: Once finished with using no depth, should be followed by turnDepthTestOn()
-	*/
-	void DX11Renderer::turnDepthTestOff() {
-		context->OMSetDepthStencilState(depthStencilStateDepthOff, 1);
-	}
-
-	/* Turns the depth testing back on
-	*/
-	void DX11Renderer::turnDepthTestOn() {
-		context->OMSetDepthStencilState(depthStencilState, 1);
-	}
-
-	Shader* DX11Renderer::getDefaultVertexShader() {
-		return defaultVertexShader;
-	}
-
-	Shader* DX11Renderer::getDefaultPixelShader() {
-		return defaultPixelShader;
-	}
-
-	ID3D11InputLayout * DX11Renderer::getLayout() {
-		return layout;
-	}
-
-	ID3D11InputLayout ** DX11Renderer::getLayoutAddress() {
-		return &layout;
-	}
-
-	D3D11_INPUT_ELEMENT_DESC* DX11Renderer::getInputElementDesc() {
-		return ied;
 	}
 
 	Camera* DX11Renderer::getCamera() {

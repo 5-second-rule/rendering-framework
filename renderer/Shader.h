@@ -6,11 +6,13 @@ namespace Transmission {
 	{
 
 	public:
-		Shader(const char*);
-		virtual ~Shader();
+		virtual ~Shader() = default;
 
 		virtual void set() = 0;
 		virtual void setWithNoLayout() = 0;
 	};
+
+	class FRAMEWORKDLL VertexShader : public Shader {};
+	class FRAMEWORKDLL PixelShader : public Shader {};
 
 }

@@ -12,7 +12,7 @@
 
 namespace Transmission {
 
-	DX11Shader::DX11Shader(char* filename) : Shader(filename) {
+	DX11Shader::DX11Shader(char* filename) {
 		std::ifstream shader(filename, std::ifstream::binary);
 		if (!shader) {
 			TCHAR pwd[MAX_PATH];
@@ -35,7 +35,7 @@ namespace Transmission {
 
 	DX11Shader::~DX11Shader() {
 		this->shader->Release();
-		delete this->bytecode;
+		delete[] this->bytecode;
 	}
 
 	ID3D11DeviceChild* DX11Shader::getShader() {
