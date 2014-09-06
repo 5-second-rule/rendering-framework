@@ -12,7 +12,9 @@
 
 namespace Transmission {
 
-	DX11Shader::DX11Shader(char* filename) {
+	DX11Shader::DX11Shader(const char* filename, ID3D11DeviceContext* context)
+		: context(context)
+	{
 		std::ifstream shader(filename, std::ifstream::binary);
 		if (!shader) {
 			TCHAR pwd[MAX_PATH];

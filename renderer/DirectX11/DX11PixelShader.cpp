@@ -5,9 +5,13 @@
 namespace Transmission {
 
 
-	DX11PixelShader::DX11PixelShader(ID3D11Device* device, ID3D11DeviceContext* context, char* filename) : DX11Shader(filename) {
-		this->context = context;
-		HR(device->CreatePixelShader(this->bytecode, this->length, NULL, (ID3D11PixelShader**)&this->shader));
+	DX11PixelShader::DX11PixelShader(DX11Renderer* renderer, const char* filename)
+		: DX11Shader(filename, renderer->getContext())
+	{
+		HR(renderer->getDevice()->CreatePixelShader(
+			this->bytecode, this->length, nullptr,
+			(ID3D11PixelShader**)(&this->shader)
+		));
 	}
 
 	ID3D11PixelShader* DX11PixelShader::getPixelShader() {
@@ -15,11 +19,6 @@ namespace Transmission {
 	}
 
 	void DX11PixelShader::set() {
-		context->PSSetShader(this->getPixelShader(), NULL, 0);
-	}
-
-	//Created since vertex shader needed a no layout function
-	void DX11PixelShader::setWithNoLayout() {
 		context->PSSetShader(this->getPixelShader(), NULL, 0);
 	}
 

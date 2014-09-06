@@ -3,11 +3,9 @@
 namespace Transmission {
 
 
-	DX11Model::DX11Model(ID3D11Device* device, ID3D11DeviceContext* context, VertexBuffer* vertices, IndexBuffer* indices, std::initializer_list<Texture*> textures)
-		: Model(vertices, indices, textures)
-	{
-		//TODO
-	}
+	DX11Model::DX11Model( DX11Renderer* renderer,
+		VertexBuffer* vertices, IndexBuffer* indices, std::initializer_list<Texture*> textures
+	) : Model(vertices, indices, textures), renderer(renderer) {}
 
 	DX11Model::~DX11Model() {}
 
@@ -15,7 +13,7 @@ namespace Transmission {
 		this->vertexBuffer->set();
 		this->indexBuffer->set();
 		
-		vertexShader.setWithNoLayout();
+		vertexShader.set();
 		pixelShader.set();
 		
 		for (unsigned int i = 0; i < this->textures.size(); ++i) {
@@ -23,7 +21,7 @@ namespace Transmission {
 		}
 
 		this->renderer->setObjectMatrix(this->getTransform());
-		context->DrawIndexed(indexBuffer->count(), 0, 0);
+		this->renderer->getContext()->DrawIndexed(indexBuffer->count(), 0, 0);
 	}
 
 }

@@ -44,9 +44,6 @@
     <Image Include="cube_uvmap2.dds">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Wood.dds">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="herpes_3_TXTR.dds">
       <Filter>Resource Files</Filter>
     </Image>
@@ -63,6 +60,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="bloodCellBump.dds">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Wood.dds">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

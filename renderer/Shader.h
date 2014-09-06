@@ -9,7 +9,6 @@ namespace Transmission {
 		virtual ~Shader() = default;
 
 		virtual void set() = 0;
-		virtual void setWithNoLayout() = 0;
 	};
 
 	class FRAMEWORKDLL VertexShader : public Shader {};

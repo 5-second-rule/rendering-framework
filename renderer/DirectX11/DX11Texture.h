@@ -6,20 +6,22 @@
 
 #include "util.h"
 #include "DirectX11/DDSTextureLoader.h"
+#include "DX11Renderer.h"
 
 namespace Transmission {
-	class DX11Texture :
-		public Texture
+	class FRAMEWORKDLL DX11Texture : public Texture
 	{
+	public:
+		DX11Texture(DX11Renderer* renderer, const char* filename);
+		virtual ~DX11Texture();
+
+		virtual void set(int slot);
+
 	private:
 		ID3D11DeviceContext* context;
 		ID3D11ShaderResourceView* textureResource;
 		ID3D11SamplerState* samplerState;
-
-	public:
-		DX11Texture(const char*, ID3D11Device*, ID3D11DeviceContext*);
-		virtual ~DX11Texture();
-
-		virtual void set(int slot);
 	};
+
+	DX11Factory(Texture);
 }

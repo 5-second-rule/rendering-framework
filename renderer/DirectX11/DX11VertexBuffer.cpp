@@ -6,7 +6,9 @@
 
 namespace Transmission {
 
-	DX11VertexBuffer::DX11VertexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, Vertex vertices[], size_t num) : VertexBuffer(num), context(context) {
+	DX11VertexBuffer::DX11VertexBuffer(DX11Renderer* renderer, Vertex vertices[], size_t num)
+		: VertexBuffer(num), context(renderer->getContext())
+	{
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
 
@@ -20,7 +22,7 @@ namespace Transmission {
 		ZeroMemory(&initData, sizeof(initData));
 		initData.pSysMem = vertices;
 
-		HR(device->CreateBuffer(&bd, &initData, &this->buffer));
+		HR(renderer->getDevice()->CreateBuffer(&bd, &initData, &this->buffer));
 
 	}
 

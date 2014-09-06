@@ -4,7 +4,9 @@
 
 namespace Transmission {
 
-	DX11IndexBuffer::DX11IndexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, unsigned int indices[], size_t num) : IndexBuffer(num), context(context) {
+	DX11IndexBuffer::DX11IndexBuffer(DX11Renderer* renderer, unsigned int indices[], size_t num)
+		: IndexBuffer(num), context(renderer->getContext())
+	{
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
 
@@ -18,7 +20,7 @@ namespace Transmission {
 		ZeroMemory(&initData, sizeof initData);
 		initData.pSysMem = indices;
 
-		HR(device->CreateBuffer(&bd, &initData, &this->buffer));
+		HR(renderer->getDevice()->CreateBuffer(&bd, &initData, &this->buffer));
 	}
 
 

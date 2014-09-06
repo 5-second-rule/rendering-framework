@@ -11,18 +11,17 @@
 #include "DX11Renderer.h"
 
 namespace Transmission {
-	class FRAMEWORKDLL DX11IndexBuffer :
-		public IndexBuffer
+	class FRAMEWORKDLL DX11IndexBuffer : public IndexBuffer
 	{
-	private:
-		ID3D11Buffer* buffer;
-		ID3D11DeviceContext* context;
-
 	public:
-		DX11IndexBuffer(ID3D11Device* device, ID3D11DeviceContext* context, unsigned int* indices, size_t size);
+		DX11IndexBuffer(DX11Renderer* renderer, unsigned int* indices, size_t size);
 		virtual ~DX11IndexBuffer();
 
 		virtual void set();
+
+	private:
+		ID3D11Buffer* buffer;
+		ID3D11DeviceContext* context;
 	};
 
 	DX11Factory(IndexBuffer);

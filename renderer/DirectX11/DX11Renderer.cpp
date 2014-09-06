@@ -362,6 +362,25 @@ namespace Transmission {
 		float color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
 		context->ClearRenderTargetView(backbuffer, color);
 		context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+		//TODO: move this
+		float world[4][4];
+		float viewProjection[5][4];
+		memcpy(world, Matrix4::identity().getPointer(), sizeof(float[4][4]));
+		memcpy(viewProjection, (this->camera->getCameraInverse() * this->camera->getPerspective()).getPointer(), sizeof(float[4][4]));
+
+		Vector4 cameraPos = this->camera->getPosition();
+		viewProjection[4][0] = cameraPos.x();
+		viewProjection[4][1] = cameraPos.y();
+		viewProjection[4][2] = cameraPos.z();
+		viewProjection[4][3] = 1.0f;
+
+		context->UpdateSubresource(perFrameBuffer, 0, NULL, &viewProjection, 0, 0);
+		context->UpdateSubresource(perVertexBuffer, 0, NULL, &world, 0, 0);
+
+		ID3D11Buffer* cBuffers [] = { perFrameBuffer, perVertexBuffer };
+		context->VSSetConstantBuffers(0, 2, cBuffers);
+
 	}
 
 	void DX11Renderer::turnDepthOff() {
@@ -389,4 +408,14 @@ namespace Transmission {
 		context->UpdateSubresource(perVertexBuffer, 0, NULL, &world, 0, 0);
 		context->VSSetConstantBuffers(1, 1, &perVertexBuffer);
 	}
+
+	ID3D11Device* DX11Renderer::getDevice() {
+		return this->device;
+	}
+
+	ID3D11DeviceContext* DX11Renderer::getContext() {
+		return this->context;
+	}
+
+	
 }

@@ -8,16 +8,15 @@
 
 namespace Transmission {
 
-	class DX11VertexShader :
+	class FRAMEWORKDLL DX11VertexShader :
 		public DX11Shader, public VertexShader
 	{
 	public:
-		DX11VertexShader(ID3D11Device* device, ID3D11DeviceContext* context, char* filename);
+		DX11VertexShader(DX11Renderer* renderer, const char* filename);
 
 		ID3D11VertexShader* getVertexShader();
 		
-		virtual void set();
-		virtual void setWithNoLayout();
+		virtual void set() override;
 
 	private:
 		ID3D11InputLayout* layout;

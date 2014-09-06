@@ -14,14 +14,16 @@
 
 namespace Transmission {
 
-	class DX11Model : public Model
+	class FRAMEWORKDLL DX11Model : public Model
 	{
 	protected:
-		ID3D11DeviceContext* context;
-		Renderer* renderer;
+		DX11Renderer* renderer;
 
 	public:
-		DX11Model(ID3D11Device* device, ID3D11DeviceContext* context, VertexBuffer* vertices, IndexBuffer* indices, std::initializer_list<Texture*> textures);
+		DX11Model(DX11Renderer* renderer,
+			VertexBuffer* vertices, IndexBuffer* indices,
+			std::initializer_list<Texture*> textures
+		);
 		virtual ~DX11Model();
 
 		virtual void draw(Shader& vertexShader, Shader& pixelShader);

@@ -1,25 +1,16 @@
 #pragma once
 
 #include <d3d11.h>
-
 #pragma comment(lib, "d3d11.lib")
 
 #include "DX11Renderer.h"
 
 namespace Transmission {
 
-	class DX11Shader
+	class FRAMEWORKDLL DX11Shader
 	{
-	protected:
-		ID3D11DeviceChild* shader;
-
-		char* bytecode;
-		size_t length;
-
-		ID3D11DeviceContext* context;
-
 	public:
-		DX11Shader(char*);
+		DX11Shader(const char* filename, ID3D11DeviceContext* context);
 		virtual ~DX11Shader();
 
 		ID3D11DeviceChild* getShader();
@@ -30,6 +21,14 @@ namespace Transmission {
 		};
 
 		Buffer getBytecode();
+
+	protected:
+		ID3D11DeviceChild* shader;
+
+		char* bytecode;
+		size_t length;
+
+		ID3D11DeviceContext* context;
 	};
 
 }

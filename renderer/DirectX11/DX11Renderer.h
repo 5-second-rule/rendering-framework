@@ -17,8 +17,7 @@
 	public: \
 		template<typename... Args> \
 		static T* create(Renderer* renderer, Args... args) { \
-			DX11Renderer* dx = static_cast<DX11Renderer*>(renderer); \
-			return new DX11##T(dx->device, dx->context, args...); \
+			return new DX11##T(static_cast<DX11Renderer*>(renderer), args...); \
 		} \
 	}
 
@@ -26,8 +25,6 @@ namespace Transmission {
 
 	class DX11Renderer : public Renderer
 	{
-	friend Renderer;
-
 	public:
 		DX11Renderer( Window* window );
 		~DX11Renderer();
@@ -41,6 +38,9 @@ namespace Transmission {
 
 		virtual Camera* getCamera() override;
 		virtual void setObjectMatrix(Matrix4) override;
+
+		ID3D11Device* getDevice();
+		ID3D11DeviceContext* getContext();
 
 	protected:
 		
